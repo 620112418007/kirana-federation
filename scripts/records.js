@@ -19,7 +19,8 @@ if (title.startsWith('[HOF]')) {
   const r = d.research || {}, st = d.style || {};
   const rec = {
     v: 1, id: d.id, at: str(d.at, 10), mode: d.mode === 'online' ? 'online' : 'solo', rules: str(d.rules, 8), n: int(d.n, 3, 4) || 4, seed: int(d.seed, 0, 4294967295),
-    leader: str(d.leader, 24) || 'ผู้เล่น', state: str(d.state, 24) || 'รัฐไร้นาม', latin: str(d.latin, 24), meaning: str(d.meaning, 60),
+    leader: str(d.leader, 24) || 'ผู้เล่น', title: str(d.title, 32), traits: (Array.isArray(d.traits) ? d.traits : []).slice(0, 3).map(x => str(x, 24)).filter(Boolean),
+    state: str(d.state, 24) || 'รัฐไร้นาม', latin: str(d.latin, 24), meaning: str(d.meaning, 60),
     color: /^#[0-9a-f]{6}$/i.test(d.color) ? d.color : '#888888',
     flag: d.flag && okImg(d.flag.img, 9000) ? { img: d.flag.img } : { seed: int(d.flag && d.flag.seed, 0, 4294967295) || 1 },
     score: d.score, legit: int(d.legit, -300, 300), stigma: int(d.stigma, 0, 300), grav: int(d.grav, 0, 9999),
@@ -37,17 +38,17 @@ if (title.startsWith('[HOF]')) {
   list.sort((a, b) => b.score - a.score || b.margin - a.margin);
   write(file, list.slice(0, 100));
   const rank = list.findIndex(x => x.id === rec.id) + 1;
-  done(`บันทึก ${rec.state} ของ ${rec.leader} (${rec.score} คะแนน) เข้าหอเกียรติยศแล้ว อันดับ ${rank} หน้าเกมจะเห็นภายในไม่กี่นาที`);
+  done(`บันทึก ${rec.state} ของ ${(rec.title ? rec.title + ' ' : '') + rec.leader} (${rec.score} คะแนน) เข้าหอเกียรติยศแล้ว อันดับ ${rank} หน้าเกมจะเห็นภายในไม่กี่นาที`);
 }
 if (title.startsWith('[COMMENT]')) {
   const text = str(d.text, 280).trim();
   if (!text || typeof d.id !== 'string' || !/^[a-z0-9]{1,16}$/.test(d.id)) done('ความคิดเห็นว่างหรือรหัสไม่ถูกต้อง');
-  const c = { id: d.id, leader: str(d.leader, 24) || 'ผู้เล่น', state: str(d.state, 24), text, at: str(d.at, 16), by: str(d.by, 16), gh: str(author, 40) };
+  const c = { id: d.id, leader: str(d.leader, 24) || 'ผู้เล่น', title: str(d.title, 32), state: str(d.state, 24), text, at: str(d.at, 16), by: str(d.by, 16), gh: str(author, 40) };
   const file = 'data/comments.json';
   const list = read(file);
   if (list.some(x => x.id === c.id)) done('ความคิดเห็นนี้บันทึกไว้แล้ว');
   list.unshift(c);
   write(file, list.slice(0, 300));
-  done(`บันทึกความคิดเห็นของ ${c.leader} แล้ว`);
+  done(`บันทึกความคิดเห็นของ ${(c.title ? c.title + ' ' : '') + c.leader} แล้ว`);
 }
 done('ชื่อ issue ไม่ได้ขึ้นต้นด้วย [HOF] หรือ [COMMENT]');

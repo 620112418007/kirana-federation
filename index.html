@@ -1073,6 +1073,10 @@ body[data-view="table"] .online-pill { bottom: auto; top: 60px; left: auto; righ
 .op-sum { margin-bottom: 6px; }
 @media (prefers-reduced-motion: reduce) { .online-pill .dot { animation: none; } }
 
+/* online hall of fame line on the end screen */
+.hofnote .hofnet b { color: var(--good); }
+.hofnote .gbtn { display: inline-flex; vertical-align: middle; margin-left: 6px; }
+
 </style>
 </head>
 <body>
@@ -7603,6 +7607,7 @@ async function unlockDev(code) {
   const tok = await sha256hex('kirana-dev-device|' + String(code || '').trim().toUpperCase());
   if (!await checkDevToken(tok)) return false;
   devToken = tok; store.set('devToken', tok); devOk = true; setAcct(currentAcct());
+  if (hofOnline()) hofSignIn({ dev: tok });
   return true;
 }
 function forgetDev() { devToken = ''; devOk = false; store.del('devToken'); setAcct(currentAcct()); }
@@ -7657,6 +7662,8 @@ async function onGoogleCredential(r) {
   store.set('acct', g);
   setAcct(currentAcct());
   notify(`${ICON('star')} ลงชื่อเข้าใช้แล้ว เกมของ ${esc(acct.name)} จะถูกบันทึก`, 3500);
+  // the hall of fame script checks this sign-in with Google once and answers with its own ticket
+  if (hofOnline()) await hofSignIn({ google: r.credential });
   acctWaiters.splice(0).forEach(f => f());
 }
 function signOut() {
@@ -7702,7 +7709,11 @@ function wireDevRow(box, redraw) {
 }
 // boot: restore the account before the first screen renders, then confirm the developer token
 acct = currentAcct();
-checkDevToken(devToken).then(ok => { devOk = ok; if (!ok && devToken) { devToken = ''; store.del('devToken'); } setAcct(currentAcct()); });
+checkDevToken(devToken).then(ok => {
+  devOk = ok; if (!ok && devToken) { devToken = ''; store.del('devToken'); }
+  setAcct(currentAcct());
+  if (devOk && hofOnline() && !hofTicket()) hofSignIn({ dev: devToken });
+});
 
 // =====================================================================
 // PROFILE: leader name, state, flag. Identity is a random device id kept in this browser.
@@ -8706,10 +8717,11 @@ async function showHallOfFame() {
   app.querySelectorAll('[data-t]').forEach(b => { b.classList.toggle('on', b.dataset.t === hofTab); b.onclick = () => { hofTab = b.dataset.t; showHallOfFame(); }; });
   const body = app.querySelector('#hof-body');
   if (hofTab === 'hof') {
-    const remote = await fetchRepoJSON('hall-of-fame.json');
-    const list = hofMerge(hofLocal(), remote.concat(lobbyRecords()));
+    const [remote, online] = await Promise.all([fetchRepoJSON('hall-of-fame.json'), hofFetchOnline()]);
+    const list = hofMerge(hofLocal(), remote.concat(online, lobbyRecords()));
     store.set('hof', list);
-    body.innerHTML = hofTable(list.slice(0, 10)) + `<p class="tiny muted">รวมผลจากเครื่องนี้${repoInfo() ? ' ไฟล์หอเกียรติยศในคลัง GitHub' : ''} และผู้เล่นที่ออนไลน์อยู่ บันทึกเฉพาะเกมที่ผู้ชนะเป็นผู้เล่น (ไม่นับ AI และโหมดสอนเล่น) เรียงตามคะแนนสุทธิ</p>`;
+    if (!body.isConnected) return;
+    body.innerHTML = hofTable(list.slice(0, 10)) + `<p class="tiny muted">รวมผลจากเครื่องนี้${hofOnline() ? ' หอเกียรติยศออนไลน์ (ผู้ชนะที่ลงชื่อเข้าใช้ถูกบันทึกเองตอนจบเกม)' : ''}${repoInfo() ? ' ไฟล์หอเกียรติยศในคลัง GitHub' : ''} และผู้เล่นที่ออนไลน์อยู่ บันทึกเฉพาะเกมที่ผู้ชนะเป็นผู้เล่น (ไม่นับ AI และโหมดสอนเล่น) เรียงตามคะแนนสุทธิ</p>`;
   } else {
     const remote = await fetchRepoJSON('comments.json');
     const list = cmtMerge(store.get('comments', []), remote.concat(lobbyComments()));
@@ -10257,7 +10269,8 @@ function hofRecord(G2, P) {
   };
   const lv = S.cfg.seats.filter(x => !x.human).map(x => x.level || 'normal');
   if (lv.length) rec.lvl = lv.includes('hard') ? 'hard' : lv.includes('normal') ? 'normal' : 'easy';
-  rec.id = hashStr([rec.seed, rec.state, rec.score, rec.n, rec.rules, rec.opp.map(o => o.state + o.score).join()].join('|')).toString(36);
+  // the player is part of the id: two people who play the same seed the same way still keep two records
+  rec.id = hashStr([rec.seed, rec.state, rec.score, rec.n, rec.rules, rec.opp.map(o => o.state + o.score).join(), rec.leader, rec.by].join('|')).toString(36);
   return rec;
 }
 // ---------- local hall of fame (merged with the repository file and with peers online) ----------
@@ -10309,10 +10322,13 @@ function showEnd() {
     <div class="mfoot"><button class="btn" id="e-log">ส่งออกบันทึก</button><button class="btn" id="e-close">ดูโต๊ะต่อ</button><button class="btn" id="e-hof">หอเกียรติยศ</button><button class="btn primary" id="e-menu">กลับเมนู</button></div></div>`, 'wide');
   sfx(h && win === h ? 'win' : 'era');
   if (h && win === h) burst(box.querySelector('.pl.first'), '<i class="spk gold"></i>', 14);
+  // a saved win goes on to the online hall of fame by itself (when config.js names one)
+  const afterSave = () => { const n = document.getElementById('e-hofnote'); if (!n) return; if (hofOnline()) hofAutoNote(n, rec, gh); else n.innerHTML = hofSavedHtml(rec, gh); };
+  if (rec && !held) afterSave();
   if (held) {
     renderAcctChips();
     const net = S.net;
-    acctWaiters.push(() => { hofAdd(rec); if (net && net.shareRecord) net.shareRecord(rec); const n = document.getElementById('e-hofnote'); if (n) n.innerHTML = hofSavedHtml(rec, gh); });
+    acctWaiters.push(() => { hofAdd(rec); if (net && net.shareRecord) net.shareRecord(rec); afterSave(); });
   }
   box.querySelector('#e-log').onclick = () => exportText('บันทึกเกม', `federation-log-seed${G.seed}.txt`, logText());
   box.querySelector('#e-close').onclick = closeModal;
@@ -10379,6 +10395,79 @@ function metricRows(m, isBatch) {
     const val = t.key === 'midWin' && !isBatch ? (v ? 'ใช่' : 'ไม่ใช่') : t.fmt(v);
     return `<tr><td>${t.label}</td><td class="num">${val}</td><td>${t.target}</td><td class="${isBatch || t.key !== 'midWin' ? cls : ''}">${isBatch || t.key !== 'midWin' ? word : 'ดูจากหลายเกม'}</td></tr>`;
   }).join('');
+}
+
+// =====================================================================
+// AUTOMATIC HALL OF FAME: a small Google Apps Script beside a Google Sheet (scripts/hof-apps-script.gs).
+// The winner's own browser sends the record when the game ends. The script trusts only a ticket it signed
+// itself after checking the Google sign-in with Google (or the developer device), and rebuilds every field.
+// Without an address in config.js the game keeps the old way: this browser, online peers, a GitHub issue.
+// =====================================================================
+const HOF_URL = (() => { const u = String((window.FED_CONFIG || {}).hofEndpoint || '').trim(); return /^https:\/\/[\w.-]+(\/[\w\-./]*)?$/.test(u) ? u : ''; })();
+const hofOnline = () => !!HOF_URL && !inViewer;
+async function hofCall(body, ms) {
+  const ctl = typeof AbortController === 'function' ? new AbortController() : null;
+  const timer = ctl ? setTimeout(() => ctl.abort(), ms || 15000) : null;
+  try {
+    // a plain-text body keeps the request simple (no preflight), which Apps Script needs
+    const r = await fetch(HOF_URL, { method: 'POST', body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined });
+    if (!r.ok) throw new Error('http ' + r.status);
+    return await r.json();
+  } finally { if (timer) clearTimeout(timer); }
+}
+// the ticket the script issued to this account; a day of margin so a game never ends on an expired one
+function hofTicket() {
+  const s = store.get('hofSession', null);
+  return s && acct && s.acct === acct.id && typeof s.t === 'string' && s.exp > Date.now() + 864e5 ? s : null;
+}
+async function hofSignIn(cred) {
+  if (!hofOnline()) return null;
+  try {
+    const j = await hofCall(Object.assign({ action: 'session' }, cred));
+    if (j && j.ok && typeof j.session === 'string') { store.set('hofSession', { t: j.session, acct: j.acct, exp: +j.exp || 0 }); return j; }
+  } catch (e) { /* offline or not set up: the record waits in this browser */ }
+  return null;
+}
+// send one record; the answer says where it stands, or what is missing
+async function hofSubmit(rec) {
+  if (!hofOnline()) return { off: true };
+  if (!hofTicket() && acct && acct.kind === 'dev' && devToken) await hofSignIn({ dev: devToken });
+  const s = hofTicket();
+  if (!s) return { need: 'auth' };
+  try {
+    const j = await hofCall({ action: 'hof', session: s.t, rec });
+    if (j && j.err === 'session') store.del('hofSession');
+    return j || { err: 'empty' };
+  } catch (e) { return { err: 'net' }; }
+}
+async function hofFetchOnline() {
+  if (!hofOnline()) return [];
+  try {
+    const ctl = typeof AbortController === 'function' ? new AbortController() : null;
+    const timer = ctl ? setTimeout(() => ctl.abort(), 10000) : null;
+    const r = await fetch(HOF_URL + (HOF_URL.includes('?') ? '&' : '?') + 'list=hof', { cache: 'no-store', signal: ctl ? ctl.signal : undefined });
+    if (timer) clearTimeout(timer);
+    const j = r.ok ? await r.json() : [];
+    return Array.isArray(j) ? j.slice(0, 60) : [];
+  } catch (e) { return []; }
+}
+const HOF_ERR = { session: 'ตั๋วยืนยันตัวตนหมดอายุ', record: 'ข้อมูลบันทึกไม่ผ่านการตรวจ', limit: 'บัญชีนี้ส่งครบ 20 บันทึกในวันนี้แล้ว', net: 'ติดต่อหอเกียรติยศออนไลน์ไม่ได้', empty: 'หอเกียรติยศออนไลน์ไม่ตอบ' };
+// the end screen line for a win: sends at once, says the rank, offers a retry or a fresh sign-in
+async function hofAutoNote(el, rec, gh) {
+  if (!el || !hofOnline()) return;
+  el.innerHTML = `${ICON('star')} บันทึก ${esc(rec.state)} ของ ${esc(fullLeader(rec))} ในเครื่องนี้แล้ว · <span class="hofnet">กำลังส่งเข้าหอเกียรติยศออนไลน์</span>`;
+  const j = await hofSubmit(rec);
+  if (!el.isConnected) return;
+  const net = el.querySelector('.hofnet');
+  if (j && j.ok) { net.innerHTML = `<b>${j.dup ? 'บันทึกนี้อยู่ในหอเกียรติยศออนไลน์แล้ว' : 'ขึ้นหอเกียรติยศออนไลน์แล้ว'} อันดับ ${+j.rank || '-'}</b>${j.total ? ` จาก ${+j.total} บันทึก` : ''}`; if (!j.dup) sfx('gavel'); return; }
+  if (j && j.need === 'auth') {
+    net.innerHTML = `ยืนยันตัวตนกับ Google อีกครั้งเพื่อส่งผลนี้ขึ้นหอเกียรติยศออนไลน์ <span class="gbtn" data-gbtn="1"></span>`;
+    wireAcct(el);
+    acctWaiters.push(() => hofAutoNote(el, rec, gh));
+    return;
+  }
+  net.innerHTML = `ส่งเข้าหอเกียรติยศออนไลน์ไม่สำเร็จ: ${esc(HOF_ERR[j && j.err] || 'ไม่ทราบสาเหตุ')}${j && j.msg ? ` (${esc(j.msg)})` : ''} <button class="btn sm" data-hofretry="1">ลองอีกครั้ง</button>${gh ? ` <a class="btn sm" href="${esc(gh)}" target="_blank" rel="noopener">ส่งผ่าน GitHub แทน</a>` : ''}`;
+  const b = net.querySelector('[data-hofretry]'); if (b) b.onclick = () => hofAutoNote(el, rec, gh);
 }
 
 // =====================================================================

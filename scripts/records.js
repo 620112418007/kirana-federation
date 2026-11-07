@@ -31,6 +31,7 @@ if (title.startsWith('[HOF]')) {
     opp: (Array.isArray(d.opp) ? d.opp : []).slice(0, 3).map(o => ({ state: str(o && o.state, 24), score: int(o && o.score, -300, 300), ai: !!(o && o.ai) })),
     by: str(d.by, 16), gh: str(author, 40),
   };
+  if (['easy', 'normal', 'hard'].includes(d.lvl)) rec.lvl = d.lvl;
   const file = 'data/hall-of-fame.json';
   const list = read(file);
   if (list.some(x => x.id === rec.id)) done(`บันทึกนี้อยู่ในหอเกียรติยศแล้ว (${rec.state} ${rec.score} คะแนน)`);

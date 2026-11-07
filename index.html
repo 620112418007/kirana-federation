@@ -1077,6 +1077,62 @@ body[data-view="table"] .online-pill { bottom: auto; top: 60px; left: auto; righ
 .hofnote .hofnet b { color: var(--good); }
 .hofnote .gbtn { display: inline-flex; vertical-align: middle; margin-left: 6px; }
 
+/* =========================== workers you can see =========================== */
+.pcard .meeples { gap: 0; flex-wrap: nowrap; }
+.pcard .meeples .mslot .ic { width: 21px; height: 21px; color: #b3a689; }
+.pcard .meeples .mslot.on .ic { color: var(--pc, #3a3a3a); filter: drop-shadow(0 0 1px rgba(0,0,0,.9)) drop-shadow(0 1px 0 rgba(0,0,0,.4)); }
+.pcard .meeples .mslot[data-w] { padding: 2px; }
+.pcard .meeples .mslot[data-w] .ic { width: 26px; height: 26px; }
+.pcard .attrs { flex-wrap: wrap; row-gap: 2px; }
+.pcard.tiny .twk { gap: 3px; padding: 3px 5px 5px; }
+.pcard.tiny .twk i { width: 10px; height: 10px; background: #b9ad92; box-shadow: inset 0 0 0 1px rgba(0,0,0,.25); }
+.pcard.tiny .twk i.on { background: var(--pc, #333); box-shadow: 0 0 0 1.5px rgba(0,0,0,.55); }
+.sres .wstat > .ic { width: 21px; height: 21px; color: var(--text); }
+.sres .wstat b { font-size: 14px; }
+.wpool .mslot .ic { width: 28px; height: 28px; }
+
+/* =========================== expansion surcharge, clearly =========================== */
+.xtag { display: inline-flex; align-items: center; gap: 2px; padding: 1px 6px 1px 5px; border-radius: 999px; background: linear-gradient(#ffb347, #f08a24); color: #3a1c00; font-weight: 800; font-size: 12px; box-shadow: 0 0 0 1.5px #a65300, 0 2px 6px rgba(240,138,36,.45); animation: xpulse 2.4s ease-in-out infinite; }
+.xtag .ic { width: 13px; height: 13px; color: #3a1c00; }
+.xtag small { font-size: 9.5px; font-weight: 700; margin-left: 1px; }
+@keyframes xpulse { 50% { box-shadow: 0 0 0 1.5px #a65300, 0 0 12px rgba(255,170,60,.85); } }
+.mymat .xnote { align-self: center; max-width: 150px; font-size: 11.5px; color: var(--muted); line-height: 1.35; }
+.mymat .xnote.on { display: grid; justify-items: center; gap: 2px; padding: 8px 10px; border-radius: 12px; background: rgba(240,138,36,.16); border: 1.5px solid #f08a24; color: #ffd9a8; text-align: center; }
+.mymat .xnote.on .ic { width: 20px; height: 20px; color: var(--grav); }
+.mymat .xnote.on b { font-size: 20px; line-height: 1; color: #ffb347; }
+.xcall { font-size: 12.5px; color: var(--muted); margin: 2px 0 10px; }
+.xcall.on { padding: 8px 12px; border-radius: 10px; background: rgba(240,138,36,.14); border: 1.5px solid #f08a24; color: #ffe2bd; }
+.xcall.on b { color: #ffb347; }
+.xcall .ic { width: 16px; height: 16px; vertical-align: -3px; color: var(--grav); }
+
+/* =========================== what a project lacks =========================== */
+.pcard.cant { position: relative; }
+.pcard.cant .costs { background: rgba(200,60,40,.12); border-radius: 6px; padding: 2px 3px; }
+.lackb { position: absolute; left: 6px; right: 6px; bottom: 6px; z-index: 2; display: flex; gap: 3px; align-items: center; justify-content: center; padding: 2px 6px; border-radius: 7px; background: rgba(150,30,20,.9); color: #fff; font-size: 10.5px; font-weight: 700; line-height: 1.25; text-align: center; pointer-events: none; }
+.lackb .ic { width: 10px; height: 10px; flex: none; }
+.pcw .pcard.cant { padding-bottom: 22px; }
+.tip .lk { margin-top: 4px; }
+.tip .lk > b { color: #c0392b; }
+.tip .lk .lkn { font-weight: 700; }
+.acard .mode.off { opacity: .6; cursor: help; }
+.opt-card.off { opacity: .62; cursor: help; filter: saturate(.7); }
+.opt-card.off .ow { font-weight: 700; color: #ff9b8a; }
+.opt-card.off .lackb { display: none; }
+
+/* =========================== ideology tracks: close together, vivid =========================== */
+.currents { display: flex; justify-content: center; align-items: flex-end; gap: 10px; padding-top: 12px; flex-wrap: wrap; }
+.currents .cur { width: 76px; gap: 5px; }
+.currents .ln-trad { --lc: #ff8c42; } .currents .ln-com { --lc: #ffd23a; } .currents .ln-ppl { --lc: #2fe0c4; } .currents .ln-arms { --lc: #ff5c5c; } .currents .ln-sci { --lc: #48a8ff; }
+.currents .cur .col { width: 40px; border-radius: 20px; background: linear-gradient(90deg, color-mix(in srgb, var(--lc) 12%, rgba(0,0,0,.55)), color-mix(in srgb, var(--lc) 22%, rgba(0,0,0,.45)), color-mix(in srgb, var(--lc) 12%, rgba(0,0,0,.55))); border: 2px solid color-mix(in srgb, var(--lc) 70%, transparent); }
+.currents .cur .col::after { left: -6px; right: -6px; top: -2px; height: 4px; }
+.currents .cur .fill { position: absolute; left: 3px; right: 3px; bottom: 3px; height: 0; border-radius: 16px; background: linear-gradient(0deg, color-mix(in srgb, var(--lc) 85%, #000 15%), var(--lc) 60%, color-mix(in srgb, var(--lc) 70%, #fff 30%)); box-shadow: 0 0 14px color-mix(in srgb, var(--lc) 55%, transparent); transition: height .5s cubic-bezier(.3,.7,.4,1); }
+.currents .cur .notch { left: 6px; right: 6px; height: 1.5px; background: rgba(255,255,255,.22); z-index: 1; }
+.currents .cur .disc { z-index: 2; width: 30px; height: 30px; margin-left: -15px; font-size: 14px; }
+.currents .cur .cn { font-size: 13px; letter-spacing: .2px; text-shadow: 0 0 8px color-mix(in srgb, var(--lc) 45%, transparent); }
+.currents .cur.hot .col { box-shadow: 0 0 0 2px var(--lc), 0 0 22px color-mix(in srgb, var(--lc) 75%, transparent); }
+.currents .cur.ruling .col { border-width: 3px; }
+@media (prefers-reduced-motion: reduce) { .xtag { animation: none; } .currents .cur .fill { transition: none; } }
+
 </style>
 </head>
 <body>
@@ -9133,8 +9189,13 @@ function projCardHtml(pr, o) {
   if (owner) {
     if (d.out === 'grav') live = '<div class="tray-c"><span class="lbl">ผลผลิตเข้าคลังเกรฟ</span></div>';
     else { let cubes = ''; for (let i = 0; i < 6; i++) cubes += `<i class="cube ${i < pr.goods ? 'c-' + d.out : 'off'}"></i>`; live = `<div class="tray-c" data-g="ค้างบนโครงการ"><span class="lbl">ค้าง ${pr.goods}/6</span>${cubes}</div>`; }
-  } else live = `<div class="costs"><span class="lbl">ต้นทุน</span>${costHtml(o.cost || d.cost)}</div>`;
-  const card = `<div class="pcard era-${d.era}${o.isNew ? ' new' : ''} o-${d.out}" ${o.attr || ''}>
+  } else {
+    const c = o.cost || d.cost, xc = o.xc || 0;
+    const base = xc ? Object.assign({}, c, { grav: Math.max(0, (c.grav || 0) - xc) }) : c;
+    live = `<div class="costs"><span class="lbl">ต้นทุน</span>${costHtml(base)}${xc ? xtagHtml(xc) : ''}</div>`;
+  }
+  const lackTip = o.lack && !o.lack.ok ? ` data-tipw="1" data-tip="${esc(lackTipHtml(o.lack, d.name))}"` : '';
+  const card = `<div class="pcard era-${d.era}${o.isNew ? ' new' : ''} o-${d.out}${o.lack && !o.lack.ok ? ' cant' : ''}" ${o.attr || ''}${lackTip}>${o.lack && !o.lack.ok ? `<span class="lackb">${ICON('x')} ${esc(lackShort(o.lack))}</span>` : ''}
     <div class="band"><span class="cn">${esc(d.name)}</span><span class="era">${eraTxt}</span></div>
     <div class="art">${cardIco(d.name, 'emb')}${inp}<span class="big">${ICON(d.out)}${d.outN}</span></div>
     <div class="body">${live}<div class="attrs"><span class="meeples" style="--pc:${owner ? owner.color : '#3a3a3a'}" data-g="แรงงาน">${meeples}</span>
@@ -9142,6 +9203,32 @@ function projCardHtml(pr, o) {
       ${d.sym.length ? `<div class="syms">${symHtml(d.sym)}</div>` : ''}${o.extra || ''}</div></div>`;
   if (o.bare) return card;
   return `<div class="pcw" style="--nb:${Math.max(d.slots, owner ? pr.buildings.length : 0)}" data-anchor="proj-${pr.uid}">${owner ? tucks(pr, o) : tucks({ d, buildings: [] }, o)}${card}</div>`;
+}
+// the expansion surcharge (ค่าขยายดินแดน) as a badge of its own, so it never hides inside the grav number
+const xtagHtml = xc => `<span class="xtag" data-tip="${esc(`<div class="tt">ค่าขยายดินแดน +${xc} เกรฟ</div><div>รัฐที่มีโครงการครบ ${G.rules.expansionFree} ใบแล้ว จ่ายเกรฟเพิ่มทุกใบที่สร้างหรือผนวก ใบละ ${G.rules.expansionStep || 1} ต่อโครงการที่เกิน</div>`)}">+${xc}${ICON('grav')}<small>ขยาย</small></span>`;
+// what is missing before P can pay a project cost, read the way the engine pays it (บริษัทร่วมทุน pays missing goods
+// at 3 grav each, เงินกู้จำนองสัมปทาน lends up to 5)
+function lackOf(P, cost) {
+  const goods = GOODS.map(t => [t, Math.max(0, (cost[t] || 0) - K.goodsOf(P, t))]).filter(x => x[1] > 0);
+  const sub = goods.reduce((s, x) => s + x[1], 0);
+  const joint = K.has(P, 'บริษัทร่วมทุน'), loan = K.has(P, 'เงินกู้จำนองสัมปทาน') ? 5 : 0;
+  const gravNeed = (cost.grav || 0) + (joint ? 3 * sub : 0);
+  const gravLack = Math.max(0, gravNeed - P.grav - loan);
+  return { goods, sub, joint, loan, gravNeed, gravLack, have: P.grav, ok: (!sub || joint) && !gravLack };
+}
+const lackShort = L => 'ขาด ' + (L.joint ? [] : L.goods.map(([t, n]) => `${RN[t]} ${n}`)).concat(L.gravLack ? [`เกรฟ ${L.gravLack}`] : []).join(' · ');
+function lackTipHtml(L, name) {
+  let h = `<div class="tt">${ICON('x')} ยังสร้าง${name ? esc(name) : 'โครงการนี้'}ไม่ได้</div>`;
+  if (L.goods.length) h += `<div class="lk">ขาดสินค้า ${L.goods.map(([t, n]) => rb(t, n)).join(' ')}${L.joint ? '<div class="tiny">บริษัทร่วมทุนจ่ายแทนได้หน่วยละ 3 เกรฟ (รวมในเกรฟที่ต้องใช้แล้ว)</div>' : ''}</div>`;
+  if (L.gravLack) h += `<div class="lk">เกรฟต้องใช้ ${L.gravNeed} มี ${L.have}${L.loan ? ` กู้ได้อีก ${L.loan}` : ''} <b>ขาด ${L.gravLack}</b></div>`;
+  return h;
+}
+// my view of a project in the market: the price I would pay now, its surcharge, and what I lack
+function myProjView(P, pr) {
+  if (!P) return {};
+  const o = K.marketOptions(G, P).find(x => x.value === pr.uid);
+  if (!o) return {};
+  return { cost: o.cost, xc: K.expansionCost(G, P), lack: lackOf(P, o.cost) };
 }
 function researchCardHtml(card, o) {
   o = o || {};
@@ -9321,7 +9408,8 @@ function renderBoard() {
       ${pile(G.bonusDeck.length, 'โบนัส', 'กองโบนัส ทิ้งแล้ว ' + G.bonusDiscard.length + ' ใบ', 'deck-bonus', 'bon')}</div>
     <div class="tokens"><span class="xtok" data-anchor="central" data-tip="${esc(`<div class="tt">ตลาดกลาง ยุค ${e.id}</div><div>ขายให้รัฐ ${e.buy} เกรฟต่อหน่วย · รับซื้อ ${e.sell}</div><div>เกณฑ์การค้ามูลค่าสูง ${e.hv}</div>`)}">${ICON('trade')}<b>${e.buy}</b>/<b>${e.sell}</b></span>
       <span class="xtok cloakt" data-anchor="cloak" data-tip="${esc(cloakTip)}">${ICON('cloak')}</span></div>`);
-  const mk = G.market.map(pr => projCardHtml(pr, { isNew: isNew(pr.uid) })).join('');
+  const me = meP();
+  const mk = G.market.map(pr => projCardHtml(pr, Object.assign({ isNew: isNew(pr.uid) }, myProjView(me, pr)))).join('');
   setHTML('b-market', `<div class="b-label"><span data-g="ตลาดโครงการ">ตลาดโครงการ ยุค ${e.id}</span></div><div class="market" data-anchor="market">${mk || '<span class="muted small">ตลาดว่าง</span>'}</div>`);
 }
 function placeRoundMarker() {
@@ -9338,7 +9426,7 @@ function renderCurrents() {
     box.dataset.tip = G.tip; box._h = null;
     box.innerHTML = `<div class="b-label"><span data-g="กระแสอุดมการณ์">กระแสอุดมการณ์</span><b data-g="จุดเปลี่ยน">ถึง ${G.tip} พลิกตอนสภา</b></div><div class="currents" data-anchor="currents">${LINES.map(l => {
       let n = ''; for (let i = 1; i < G.tip; i++) n += `<span class="notch" style="bottom:${13 + i * 17}px"></span>`;
-      return `<div class="cur ln-${l}" data-l="${l}" style="--tip:${G.tip}" data-anchor="cur-${l}"><div class="col">${n}<span class="disc"></span></div><span class="cn">${LN[l]}</span><span class="creg"></span></div>`;
+      return `<div class="cur ln-${l}" data-l="${l}" style="--tip:${G.tip}" data-anchor="cur-${l}"><div class="col"><span class="fill"></span>${n}<span class="disc"></span></div><span class="cn">${LN[l]}</span><span class="creg"></span></div>`;
     }).join('')}</div>`;
   }
   for (const l of LINES) {
@@ -9346,6 +9434,7 @@ function renderCurrents() {
     const ruling = !!(r && r.name === G.regime);
     el.classList.toggle('ruling', ruling); el.classList.toggle('hot', !ruling && v >= G.tip - 1);
     const disc = el.querySelector('.disc'); disc.style.bottom = (v * 17) + 'px'; disc.textContent = v;
+    el.querySelector('.fill').style.height = (v ? v * 17 + 13 : 0) + 'px';
     el.querySelector('.creg').textContent = r ? (ruling ? 'ครองอยู่' : r.name) : '';
     el.dataset.tip = r ? `<div class="tt">${esc(LN[l])} ${v}/${G.tip}</div><div>${ruling ? 'ระบอบของสายนี้ครองอยู่' : 'ถ้าพลิกจะเป็น ' + esc(r.name)}</div><div>มาตรวัด: ${esc(r.metric)}</div><div>นโยบาย: ${gloss(r.policy)}</div>` : '';
   }
@@ -9434,7 +9523,7 @@ function resLine(P) {
   return `<div class="sres"><span class="coin" data-fx="grav-${P.id}" data-anchor="grav-${P.id}" data-g="เกรฟ">${ICON('grav')}${P.grav}</span>
     <span class="stat" data-fx="goods-${P.id}" data-g="สินค้า">${GOODS.map(t => rb(t, K.goodsOf(P, t))).join(' ')}</span>
     ${whHtml(P)}
-    <span class="stat" data-anchor="workers-${P.id}" data-tip="${esc(`<div class="tt">แรงงาน</div><div>ทำงาน ${K.assignedWorkers(P)} จาก ${K.totalWorkers(P)} คน${nextCost != null ? ` · คนถัดไปจ่ายอาหาร ${nextCost}` : ''}</div>`)}">${ICON('worker')}<b>${K.assignedWorkers(P)}/${K.totalWorkers(P)}</b></span>
+    <span class="stat wstat" data-anchor="workers-${P.id}" data-tip="${esc(`<div class="tt">แรงงาน</div><div>ทำงาน ${K.assignedWorkers(P)} จาก ${K.totalWorkers(P)} คน${nextCost != null ? ` · คนถัดไปจ่ายอาหาร ${nextCost}` : ''}</div>`)}">${ICON('worker')}<b>${K.assignedWorkers(P)}/${K.totalWorkers(P)}</b></span>
     ${handPips(P)}${modsHtml(P)}</div>`;
 }
 function rivalSeat(P) {
@@ -9458,7 +9547,7 @@ function renderMine() {
   setHTML(box, `<div class="mat me${isActive(P) ? ' active' : ''}" style="--pc:${P.color}" data-anchor="seat-${P.id}">
     <div class="mtop">${seatHead(P, true)}${resLine(P)}<span class="stat" data-g="ความจุการซื้อ">${ICON('wagon')}<b>${K.capacity(G, P, true)}</b></span></div>
     <div class="mbody"><div class="projrow">${P.projects.map(pr => projCardHtml(pr, { P, isNew: isNew(pr.uid), ready })).join('')}
-      <div class="xnote tiny muted" data-g="ค่าขยายดินแดน">${xc > 0 ? `ใบถัดไป +${xc} เกรฟ` : G.rules.expansionFree != null ? `ค่าขยายดินแดนเริ่มใบที่ ${G.rules.expansionFree + 1}` : ''}</div></div>
+      ${G.rules.expansionFree != null ? `<div class="xnote${xc > 0 ? ' on' : ''}" data-g="ค่าขยายดินแดน">${xc > 0 ? `${ICON('grav')}<b>+${xc}</b><span>ค่าขยายดินแดน โครงการใบถัดไป</span>` : `<span>ค่าขยายดินแดนเริ่มที่โครงการใบที่ ${G.rules.expansionFree + 1} (มี ${P.projects.length})</span>`}</div>` : ''}</div>
       <div class="mside"><div class="b-label"><span data-g="การ์ดวิจัย">การ์ดวิจัย</span></div><div class="rrow2" data-anchor="research-${P.id}">${researchRow(P)}</div>
         <div class="b-label"><span data-g="กองทัพ">กองทัพ</span><button class="btn xs" id="m-army">ดูทั้งกอง</button></div>${armyPiles(P, true)}</div></div></div>`);
   const ab = box.querySelector('#m-army'); if (ab) ab.onclick = () => showArmy(P);
@@ -9585,8 +9674,13 @@ function renderHand() {
   const cards = ['trade', 'military', 'research', 'diplomacy'].map((card, ci) => {
     const inHand = P.hand.includes(card);
     const pls = o.plays.filter(p => p.card === card);
-    const modes = pls.map(p => `<button class="mode" data-card="${card}" data-mode="${p.mode}" ${p.ok ? '' : 'disabled'}>
-        <span class="mi">${ICON(MODE_ICON[p.mode])}</span><span class="mt"><b data-g="${esc(K.MODE_NAME[p.mode])}">${esc(K.MODE_NAME[p.mode])}</b><small>${p.ok ? esc(ACT_TEXT[p.mode]) : esc(p.why || 'ทำไม่ได้ตอนนี้')}</small></span></button>`).join('');
+    // a mode that cannot be played stays a plain block, so pointing at it explains why (for building: what is missing)
+    const modes = pls.map(p => {
+      const inner = `<span class="mi">${ICON(MODE_ICON[p.mode])}</span><span class="mt"><b data-g="${esc(K.MODE_NAME[p.mode])}">${esc(K.MODE_NAME[p.mode])}</b><small>${p.ok ? esc(ACT_TEXT[p.mode]) : esc(p.why || 'ทำไม่ได้ตอนนี้')}</small></span>`;
+      if (p.ok) return `<button class="mode" data-card="${card}" data-mode="${p.mode}">${inner}</button>`;
+      const tip = p.mode === 'build' ? buildLackTip(P) : `<div class="tt">${esc(K.MODE_NAME[p.mode])}</div><div>${esc(p.why || 'ทำไม่ได้ตอนนี้')}</div>`;
+      return `<div class="mode off" aria-disabled="true" data-tipw="1" data-tip="${esc(tip)}">${inner}</div>`;
+    }).join('');
     const state = card === 'diplomacy' && P.diploPlayed ? 'ค้างบนโต๊ะจนสภาประชุม' : 'เล่นแล้ว รอการทูตคืนขึ้นมือ';
     return `<div class="acard a-${card}${inHand ? '' : ' used'}" style="--k:${ci}"><div class="aart">${ICON(CARD_ICON[card])}</div><div class="an">${K.CARD_NAME[card]}</div>
       ${inHand ? `<div class="modes">${modes}</div>` : `<div class="astate">${state}</div>`}</div>`;
@@ -9617,6 +9711,15 @@ function renderHand() {
   if (fxOn()) sfx('card');
 }
 
+// why nothing in the market can be built: each project and what it lacks
+function buildLackTip(P) {
+  const mo = K.marketOptions(G, P);
+  if (!mo.length) return '<div class="tt">สร้างโครงการ</div><div>ตลาดโครงการว่าง</div>';
+  return `<div class="tt">${ICON('x')} ยังสร้างโครงการไหนไม่ได้</div>` + mo.map(o => {
+    const L = lackOf(P, o.cost);
+    return `<div class="lk"><span class="lkn">${esc(o.proj.d.name)}</span> ${L.ok ? 'จ่ายไหว' : `ขาด ${L.joint ? '' : L.goods.map(([t, n]) => rb(t, n)).join(' ')}${L.gravLack ? ` ${rb('grav', L.gravLack)}` : ''}`}${L.gravLack && K.expansionCost(G, P) ? ` <span class="tiny">(เกรฟรวมค่าขยายดินแดน +${K.expansionCost(G, P)} แล้ว)</span>` : ''}</div>`;
+  }).join('') + `<div class="tiny" style="margin-top:4px">มีอยู่ ${GOODS.map(t => rb(t, K.goodsOf(P, t))).join(' ')} ${rb('grav', P.grav)}</div>`;
+}
 // ---------- popup for card choices ----------
 function oddsHtml(p) { const c = p >= 60 ? 'good' : p >= 40 ? 'warnc' : 'bad'; return `<div class="odds ${c}">โอกาสชนะ <b>${p}%</b></div>`; }
 const oddsCache = {};
@@ -9633,7 +9736,7 @@ function commandOdds(P, o) {
 }
 function optionInner(P, req, o, i) {
   const k = req.kind;
-  if ((k === 'build' || k === 'exploreChoose') && o.proj) return projCardHtml(o.proj, { cost: o.cost, bare: true }) + (k === 'exploreChoose' ? `<div class="os">${esc(o.sub || '')}</div>` : '');
+  if ((k === 'build' || k === 'exploreChoose') && o.proj) return projCardHtml(o.proj, { cost: o.cost, xc: o.cost ? K.expansionCost(G, P) : 0, bare: true }) + (k === 'exploreChoose' ? `<div class="os">${esc(o.sub || '')}</div>` : '');
   if ((k === 'researchPick') && o.card) return researchCardHtml(o.card, { cost: o.cost || o.card.d.cost });
   if ((k === 'milPick' || k === 'milRemove' || k === 'scout') && o.card) return milCardHtml(o.card) + (k === 'milRemove' && o.sub ? `<div class="os">${esc(o.sub.split(' · ').pop())}</div>` : '');
   if (k === 'attach' && o.pr) return projCardHtml(o.pr, { P, bare: true }) + `<div class="os">${esc(o.label)}</div>`;
@@ -9656,8 +9759,8 @@ function optionInner(P, req, o, i) {
 }
 function contextHtml(P, req) {
   switch (req.kind) {
-    case 'annex': return `<div class="ctx">${projCardHtml(req.proj, { cost: req.cost, bare: true })}<div class="small">${expansionNote(P)}<p>ผนวกแล้วการ์ดนี้เป็นโครงการของคุณ ไม่ผนวก การ์ดกลับไปใต้กองโครงการ</p></div></div>`;
-    case 'build': return `<div class="small muted ctxline">${expansionNote(P)}</div>`;
+    case 'annex': return `<div class="ctx">${projCardHtml(req.proj, { cost: req.cost, xc: K.expansionCost(G, P), bare: true })}<div class="small">${expansionNote(P)}<p>ผนวกแล้วการ์ดนี้เป็นโครงการของคุณ ไม่ผนวก การ์ดกลับไปใต้กองโครงการ</p></div></div>`;
+    case 'build': return `<div class="xcall${K.expansionCost(G, P) > 0 ? ' on' : ''}">${expansionNote(P)}</div>`;
     case 'spyglass': return `<div class="small">การ์ด 2 ใบบนสุดของ${esc(req.S.name)}: <b>${esc(req.text)}</b></div>`;
     case 'labResearch': return `<div class="ctx">${researchCardHtml(req.card, { cost: req.cost })}</div>`;
     case 'scoutDeck': case 'scout': return liveHtml(req.live);
@@ -9671,7 +9774,7 @@ function contextHtml(P, req) {
 function expansionNote(P) {
   if (G.rules.expansionFree == null) return '';
   const x = K.expansionCost(G, P), nth = P.projects.length + 1;
-  return x > 0 ? `โครงการใบที่ ${nth} ราคารวมค่าขยายดินแดน ${x} เกรฟแล้ว` : `ค่าขยายดินแดนเริ่มที่โครงการใบที่ ${G.rules.expansionFree + 1} ตอนนี้มี ${P.projects.length} ใบ`;
+  return x > 0 ? `${ICON('grav')} <b>ค่าขยายดินแดน +${x} เกรฟ</b> ทุกใบในหน้านี้ เพราะนี่จะเป็นโครงการใบที่ ${nth} (สร้างได้ ${G.rules.expansionFree} ใบโดยไม่เสียค่าขยาย) ราคาบนการ์ดรวมไว้แล้วในป้าย +${x}` : `ค่าขยายดินแดนเริ่มที่โครงการใบที่ ${G.rules.expansionFree + 1} ตอนนี้มี ${P.projects.length} ใบ`;
 }
 function liveHtml(live) {
   if (!live) return '';
@@ -9682,7 +9785,13 @@ function openChoice(P, req) {
   const opts = req.options || [];
   const yesNo = opts.length <= 2 && opts.every(o => typeof o.value === 'boolean');
   const grid = yesNo ? `<div class="row center">${opts.map((o, i) => `<button class="btn ${o.value ? 'primary' : ''}" data-i="${i}" ${o.disabled ? 'disabled' : ''}>${esc(o.label)}</button>`).join('')}</div>`
-    : `<div class="ch-grid k-${req.kind}">${opts.map((o, i) => `<button class="opt-card" data-i="${i}" ${o.disabled ? 'disabled' : ''}>${optionInner(P, req, o, i)}${o.disabled && o.why ? `<div class="ow">${esc(o.why)}</div>` : ''}</button>`).join('')}</div>`;
+    : `<div class="ch-grid k-${req.kind}">${opts.map((o, i) => {
+      // a card that cannot be taken stays a plain block, so pointing at it still shows why
+      if (!o.disabled) return `<button class="opt-card" data-i="${i}">${optionInner(P, req, o, i)}</button>`;
+      const L = (req.kind === 'build' || req.kind === 'exploreChoose') && o.cost ? lackOf(P, o.cost) : null;
+      const tip = L && !L.ok ? ` data-tipw="1" data-tip="${esc(lackTipHtml(L, o.proj && o.proj.d.name))}"` : '';
+      return `<div class="opt-card off" aria-disabled="true"${tip}>${optionInner(P, req, o, i)}${L && !L.ok ? `<div class="ow">${esc(lackShort(L))}</div>` : o.why ? `<div class="ow">${esc(o.why)}</div>` : ''}</div>`;
+    }).join('')}</div>`;
   const box = openModal(`<div class="choice">
     <div class="ch-head"><h2>${esc(req.title || '')}</h2><button class="btn sm ghost" id="c-peek">${ICON('eye')} ดูโต๊ะ</button></div>
     ${contextHtml(P, req)}${grid}

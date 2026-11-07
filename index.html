@@ -795,12 +795,61 @@ body { line-height: 1.55; }
 .swatch.on { border-color: #fff; box-shadow: 0 0 0 2px var(--brass); }
 .idbox { padding: 8px 10px; border-radius: 10px; background: rgba(0,0,0,.25); }
 .idbox code { color: var(--brass-hi); margin: 0 4px; }
-.fe { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; }
-.fe-canvas canvas { width: 360px; height: 240px; border-radius: 8px; box-shadow: 0 0 0 3px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.5); touch-action: none; cursor: crosshair; background: #fff; }
-.fe-tools { display: grid; gap: 10px; }
-.fe-row { display: flex; gap: 6px; flex-wrap: wrap; }
-.fe-pal { display: grid; grid-template-columns: repeat(8, 26px); gap: 6px; }
-@media (max-width: 700px) { .fe { grid-template-columns: 1fr; } .fe-canvas canvas { width: 100%; height: auto; } }
+/* flag editor: canvas and layouts on the left, brush tools or the shape library on the right */
+.mbox.fe-box { width: min(1180px, 100%); }
+.fe2 { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 18px; align-items: start; }
+.fe-left { display: grid; gap: 8px; min-width: 0; }
+.fe-left h3 { margin: 6px 0 0; }
+.fe-stage { position: relative; width: 100%; max-width: 600px; aspect-ratio: 3 / 2; border-radius: 8px; box-shadow: 0 0 0 3px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.5); background: #fff; overflow: hidden; }
+.fe-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
+#fe-view { cursor: crosshair; }
+#fe-view[data-tool="fill"] { cursor: cell; }
+#fe-view[data-tool="pick"] { cursor: copy; }
+#fe-over { pointer-events: none; }
+.fe-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.fe-act .grow { min-width: 0; }
+.fe-pats { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; }
+.fe-pat { display: grid; justify-items: center; gap: 3px; padding: 5px 4px 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.22); color: var(--text); font-size: 11px; line-height: 1.2; cursor: pointer; }
+.fe-pat canvas { width: 48px; height: 32px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,.45); }
+.fe-pat:hover { border-color: rgba(255,255,255,.35); }
+.fe-pat.on { border-color: var(--brass-hi); box-shadow: 0 0 0 2px var(--brass); background: rgba(227,179,60,.12); }
+.fe-slots { gap: 8px; }
+.fe-slot, .fe-custom { position: relative; display: inline-block; width: 28px; height: 28px; border-radius: 7px; background: var(--sw); border: 2px solid rgba(255,255,255,.45); cursor: pointer; overflow: hidden; }
+.fe-slot.off { display: none; }
+.fe-slot input, .fe-custom input { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); opacity: 0; cursor: pointer; border: 0; padding: 0; }
+.fe-custom { border-radius: 50%; width: 24px; height: 24px; background: conic-gradient(#e0605f, #e3b33c, #5fc28a, #4fb3e8, #7b3fa0, #e0605f); }
+.fe-right { min-width: 0; }
+.fe-tools2 { display: grid; gap: 10px; }
+.fe-ctl { display: grid; grid-template-columns: 62px 1fr 56px; gap: 8px; align-items: center; font-size: 13px; }
+.fe-ctl input[type="range"] { width: 100%; accent-color: var(--brass); }
+.fe-ctl input[type="number"] { width: 56px; padding: 3px 4px; }
+.fe-val { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted, #b9b19c); }
+.fe-shape { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 8px; border-radius: 10px; background: rgba(0,0,0,.22); }
+#fe-cur { display: flex; gap: 10px; align-items: center; min-width: 0; }
+#fe-cur span { display: grid; min-width: 0; }
+#fe-cur b { font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-transform: capitalize; }
+#fe-cur small { font-size: 11px; opacity: .7; }
+#fe-cur svg.big { width: 40px; height: 40px; flex: none; fill: #f4efe2; background: rgba(255,255,255,.06); border-radius: 8px; padding: 3px; }
+.fe-basic, .fe-recent { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+.fe-sh, .fe-ic { width: 36px; height: 36px; padding: 4px; border-radius: 7px; border: 1px solid rgba(255,255,255,.14); background: #efe6cf; cursor: pointer; }
+.fe-sh svg, .fe-ic svg { width: 100%; height: 100%; fill: #241f18; display: block; }
+.fe-sh:hover, .fe-ic:hover { background: #fff7e2; }
+.fe-sh.on, .fe-ic.on { box-shadow: 0 0 0 2px var(--brass-hi); background: #ffe9a8; }
+.fe-pal { display: grid; grid-template-columns: repeat(9, 26px); gap: 6px; }
+.fe-lib { display: grid; gap: 8px; }
+.fe-lib #fe-q { flex: 1; min-width: 0; }
+.fe-libhead { display: flex; gap: 8px; align-items: center; }
+.fe-libhead b { font-size: 14px; color: var(--brass-hi); }
+.fe-cats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; max-height: min(56vh, 520px); overflow: auto; padding-right: 2px; }
+.fe-cat { display: flex; gap: 8px; align-items: center; padding: 6px 8px; border-radius: 9px; border: 1px solid rgba(255,255,255,.12); background: rgba(0,0,0,.22); color: var(--text); text-align: left; cursor: pointer; min-width: 0; }
+.fe-cat:hover { border-color: var(--brass-hi); background: rgba(227,179,60,.1); }
+.fe-cat svg { width: 34px; height: 34px; flex: none; fill: #241f18; background: #efe6cf; border-radius: 7px; padding: 4px; }
+.fe-cat span { display: grid; min-width: 0; }
+.fe-cat b { font-size: 12.5px; font-weight: 600; line-height: 1.25; }
+.fe-cat small { font-size: 11px; color: var(--muted); }
+.fe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 4px; max-height: min(52vh, 460px); overflow: auto; padding-right: 2px; align-content: start; }
+.fe-grid .fe-ic { width: 100%; height: auto; aspect-ratio: 1; }
+@media (max-width: 860px) { .fe2 { grid-template-columns: 1fr; } .fe-stage { max-width: none; } .fe-pal { grid-template-columns: repeat(9, 1fr); } }
 /* dice roll */
 .diceroll { text-align: center; }
 .dr-seats { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin: 16px 0 8px; }
@@ -908,6 +957,24 @@ body { line-height: 1.55; }
 @media (max-width: 900px) { .seats { grid-template-columns: 1fr; } .b-mid { grid-template-columns: 1fr; } .hcards { grid-template-columns: repeat(2, 1fr); } .ccols { grid-template-columns: 1fr; } }
 .ccols .frow .ic, .summary .ic, .hr-cards .ic { color: var(--grav); }
 .hr-cards span:nth-child(1) .ic { color: #b9a6ff; } .hr-cards span:nth-child(2) .ic { color: #ff9c8c; } .hr-cards span:nth-child(3) .ic { color: #9fd0ff; }
+
+/* leader title and personality words */
+.welcome #w-title { max-width: 230px; }
+.welcome #w-title-own { width: 150px; }
+.w-traits { display: inline-flex; gap: 5px; flex-wrap: wrap; }
+.trait { display: inline-block; padding: 2px 9px; border-radius: 999px; background: rgba(227,179,60,.16); border: 1px solid rgba(227,179,60,.45); color: var(--brass-hi); font-size: 12.5px; }
+.ptraits { display: block; font-size: 11px; color: var(--brass-hi); opacity: .85; }
+.mbox.traitbox { width: min(780px, 100%); }
+.tp-picked { display: flex; align-items: center; gap: 8px; margin: 6px 0 4px; font-size: 15px; flex-wrap: wrap; }
+.tp-picked i { opacity: .5; font-style: normal; }
+.tp-slot { min-width: 96px; text-align: center; padding: 6px 12px; border-radius: 10px; border: 1px dashed rgba(255,255,255,.25); color: var(--muted); }
+.tp-slot.on { border-style: solid; border-color: var(--brass); color: var(--brass-hi); background: rgba(227,179,60,.12); font-weight: 600; }
+.tp-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.tp { position: relative; padding: 4px 11px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: rgba(0,0,0,.22); color: var(--text); font-size: 13px; cursor: pointer; }
+.tp:hover:not(:disabled) { border-color: var(--brass-hi); }
+.tp.on { background: var(--brass); color: #1b1408; border-color: var(--brass-hi); font-weight: 600; }
+.tp.on::after { content: attr(data-n); position: absolute; top: -7px; right: -6px; width: 16px; height: 16px; border-radius: 50%; background: #1b1408; color: var(--brass-hi); font-size: 10px; line-height: 16px; text-align: center; }
+.tp:disabled { opacity: .35; cursor: not-allowed; }
 
 </style>
 </head>
@@ -6757,10 +6824,10 @@ function flagHtml(meta, cls) {
 const pFlag = (P, cls) => P ? flagHtml(seatOf(P) || { color: P.color, flag: { seed: P.id + 7 } }, cls) : flagHtml(null, cls);
 function styleName(P) {
   const s = seatOf(P);
-  if (P.human) return s && s.leader ? s.leader : 'ผู้เล่น';
+  if (P.human) return s && s.leader ? fullLeader(s) : 'ผู้เล่น';
   return 'AI ' + AI.describe(P);
 }
-function leaderOf(P) { const s = seatOf(P); return s && s.leader ? s.leader : (P.human ? 'ผู้เล่น' : 'AI'); }
+function leaderOf(P) { const s = seatOf(P); return s && s.leader ? fullLeader(s) : (P.human ? 'ผู้เล่น' : 'AI'); }
 
 // ---------- sound: tiny synthesized cues, no audio files ----------
 let actx = null;
@@ -7332,16 +7399,75 @@ const shortId = id => String(id || '').slice(0, 4).toUpperCase() + '-' + String(
 // the state name this profile plays under: the saved one, or a fresh Althalani name every game
 function profileStateName(rand) { return profile.state && profile.state.th ? profile.state : althName(rand); }
 
+// ---------- leader titles (139, grouped) and personality words (100, pick three) ----------
+const LEADER_TITLES = [
+  ['ผู้นำรัฐและการเมือง', ['ท่าน', 'ท่านผู้นำ', 'ท่านผู้นำสูงสุด', 'ผู้นำสูงสุด', 'ประธานาธิบดี', 'ท่านประธาน', 'ประธานสภา', 'ประธานสหพันธ์', 'นายกรัฐมนตรี', 'อัครมหาเสนาบดี', 'เสนาบดี',
+    'รัฐบุรุษ', 'กงสุล', 'กงสุลใหญ่', 'ผู้ว่าการรัฐ', 'ข้าหลวงใหญ่', 'ผู้พิทักษ์แห่งรัฐ', 'ผู้สำเร็จราชการ', 'ทริบูน', 'ด็อจ', 'วุฒิสมาชิก', 'นายกเทศมนตรี', 'ฯพณฯ', 'ท่านผู้ทรงเกียรติ']],
+  ['ราชวงศ์และขุนนาง', ['ราชา', 'ราชินี', 'มหาราชา', 'จักรพรรดิ', 'จักรพรรดินี', 'เจ้าชาย', 'เจ้าหญิง', 'อาร์ชดยุก', 'แกรนด์ดยุก', 'ดยุก', 'ดัชเชส', 'มาร์ควิส', 'เคานต์', 'เคาน์เตส',
+    'ไวเคานต์', 'บารอน', 'บารอเนส', 'ลอร์ด', 'เลดี้', 'เซอร์', 'สุลต่าน', 'เอมีร์', 'ชาห์', 'ข่าน', 'ซาร์', 'ไกเซอร์', 'ฟาโรห์', 'โชกุน', 'เจ้าครองนคร', 'เจ้าผู้ครองแคว้น']],
+  ['ทหารและการศึก', ['จอมพล', 'จอมทัพ', 'แม่ทัพ', 'แม่ทัพใหญ่', 'ขุนพล', 'ขุนศึก', 'นายพล', 'พลเอก', 'พลเรือเอก', 'ผู้บัญชาการ', 'ผู้บัญชาการสูงสุด', 'พันเอก', 'กัปตัน', 'อัศวินผู้ยิ่งใหญ่', 'ผู้พิชิต']],
+  ['ศาสนาและจิตวิญญาณ', ['ผู้นำจิตวิญญาณ', 'บิชอป', 'อาร์ชบิชอป', 'คาร์ดินัล', 'มหาปุโรหิต', 'ปุโรหิต', 'นักบวชสูงสุด', 'เจ้าอาวาส', 'อธิการ', 'แม่อธิการ', 'ผู้ทำนาย', 'ผู้พิทักษ์ศรัทธา',
+    'นักพรต', 'ฤๅษี', 'หมอผี', 'ดรูอิดสูงสุด']],
+  ['ธุรกิจและการบริหาร', ['ผู้อำนวยการสูงสุด', 'ผู้อำนวยการ', 'ผู้บริหารสูงสุด', 'ประธานกรรมการ', 'ประธานบริหาร', 'ซีอีโอ', 'ผู้จัดการใหญ่', 'ผู้ตรวจการใหญ่', 'เจ้าสัว', 'นายห้าง', 'เศรษฐี',
+    'มหาเศรษฐี', 'พ่อค้าใหญ่', 'นายกสมาคม', 'หัวหน้ากิลด์']],
+  ['ปราชญ์และช่าง', ['ศาสตราจารย์', 'อธิการบดี', 'ปราชญ์', 'มหาปราชญ์', 'ด็อกเตอร์', 'นักปรัชญา', 'บรรณารักษ์ใหญ่', 'นายช่างใหญ่', 'หัวหน้าวิศวกร', 'จอมเวท', 'นักประดิษฐ์']],
+  ['การปฏิวัติและประชาชน', ['สหาย', 'สหายผู้นำ', 'สหายประธาน', 'ผู้นำการปฏิวัติ', 'ผู้ปลดปล่อย', 'ผู้กอบกู้', 'บิดาแห่งรัฐ', 'มารดาแห่งรัฐ', 'ผู้พิทักษ์ประชาชน', 'ผู้แทนประชาชน',
+    'เลขาธิการใหญ่', 'เลขาธิการพรรค']],
+  ['ชนเผ่าและท้องถิ่น', ['หัวหน้าเผ่า', 'ผู้นำเผ่า', 'ผู้อาวุโส', 'ผู้เฒ่า', 'ประมุขตระกูล', 'หัวหน้าตระกูล', 'เจ้าเมือง', 'ผู้ใหญ่บ้าน', 'กำนัน', 'เจ้าพ่อ', 'เจ้าแม่']],
+  ['ทะเลและฟ้า', ['กัปตันเรือเหาะ', 'นายกองเรือเหาะ', 'ผู้บัญชาการกองเรือ', 'นายเรือใหญ่', 'เจ้าท่า']],
+];
+const ALL_TITLES = LEADER_TITLES.flatMap(g => g[1]);
+const LEADER_TRAITS = [
+  ['อารมณ์และนิสัย', ['ใจเย็น', 'หัวร้อน', 'ใจร้อน', 'สุขุม', 'เยือกเย็น', 'ฉุนเฉียว', 'ร่าเริง', 'เคร่งขรึม', 'อารมณ์ขัน', 'จริงจัง', 'ขี้เล่น', 'เจ้าอารมณ์', 'อ่อนโยน', 'แข็งกร้าว',
+    'อดทน', 'หุนหันพลันแล่น', 'ช่างฝัน', 'ช่างสงสัย', 'มองโลกในแง่ดี', 'มองโลกในแง่ร้าย']],
+  ['วิธีคิด', ['ฉลาดหลักแหลม', 'ไหวพริบดี', 'รอบคอบ', 'ช่างวางแผน', 'มีวิสัยทัศน์', 'ปฏิบัตินิยม', 'ใฝ่รู้', 'หัวโบราณ', 'หัวก้าวหน้า', 'ยืดหยุ่น', 'ดื้อรั้น', 'เด็ดขาด', 'ลังเล',
+    'สร้างสรรค์', 'ช่างวิเคราะห์', 'มีหลักการ', 'ฉวยโอกาส', 'เจ้าแผนการ', 'ลึกลับ', 'ความจำดี']],
+  ['อำนาจและความกล้า', ['ทะเยอทะยาน', 'กระหายอำนาจ', 'หยิ่งผยอง', 'ทะนงตน', 'ถ่อมตน', 'มั่นใจ', 'หลงตัวเอง', 'มีบารมี', 'น่าเกรงขาม', 'โหดเหี้ยม', 'เผด็จการ', 'เด็ดเดี่ยว', 'ใจถึง',
+    'บ้าบิ่น', 'กล้าหาญ', 'ระมัดระวัง', 'ชอบเสี่ยง', 'ชอบสงคราม', 'รักสงบ', 'ไม่ยอมแพ้']],
+  ['การเข้าสังคม', ['มีเสน่ห์', 'ช่างพูด', 'ปากหวาน', 'ปากร้าย', 'ตรงไปตรงมา', 'พูดอ้อมค้อม', 'เข้าสังคมเก่ง', 'เก็บตัว', 'เป็นกันเอง', 'เย็นชา', 'อบอุ่น', 'นักการทูต', 'ช่างต่อรอง',
+    'ขี้ระแวง', 'เชื่อคนง่าย', 'ใจกว้าง', 'ขี้อิจฉา', 'เจ้าคิดเจ้าแค้น', 'ให้อภัยง่าย', 'ชอบโอ้อวด']],
+  ['คุณธรรมและวิถีชีวิต', ['ซื่อสัตย์', 'เจ้าเล่ห์', 'ยุติธรรม', 'ลำเอียง', 'มีเมตตา', 'ไร้ปรานี', 'เสียสละ', 'เห็นแก่ตัว', 'ภักดี', 'กตัญญู', 'โลภ', 'มัธยัสถ์', 'ฟุ่มเฟือย', 'สมถะ',
+    'เจ้าสำราญ', 'เคร่งศาสนา', 'รักชาติ', 'ขยัน', 'ขี้เกียจ', 'มีวินัย']],
+];
+const ALL_TRAITS = LEADER_TRAITS.flatMap(g => g[1]);
+// title + name for any profile, seat, record or comment ('ท่านประธาน อาลิซ'); older records have no title
+function fullLeader(p) {
+  if (!p) return '';
+  const t = typeof p.title === 'string' ? p.title.trim() : '', n = String(p.leader || '').trim();
+  return t && n ? t + ' ' + n : (n || t);
+}
+function traitLine(p) { return p && Array.isArray(p.traits) ? p.traits.filter(x => typeof x === 'string' && x).slice(0, 3).join(' · ') : ''; }
+function pickTraits(rand) {
+  const pool = ALL_TRAITS.slice(), out = [], rr = rand || Math.random;
+  while (out.length < 3) out.push(pool.splice(Math.floor(rr() * pool.length), 1)[0]);
+  return out;
+}
+const validTraits = a => Array.isArray(a) && a.length === 3 && new Set(a).size === 3 && a.every(x => ALL_TRAITS.includes(x));
+// AI leaders take a title from the group that matches how they play
+const AI_TITLE_GROUP = { warlord: 'ทหารและการศึก', merchant: 'ธุรกิจและการบริหาร', scholar: 'ปราชญ์และช่าง', builder: 'ผู้นำรัฐและการเมือง', balanced: 'ราชวงศ์และขุนนาง' };
+function aiTitle(style, rand) {
+  const g = (LEADER_TITLES.find(x => x[0] === AI_TITLE_GROUP[style]) || LEADER_TITLES[0])[1];
+  return g[Math.floor((rand || Math.random)() * g.length)];
+}
+// the fields a seat carries about its leader
+const seatLeader = p => ({ leader: String(p.leader || 'ผู้เล่น').slice(0, 24), title: String(p.title || '').slice(0, 32), traits: Array.isArray(p.traits) ? p.traits.slice(0, 3) : [] });
+
 function showWelcome(next, editing) {
   ensureProfile();
   const st = profile.state ? Object.assign({}, profile.state) : null;
-  const draft = { leader: profile.leader || '', state: st, flag: Object.assign({}, profile.flag), color: profile.color || COLORS[0], randomName: !st };
+  // a brand-new leader starts as ท่าน; an existing one keeps whatever their name already says
+  const draft = { leader: profile.leader || '', state: st, flag: Object.assign({}, profile.flag), color: profile.color || COLORS[0], randomName: !st,
+    title: typeof profile.title === 'string' ? profile.title : (profile.leader ? '' : 'ท่าน'), traits: validTraits(profile.traits) ? profile.traits.slice() : pickTraits() };
+  const ownTitle = draft.title && !ALL_TITLES.includes(draft.title);
   const box = openModal(`<div class="welcome">
     <div class="wl-art">${ICON('crown')}</div>
     <h2>${editing ? 'แก้ไขรัฐของท่าน' : 'ยินดีต้อนรับ ท่านผู้นำ'}</h2>
     <p class="small muted">ชื่อผู้นำใช้แสดงในรายชื่อผู้เล่นออนไลน์ หอเกียรติยศ และลานความคิดเห็น ชื่อรัฐกับธงจะขึ้นบนโต๊ะทุกเกม</p>
     <div class="kv wide">
-      <label for="w-leader">ชื่อผู้นำ</label><span><input id="w-leader" maxlength="24" value="${esc(draft.leader)}" placeholder="เช่น ท่านอาลิซ" autocomplete="nickname"></span>
+      <label for="w-title">คำนำหน้า</label><span class="row"><select id="w-title"><option value="">ไม่ใช้คำนำหน้า</option>${LEADER_TITLES.map(([g, ts]) => `<optgroup label="${esc(g)}">${ts.map(x => `<option${x === draft.title ? ' selected' : ''}>${esc(x)}</option>`).join('')}</optgroup>`).join('')}<option value="__own"${ownTitle ? ' selected' : ''}>พิมพ์คำนำหน้าเอง</option></select><input id="w-title-own" class="${ownTitle ? '' : 'hidden'}" maxlength="24" value="${ownTitle ? esc(draft.title) : ''}" placeholder="คำนำหน้าของท่าน"><button class="btn sm" id="w-title-rnd" title="สุ่มคำนำหน้า">${ICON('dice')}</button></span>
+      <label for="w-leader">ชื่อผู้นำ</label><span><input id="w-leader" maxlength="24" value="${esc(draft.leader)}" placeholder="เช่น อาลิซ" autocomplete="nickname"></span>
+      <label>บุคลิกผู้นำ</label><span class="row"><span class="w-traits" id="w-traits"></span><button class="btn sm" id="w-traits-pick">เลือกบุคลิก 3 คำ</button></span>
+      <span></span><span class="tiny muted" id="w-preview"></span>
       <label for="w-state">ชื่อรัฐ</label><span class="row"><input id="w-state" maxlength="24" value="${esc(st ? st.th : '')}" placeholder="เว้นว่าง = สุ่มชื่ออัลธาลานีทุกเกม"><button class="btn sm" id="w-roll" title="สุ่มชื่อจากรากศัพท์อัลธาลานี">${ICON('dice')} สุ่มชื่อ</button></span>
       <span></span><span class="tiny muted" id="w-mean">${st && st.meaning ? esc((st.latin || '') + ' · ' + st.meaning) : 'ชื่อสุ่มประกอบจากรากศัพท์ในภาษาอัลธาลานี พร้อมความหมาย'}</span>
       <label>ธงรัฐ</label><span class="row"><span id="w-flag"></span><button class="btn sm" id="w-draw">${ICON('brush')} วาดธง</button><button class="btn sm" id="w-rflag">${ICON('dice')} สุ่มลาย</button></span>
@@ -7351,7 +7477,19 @@ function showWelcome(next, editing) {
     <div class="mfoot"><span class="err small grow" id="w-err"></span>${editing ? '<button class="btn" id="w-cancel">ยกเลิก</button>' : ''}<button class="btn primary" id="w-ok">${editing ? 'บันทึก' : 'เข้าสู่สหพันธรัฐ'}</button></div></div>`);
   const q = s => box.querySelector(s);
   const drawFlag = () => { q('#w-flag').innerHTML = flagHtml({ flag: draft.flag, color: draft.color }, 'lg'); };
-  drawFlag();
+  const readTitle = () => { const v = q('#w-title').value; return v === '__own' ? q('#w-title-own').value.trim().replace(/\s+/g, ' ').slice(0, 24) : v; };
+  const preview = () => {
+    draft.title = readTitle();
+    const name = fullLeader({ title: draft.title, leader: q('#w-leader').value.trim() || 'ชื่อของท่าน' });
+    q('#w-traits').innerHTML = draft.traits.map(x => `<span class="trait">${esc(x)}</span>`).join('');
+    q('#w-preview').innerHTML = `จะแสดงเป็น <b>${esc(name)}</b> · ${esc(draft.traits.join(' · '))}`;
+  };
+  drawFlag(); preview();
+  q('#w-title').onchange = () => { q('#w-title-own').classList.toggle('hidden', q('#w-title').value !== '__own'); if (q('#w-title').value === '__own') q('#w-title-own').focus(); preview(); };
+  q('#w-title-own').oninput = preview;
+  q('#w-leader').oninput = preview;
+  q('#w-title-rnd').onclick = () => { q('#w-title').value = ALL_TITLES[Math.floor(Math.random() * ALL_TITLES.length)]; q('#w-title-own').classList.add('hidden'); preview(); sfx('dice'); };
+  q('#w-traits-pick').onclick = () => openTraitPicker(draft.traits, tr => { draft.traits = tr; preview(); });
   q('#w-roll').onclick = () => { const n = althName(); draft.state = n; draft.randomName = false; q('#w-state').value = n.th; q('#w-mean').textContent = n.latin + ' · ' + n.meaning; sfx('dice'); };
   q('#w-state').oninput = e => { const v = e.target.value.trim(); draft.state = v ? { th: v, latin: '', meaning: '' } : null; q('#w-mean').textContent = v ? 'ชื่อที่ท่านตั้งเอง' : 'เว้นว่างไว้ ระบบจะสุ่มชื่ออัลธาลานีให้ทุกเกม'; };
   q('#w-rflag').onclick = () => { draft.flag = { seed: (Math.random() * 2 ** 31) >>> 0 }; drawFlag(); };
@@ -7361,86 +7499,534 @@ function showWelcome(next, editing) {
   q('#w-ok').onclick = () => {
     const leader = q('#w-leader').value.trim().replace(/\s+/g, ' ');
     if (!leader) { q('#w-err').textContent = 'กรอกชื่อผู้นำก่อนเข้าเกม'; q('#w-leader').focus(); return; }
-    profile.leader = leader.slice(0, 24); profile.state = draft.state; profile.flag = draft.flag; profile.color = draft.color;
+    if (!validTraits(draft.traits)) { q('#w-err').textContent = 'เลือกบุคลิกผู้นำให้ครบ 3 คำ'; return; }
+    profile.leader = leader.slice(0, 24); profile.title = readTitle(); profile.traits = draft.traits.slice();
+    profile.state = draft.state; profile.flag = draft.flag; profile.color = draft.color;
     saveProfile(); closeModal(); sfx('gavel');
     if (next) next(true);
   };
   setTimeout(() => q('#w-leader').focus(), 30);
 }
 
-// ---------- flag editor: a small paint canvas (brush, fill, patterns, undo) ----------
-const PAINT = ['#b8322a', '#e0605f', '#d66a1f', '#e3b33c', '#f2ead5', '#ffffff', '#2f7d4a', '#5fc28a', '#2a8c8c', '#1f4e8c', '#4fb3e8', '#7b3fa0', '#8c1f3f', '#6b4a2a', '#20262e', '#000000'];
-function openFlagEditor(initial, color, onSave) {
-  const W = 240, H = 160;
-  const box = dialog2(`<h2>${ICON('brush')} วาดธงรัฐ</h2>
-    <div class="fe"><div class="fe-canvas"><canvas id="fe-c" width="${W}" height="${H}"></canvas></div>
-      <div class="fe-tools">
-        <div class="fe-row" id="fe-tool"><button class="btn sm on" data-t="brush">พู่กัน</button><button class="btn sm" data-t="fill">เทสี</button></div>
-        <div class="fe-row" id="fe-size"><button class="btn sm" data-s="4">เล็ก</button><button class="btn sm on" data-s="10">กลาง</button><button class="btn sm" data-s="22">ใหญ่</button></div>
-        <div class="fe-pal" id="fe-pal">${PAINT.map((c, i) => `<button class="swatch${i === 3 ? ' on' : ''}" data-p="${c}" style="--sw:${c}" aria-label="สี ${c}"></button>`).join('')}</div>
-        <div class="fe-row"><button class="btn sm" id="fe-pat">${ICON('dice')} ลายพื้นสุ่ม</button><button class="btn sm" id="fe-clear">ล้างเป็นสีที่เลือก</button><button class="btn sm" id="fe-undo">ย้อน</button></div>
-        <div class="tiny muted">ลากบนผืนธงเพื่อวาด เทสีเติมพื้นที่สีเดียวกัน ธงจะย่อเป็นขนาด 120×80 ตอนบันทึก</div>
-      </div></div>
-    <div class="mfoot"><button class="btn" id="fe-cancel">ยกเลิก</button><button class="btn primary" id="fe-ok">ใช้ธงนี้</button></div>`, 'wide');
-  const cv = box.querySelector('#fe-c'), ctx = cv.getContext('2d');
-  let tool = 'brush', size = 10, paint = PAINT[3], drawing = false, last = null;
-  const undo = [];
-  const snap = () => { undo.push(ctx.getImageData(0, 0, W, H)); if (undo.length > 25) undo.shift(); };
-  const drawSVG = svg => new Promise(res => {
-    const img = new Image();
-    img.onload = () => { ctx.drawImage(img, 0, 0, W, H); res(); };
-    img.onerror = () => res();
-    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" '));
-  });
-  const start = initial && initial.img ? new Promise(res => { const img = new Image(); img.onload = () => { ctx.drawImage(img, 0, 0, W, H); res(); }; img.onerror = res; img.src = initial.img; })
-    : drawSVG(flagSVG((initial && initial.seed) || 1, color));
-  start.then(snap);
-  const pos = e => { const r = cv.getBoundingClientRect(); return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height }; };
-  const line = (a, b) => { ctx.strokeStyle = paint; ctx.lineWidth = size; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); };
-  cv.onpointerdown = e => {
-    e.preventDefault(); cv.setPointerCapture(e.pointerId);
-    const p = pos(e); snap();
-    if (tool === 'fill') { floodFill(ctx, Math.floor(p.x), Math.floor(p.y), paint, W, H); return; }
-    drawing = true; last = p; line(p, { x: p.x + 0.01, y: p.y });
+// pick exactly three different words; a fourth needs one of the three taken back first
+function openTraitPicker(current, onDone) {
+  let picked = (current || []).filter(x => ALL_TRAITS.includes(x)).slice(0, 3);
+  const box = dialog2(`<h2>บุคลิกผู้นำ</h2>
+    <p class="small muted">เลือก 3 คำที่บอกความเป็นผู้นำคนนี้ คำเดียวกันเลือกซ้ำไม่ได้ กดคำที่เลือกแล้วอีกครั้งเพื่อเอาออก</p>
+    <div class="tp-picked" id="tp-picked"></div>
+    ${LEADER_TRAITS.map(([g, ws]) => `<h3>${esc(g)}</h3><div class="tp-group">${ws.map(w => `<button class="tp" data-w="${esc(w)}">${esc(w)}</button>`).join('')}</div>`).join('')}
+    <div class="mfoot"><span class="small grow" id="tp-n"></span><button class="btn" id="tp-clear">ล้างที่เลือก</button><button class="btn" id="tp-rnd">${ICON('dice')} สุ่มสามคำ</button><button class="btn" id="tp-cancel">ยกเลิก</button><button class="btn primary" id="tp-ok">ใช้บุคลิกนี้</button></div>`, 'traitbox');
+  const sync = () => {
+    box.querySelectorAll('[data-w]').forEach(b => { const i = picked.indexOf(b.dataset.w); b.classList.toggle('on', i >= 0); b.dataset.n = i >= 0 ? String(i + 1) : ''; b.disabled = i < 0 && picked.length >= 3; });
+    box.querySelector('#tp-picked').innerHTML = [0, 1, 2].map(i => `<span class="tp-slot${picked[i] ? ' on' : ''}">${picked[i] ? esc(picked[i]) : 'คำที่ ' + (i + 1)}</span>`).join('<i>·</i>');
+    box.querySelector('#tp-n').textContent = `เลือกแล้ว ${picked.length} จาก 3 คำ`;
+    box.querySelector('#tp-ok').disabled = picked.length !== 3;
   };
-  cv.onpointermove = e => { if (!drawing) return; const p = pos(e); line(last, p); last = p; };
-  cv.onpointerup = cv.onpointercancel = () => { drawing = false; last = null; };
-  box.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { tool = b.dataset.t; box.querySelectorAll('[data-t]').forEach(x => x.classList.toggle('on', x === b)); });
-  box.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { size = +b.dataset.s; box.querySelectorAll('[data-s]').forEach(x => x.classList.toggle('on', x === b)); });
-  box.querySelectorAll('[data-p]').forEach(b => b.onclick = () => { paint = b.dataset.p; box.querySelectorAll('[data-p]').forEach(x => x.classList.toggle('on', x === b)); });
-  box.querySelector('#fe-pat').onclick = () => { snap(); drawSVG(flagSVG((Math.random() * 2 ** 31) >>> 0)); };
-  box.querySelector('#fe-clear').onclick = () => { snap(); ctx.fillStyle = paint; ctx.fillRect(0, 0, W, H); };
-  box.querySelector('#fe-undo').onclick = () => { if (undo.length > 1) { undo.pop(); ctx.putImageData(undo[undo.length - 1], 0, 0); } else if (undo.length) ctx.putImageData(undo[0], 0, 0); };
-  box.querySelector('#fe-cancel').onclick = closeDialog2;
-  box.querySelector('#fe-ok').onclick = () => {
+  box.addEventListener('click', e => {
+    const b = e.target.closest('[data-w]'); if (!b || b.disabled) return;
+    const w = b.dataset.w, i = picked.indexOf(w);
+    if (i >= 0) picked.splice(i, 1); else if (picked.length < 3) picked.push(w);
+    sync();
+  });
+  box.querySelector('#tp-rnd').onclick = () => { picked = pickTraits(); sync(); sfx('dice'); };
+  box.querySelector('#tp-clear').onclick = () => { picked = []; sync(); };
+  box.querySelector('#tp-cancel').onclick = closeDialog2;
+  box.querySelector('#tp-ok').onclick = () => { if (picked.length !== 3) return; closeDialog2(); onDone(picked.slice()); };
+  sync();
+}
+
+// =====================================================================
+// FLAG EDITOR: two layers on a 360x240 canvas. The bottom layer is a flag
+// layout modelled on real national flags (23 layouts, up to four colours);
+// the top layer is paint. Brushes take any size and rotation, and their shape
+// comes from a circle, simple heraldic shapes, or the game-icons set traced to
+// vectors (flag-icons.js, loaded on demand from beside the page).
+// =====================================================================
+const PAINT = ['#b8322a', '#e0605f', '#d66a1f', '#e3b33c', '#f2ead5', '#ffffff', '#2f7d4a', '#5fc28a', '#2a8c8c', '#1f4e8c', '#4fb3e8', '#7b3fa0', '#8c1f3f', '#6b4a2a', '#20262e', '#000000'];
+const FW = 360, FH = 240;   // working resolution; saved flags are 120x80 plus a 48x32 thumb
+
+// ---------- layouts ----------
+function fpRect(c, x, y, w, h, col) { c.fillStyle = col; c.fillRect(x, y, w, h); }
+function fpBands(c, W, H, cols, wts, vertical) {
+  const tot = wts.reduce((a, b) => a + b, 0); let at = 0;
+  cols.forEach((col, i) => {
+    const len = (vertical ? W : H) * wts[i] / tot;
+    if (vertical) fpRect(c, Math.floor(at), 0, Math.ceil(len) + 1, H, col); else fpRect(c, 0, Math.floor(at), W, Math.ceil(len) + 1, col);
+    at += len;
+  });
+}
+function fpPoly(c, pts, col) { c.fillStyle = col; c.beginPath(); pts.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.closePath(); c.fill(); }
+function fpLine(c, pts, w, col, cap, join) { c.strokeStyle = col; c.lineWidth = w; c.lineCap = cap || 'square'; c.lineJoin = join || 'miter'; c.beginPath(); pts.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke(); }
+const eq = n => new Array(n).fill(1);
+const FLAG_PATTERNS = [
+  { id: 'plain', name: 'พื้นสีเดียว', ex: 'ผืนเรียบไว้วาดเองทั้งผืน', n: 1, draw: (c, W, H, k) => fpRect(c, 0, 0, W, H, k[0]) },
+  { id: 'h2', name: 'แถบนอนสองสี', ex: 'โปแลนด์ อินโดนีเซีย ยูเครน', n: 2, draw: (c, W, H, k) => fpBands(c, W, H, [k[1], k[0]], eq(2)) },
+  { id: 'v2', name: 'แถบตั้งสองสี', ex: 'มอลตา แอลจีเรีย', n: 2, draw: (c, W, H, k) => fpBands(c, W, H, [k[1], k[0]], eq(2), true) },
+  { id: 'h3', name: 'แถบนอนสามสี', ex: 'เยอรมนี เนเธอร์แลนด์ ฮังการี', n: 3, draw: (c, W, H, k) => fpBands(c, W, H, [k[0], k[1], k[2]], eq(3)) },
+  { id: 'v3', name: 'แถบตั้งสามสี', ex: 'ฝรั่งเศส อิตาลี ไอร์แลนด์', n: 3, draw: (c, W, H, k) => fpBands(c, W, H, [k[2], k[1], k[0]], eq(3), true) },
+  { id: 'fess', name: 'แถบกลางกว้าง', ex: 'สเปน กัมพูชา', n: 2, draw: (c, W, H, k) => fpBands(c, W, H, [k[0], k[1], k[0]], [1, 2, 1]) },
+  { id: 'pale', name: 'แถบตั้งกลางกว้าง', ex: 'แคนาดา', n: 2, draw: (c, W, H, k) => fpBands(c, W, H, [k[0], k[1], k[0]], [1, 2, 1], true) },
+  { id: 'thai', name: 'ไตรรงค์ห้าแถบ', ex: 'ไทย คอสตาริกา', n: 3, draw: (c, W, H, k) => fpBands(c, W, H, [k[0], k[1], k[2], k[1], k[0]], [1, 1, 2, 1, 1]) },
+  { id: 'stripes', name: 'มุมธงบนริ้วสลับ', ex: 'กรีซ มาเลเซีย สหรัฐอเมริกา ไลบีเรีย', n: 3, draw: (c, W, H, k) => {
+    fpBands(c, W, H, eq(9).map((_, i) => i % 2 ? k[1] : k[0]), eq(9)); fpRect(c, 0, 0, Math.round(H * 5 / 9), Math.round(H * 5 / 9), k[2]);
+  } },
+  { id: 'canton', name: 'มุมธงบนสองแถบ', ex: 'ชิลี', n: 3, draw: (c, W, H, k) => { fpBands(c, W, H, [k[1], k[0]], eq(2)); fpRect(c, 0, 0, H / 2, H / 2, k[2]); } },
+  { id: 'nordic', name: 'กากบาทนอร์ดิก', ex: 'เดนมาร์ก สวีเดน ฟินแลนด์', n: 2, draw: (c, W, H, k) => {
+    const t = H * 0.2; fpRect(c, 0, 0, W, H, k[0]); fpRect(c, (H - t) / 2, 0, t, H, k[1]); fpRect(c, 0, (H - t) / 2, W, t, k[1]);
+  } },
+  { id: 'nordic2', name: 'กากบาทนอร์ดิกสองชั้น', ex: 'นอร์เวย์ ไอซ์แลนด์', n: 3, draw: (c, W, H, k) => {
+    const t1 = H * 0.25, t2 = H * 0.125; fpRect(c, 0, 0, W, H, k[0]);
+    fpRect(c, (H - t1) / 2, 0, t1, H, k[1]); fpRect(c, 0, (H - t1) / 2, W, t1, k[1]);
+    fpRect(c, (H - t2) / 2, 0, t2, H, k[2]); fpRect(c, 0, (H - t2) / 2, W, t2, k[2]);
+  } },
+  { id: 'cross', name: 'กากบาทกลางธง', ex: 'อังกฤษ จอร์เจีย', n: 2, draw: (c, W, H, k) => {
+    const t = H * 0.2; fpRect(c, 0, 0, W, H, k[1]); fpRect(c, (W - t) / 2, 0, t, H, k[0]); fpRect(c, 0, (H - t) / 2, W, t, k[0]);
+  } },
+  { id: 'saltire', name: 'กากบาทไขว้', ex: 'สกอตแลนด์ จาเมกา', n: 2, draw: (c, W, H, k) => {
+    fpRect(c, 0, 0, W, H, k[0]); fpLine(c, [[0, 0], [W, H]], H * 0.18, k[1]); fpLine(c, [[W, 0], [0, H]], H * 0.18, k[1]);
+  } },
+  { id: 'hoist', name: 'สามเหลี่ยมคันธง', ex: 'เช็กเกีย ฟิลิปปินส์', n: 3, draw: (c, W, H, k) => { fpBands(c, W, H, [k[1], k[0]], eq(2)); fpPoly(c, [[0, 0], [W / 2, H / 2], [0, H]], k[2]); } },
+  { id: 'chevron', name: 'สามเหลี่ยมบนแถบสามสี', ex: 'จอร์แดน ปาเลสไตน์ ซูดาน', n: 4, draw: (c, W, H, k) => { fpBands(c, W, H, [k[2], k[1], k[3]], eq(3)); fpPoly(c, [[0, 0], [W / 3, H / 2], [0, H]], k[0]); } },
+  { id: 'bend', name: 'แบ่งครึ่งแนวทแยง', ex: 'ภูฏาน', n: 2, draw: (c, W, H, k) => { fpPoly(c, [[0, 0], [W, 0], [0, H]], k[1]); fpPoly(c, [[W, 0], [W, H], [0, H]], k[0]); } },
+  { id: 'band', name: 'แถบทแยงมีขอบ', ex: 'แทนซาเนีย นามิเบีย', n: 4, draw: (c, W, H, k) => {
+    fpPoly(c, [[0, 0], [W, 0], [0, H]], k[0]); fpPoly(c, [[W, 0], [W, H], [0, H]], k[2]);
+    fpLine(c, [[0, H], [W, 0]], H * 0.42, k[3]); fpLine(c, [[0, H], [W, 0]], H * 0.3, k[1]);
+  } },
+  { id: 'quarter', name: 'สี่ส่วน', ex: 'ปานามา', n: 3, draw: (c, W, H, k) => {
+    fpRect(c, 0, 0, W / 2, H / 2, k[1]); fpRect(c, W / 2, 0, W / 2, H / 2, k[0]); fpRect(c, 0, H / 2, W / 2, H / 2, k[2]); fpRect(c, W / 2, H / 2, W / 2, H / 2, k[1]);
+  } },
+  { id: 'disc', name: 'วงกลางธง', ex: 'ญี่ปุ่น บังกลาเทศ ปาเลา', n: 2, draw: (c, W, H, k) => {
+    fpRect(c, 0, 0, W, H, k[1]); c.fillStyle = k[0]; c.beginPath(); c.arc(W / 2, H / 2, H * 0.3, 0, Math.PI * 2); c.fill();
+  } },
+  { id: 'border', name: 'ขอบธง', ex: 'มอนเตเนโกร ศรีลังกา', n: 2, draw: (c, W, H, k) => { const t = H * 0.075; fpRect(c, 0, 0, W, H, k[1]); fpRect(c, t, t, W - 2 * t, H - 2 * t, k[0]); } },
+  { id: 'pall', name: 'แถบรูปตัว Y', ex: 'แอฟริกาใต้', n: 4, draw: (c, W, H, k) => {
+    // arms run from the hoist corners to a junction, then one band runs to the fly; the triangle fills the space between the arms
+    const jx = W * 0.4, a = H * 0.1, al = Math.atan2(H / 2, jx), ca = Math.cos(al), ta = Math.tan(al);
+    const xu = (H / 2 - a + a / ca) / ta, xi = (H / 2 - a / ca) / ta;
+    fpBands(c, W, H, [k[0], k[2]], eq(2));
+    fpPoly(c, [[0, -a / ca], [xu, H / 2 - a], [W, H / 2 - a], [W, H / 2 + a], [xu, H / 2 + a], [0, H + a / ca], [0, H - a / ca], [xi, H / 2], [0, a / ca]], k[1]);
+    fpPoly(c, [[0, a / ca], [xi, H / 2], [0, H - a / ca]], k[3]);
+  } },
+  { id: 'hband', name: 'แถบตั้งคันธงกับแถบนอน', ex: 'มาดากัสการ์ เบนิน', n: 3, draw: (c, W, H, k) => {
+    fpBands(c, W, H, [k[1], k[2]], eq(2)); fpRect(c, 0, 0, W / 3, H, k[0]);
+  } },
+];
+const PAT_BY_ID = Object.fromEntries(FLAG_PATTERNS.map(p => [p.id, p]));
+// colour sets that real flags lean on, for the shuffle button
+const REAL_PALETTES = [
+  ['#b8322a', '#f4efe2', '#1f4e8c'], ['#2f7d4a', '#f4efe2', '#b8322a'], ['#20262e', '#b8322a', '#e3b33c'], ['#1f6fb5', '#f2c230'],
+  ['#c22a35', '#f4efe2'], ['#2f7d4a', '#e3b33c', '#b8322a'], ['#b8322a', '#f4efe2', '#20262e', '#2f7d4a'], ['#1f6fb5', '#f4efe2'],
+  ['#e07a1f', '#f4efe2', '#2f7d4a'], ['#c22a35', '#f2c230'], ['#2f7d4a', '#f4efe2'], ['#8c1f3f', '#f4efe2'], ['#20262e', '#e3b33c', '#c22a35', '#1f4e8c'],
+  ['#2a8c8c', '#f2c230', '#20262e'], ['#7b3fa0', '#f4efe2', '#e3b33c'],
+];
+
+// ---------- brush shapes ----------
+function starPath(n, R, r) {
+  let d = '';
+  for (let i = 0; i < n * 2; i++) { const a = -Math.PI / 2 + i * Math.PI / n, rr = i % 2 ? r : R; d += (i ? 'L' : 'M') + (256 + rr * Math.cos(a)).toFixed(1) + ' ' + (256 + rr * Math.sin(a)).toFixed(1); }
+  return d + 'Z';
+}
+function sunPath() {
+  let d = 'M376 256A120 120 0 1 0 136 256A120 120 0 1 0 376 256Z';
+  for (let i = 0; i < 12; i++) {
+    const a = i * Math.PI / 6, w = 0.15, p = (ang, r) => (256 + r * Math.cos(ang)).toFixed(1) + ' ' + (256 + r * Math.sin(ang)).toFixed(1);
+    d += 'M' + p(a, 250) + 'L' + p(a + w, 150) + 'L' + p(a - w, 150) + 'Z';
+  }
+  return d;
+}
+const BASIC_SHAPES = [
+  { id: 'round', name: 'วงกลม', d: 'M512 256A256 256 0 1 0 0 256A256 256 0 1 0 512 256Z' },
+  { id: 'square', name: 'สี่เหลี่ยม', d: 'M0 0H512V512H0Z' },
+  { id: 'star', name: 'ดาว', d: starPath(5, 256, 100) },
+  { id: 'star6', name: 'ดาวหกแฉก', d: starPath(6, 256, 140) },
+  { id: 'triangle', name: 'สามเหลี่ยม', d: 'M256 22L490 450L22 450Z' },
+  { id: 'diamond', name: 'ข้าวหลามตัด', d: 'M256 6L470 256L256 506L42 256Z' },
+  { id: 'crescent', name: 'จันทร์เสี้ยว', d: 'M411.9 73.5A240 240 0 1 0 411.9 438.5A200 200 0 1 1 411.9 73.5Z' },
+  { id: 'sun', name: 'ตะวัน', d: sunPath() },
+  { id: 'cross', name: 'กากบาท', d: 'M196 16H316V196H496V316H316V496H196V316H16V196H196Z' },
+];
+const BASIC_BY_ID = Object.fromEntries(BASIC_SHAPES.map(s => [s.id, s]));
+// Thai words a player may type in the library search, mapped to the English icon names
+const ICON_TH = { 'มงกุฎ': 'crown', 'ดาว': 'star', 'ดาบ': 'sword', 'โล่': 'shield', 'นกอินทรี': 'eagle', 'อินทรี': 'eagle', 'มังกร': 'dragon', 'สิงโต': 'lion',
+  'หมาป่า': 'wolf', 'หมี': 'bear', 'ม้า': 'horse', 'นก': 'bird', 'ต้นไม้': 'tree', 'ใบไม้': 'leaf', 'ดอกไม้': 'flower', 'กุหลาบ': 'rose', 'ตะวัน': 'sun', 'ดวงอาทิตย์': 'sun',
+  'จันทร์': 'moon', 'พระจันทร์': 'moon', 'ไฟ': 'fire', 'เปลวไฟ': 'flame', 'น้ำ': 'water', 'คลื่น': 'wave', 'ภูเขา': 'mountain', 'ปราสาท': 'castle', 'หอคอย': 'tower',
+  'สมอ': 'anchor', 'เรือ': 'ship', 'ข้าว': 'wheat', 'ค้อน': 'hammer', 'ฟันเฟือง': 'gear', 'หนังสือ': 'book', 'กุญแจ': 'key', 'ดวงตา': 'eye', 'ตา': 'eye',
+  'หัวกะโหลก': 'skull', 'กะโหลก': 'skull', 'มือ': 'hand', 'ปีก': 'wing', 'หัวใจ': 'heart', 'ขวาน': 'axe', 'หอก': 'spear', 'ธนู': 'bow', 'ลูกศร': 'arrow',
+  'ปืน': 'gun', 'หมวก': 'helm', 'เกราะ': 'armor', 'งู': 'snake', 'ปลา': 'fish', 'แมว': 'cat', 'หมา': 'dog', 'สุนัข': 'dog', 'วัว': 'bull', 'แพะ': 'goat',
+  'กวาง': 'deer', 'หมูป่า': 'boar', 'แมงมุม': 'spider', 'ผึ้ง': 'bee', 'ผีเสื้อ': 'butterfly', 'ไข่': 'egg', 'แอปเปิล': 'apple', 'องุ่น': 'grape',
+  'ระฆัง': 'bell', 'เทียน': 'candle', 'คบเพลิง': 'torch', 'ตะเกียง': 'lantern', 'บัลลังก์': 'throne', 'คทา': 'scepter', 'ไม้กางเขน': 'cross', 'ธง': 'flag',
+  'ตราชั่ง': 'scales', 'เข็มทิศ': 'compass', 'โลก': 'globe', 'เมฆ': 'cloud', 'สายฟ้า': 'lightning', 'หิมะ': 'snow', 'น้ำแข็ง': 'ice', 'หิน': 'stone',
+  'คริสตัล': 'crystal', 'อัญมณี': 'gem', 'เหรียญ': 'coin', 'ทอง': 'gold', 'แหวน': 'ring', 'หน้ากาก': 'mask', 'ผี': 'ghost', 'ปีศาจ': 'demon', 'นางฟ้า': 'angel',
+  'หุ่นยนต์': 'robot', 'จรวด': 'rocket', 'เครื่องบิน': 'plane', 'รถ': 'car', 'รถถัง': 'tank', 'ลูกเต๋า': 'dice', 'ไพ่': 'card', 'ดนตรี': 'music', 'กลอง': 'drum' };
+// a recognisable face for each category tile
+const CAT_FACE = { symbol: 'fleur-de-lys', regalia: 'crown', animal: 'wolf-head', myth: 'dragon-head', plant: 'oak', nature: 'sun', weapon: 'crossed-swords',
+  armor: 'checked-shield', building: 'castle', vehicle: 'galleon', people: 'person', death: 'skull-crossed-bones', magic: 'crystal-ball', tool: 'anvil',
+  object: 'scroll-unfurled', clothes: 'pointy-hat', food: 'shiny-apple', tech: 'robot-golem', game: 'dice-six-faces-five', music: 'lyre', map: 'treasure-map',
+  ui: 'stop-sign', action: 'bright-explosion', abstract: 'abstract-013', other: '' };
+
+// the traced icon set lives in flag-icons.js next to the page so the game file stays small
+let iconSet = null, iconLoad = null;
+function loadFlagIcons() {
+  if (iconSet) return Promise.resolve(iconSet);
+  if (iconLoad) return iconLoad;
+  iconLoad = new Promise((res, rej) => {
+    const done = () => {
+      const raw = window.FED_ICONS && Array.isArray(window.FED_ICONS.list) ? window.FED_ICONS.list : null;
+      if (!raw) { iconLoad = null; rej(new Error('missing')); return; }
+      // accept only plain names and path data, whatever the file holds
+      const list = raw.filter(x => Array.isArray(x) && /^[a-z0-9][a-z0-9-]{0,60}$/.test(x[0]) && typeof x[1] === 'string' && /^[MmLlHhVvCcSsQqTtAaZz0-9 .,-]+$/.test(x[1]));
+      const cats = (Array.isArray(window.FED_ICONS.cats) ? window.FED_ICONS.cats : []).filter(c => Array.isArray(c) && /^[a-z]{1,12}$/.test(c[0]) && typeof c[1] === 'string')
+        .map((c, i) => ({ id: c[0], th: c[1].slice(0, 40), i, list: list.filter(x => x[2] === i) })).filter(c => c.list.length);
+      iconSet = { list, cats, byName: new Map(list.map(x => [x[0], x[1]])), credit: String(window.FED_ICONS.credit || '') };
+      res(iconSet);
+    };
+    if (window.FED_ICONS) { done(); return; }
+    const s = document.createElement('script');
+    s.src = 'flag-icons.js'; s.async = true;
+    s.onload = done; s.onerror = () => { iconLoad = null; rej(new Error('missing')); };
+    document.head.appendChild(s);
+  });
+  return iconLoad;
+}
+const pathCache = new Map();
+function shapePath(sel) {
+  const key = sel.k === 'icon' ? 'i:' + sel.name : 'b:' + sel.id;
+  if (pathCache.has(key)) return pathCache.get(key);
+  const d = sel.k === 'icon' ? iconSet && iconSet.byName.get(sel.name) : BASIC_BY_ID[sel.id] && BASIC_BY_ID[sel.id].d;
+  if (!d) return null;
+  const p = new Path2D(d); pathCache.set(key, p); return p;
+}
+function shapeD(sel) { return sel.k === 'icon' ? (iconSet && iconSet.byName.get(sel.name)) || '' : (BASIC_BY_ID[sel.id] || BASIC_SHAPES[0]).d; }
+const shapeSvg = (d, cls) => `<svg class="${cls || ''}" viewBox="0 0 512 512" aria-hidden="true"><path d="${esc(d)}"/></svg>`;
+const shapeName = sel => sel.k === 'icon' ? sel.name.replace(/-/g, ' ') : (BASIC_BY_ID[sel.id] || BASIC_SHAPES[0]).name;
+
+// a seat or record never needs the editing layers
+const seatFlag = f => f && f.img ? { img: f.img, thumb: f.thumb } : { seed: (f && f.seed) || 1 };
+
+function openFlagEditor(initial, color, onSave) {
+  initial = initial || {};
+  const prefs = Object.assign({ size: 24, angle: 0, spacing: 110, shape: { k: 'b', id: 'round' }, paint: PAINT[3] }, store.get('flagPrefs', {}));
+  if (!prefs.shape || (prefs.shape.k !== 'icon' && !BASIC_BY_ID[prefs.shape.id])) prefs.shape = { k: 'b', id: 'round' };
+  let tool = 'brush', size = clampN(prefs.size, 1, 240), angle = clampN(prefs.angle, 0, 359), spacing = clampN(prefs.spacing, 10, 300), sel = prefs.shape, paint = prefs.paint;
+  const base = /^#[0-9a-f]{6}$/i.test(color || '') ? color : '#b8322a';
+  const defCols = [base, '#f4efe2', base.toLowerCase() === '#1f4e8c' ? '#2f7d4a' : '#1f4e8c', '#e3b33c'];
+  const L0 = initial.layers;
+  let bg = L0 && L0.bg && (L0.bg.t === 'pat' ? PAT_BY_ID[L0.bg.id] : true) ? JSON.parse(JSON.stringify(L0.bg))
+    : initial.img ? { t: 'img', src: initial.img } : { t: 'seed', seed: initial.seed || 1 };
+  let cols = bg.t === 'pat' && Array.isArray(bg.cols) ? bg.cols.slice(0, 4).concat(defCols).slice(0, 4) : defCols.slice();
+  const recent = () => store.get('flagRecent', []).filter(n => /^[a-z0-9-]+$/.test(n)).slice(0, 14);
+
+  const box = dialog2(`<h2>${ICON('brush')} วาดธงรัฐ</h2>
+    <div class="fe2">
+      <div class="fe-left">
+        <div class="fe-stage"><canvas id="fe-view" width="${FW}" height="${FH}"></canvas><canvas id="fe-over" width="${FW}" height="${FH}"></canvas></div>
+        <div class="fe-row fe-act"><button class="btn sm" id="fe-undo" title="Ctrl+Z">ย้อน</button><button class="btn sm" id="fe-redo" title="Ctrl+Y">ทำซ้ำ</button><button class="btn sm" id="fe-clear">ล้างภาพวาด</button><span class="tiny muted grow" id="fe-note"></span></div>
+        <h3>ลายพื้นธง</h3>
+        <div class="fe-pats" id="fe-pats">${FLAG_PATTERNS.map(p => `<button class="fe-pat" data-pat="${p.id}" title="${esc(p.name + ' · แบบ ' + p.ex)}"><canvas width="48" height="32"></canvas><span>${esc(p.name)}</span></button>`).join('')}</div>
+        <div class="fe-row fe-slots"><span class="tiny muted">สีของลาย</span>${[0, 1, 2, 3].map(i => `<label class="fe-slot" data-slot="${i}" title="สีที่ ${i + 1}"><input type="color" value="${cols[i]}" aria-label="สีลายที่ ${i + 1}"></label>`).join('')}
+          <button class="btn sm" id="fe-pal">${ICON('dice')} ชุดสีแบบธงจริง</button><button class="btn sm" id="fe-rnd">${ICON('dice')} สุ่มลาย</button></div>
+      </div>
+      <div class="fe-right">
+        <div class="fe-tools2" id="fe-tools">
+          <div class="fe-row" id="fe-tool"><button class="btn sm on" data-t="brush">พู่กัน</button><button class="btn sm" data-t="erase">ยางลบ</button><button class="btn sm" data-t="fill">เทสี</button><button class="btn sm" data-t="pick">ดูดสี</button></div>
+          <div class="fe-ctl"><label for="fe-size">ขนาด</label><input type="range" id="fe-size" min="1" max="240" value="${size}"><input type="number" id="fe-sizen" min="1" max="240" value="${size}"></div>
+          <div class="fe-ctl"><label for="fe-ang">หมุน</label><input type="range" id="fe-ang" min="0" max="359" value="${angle}"><span class="fe-val" id="fe-angv">${angle}°</span></div>
+          <div class="fe-ctl"><label for="fe-sp">ระยะห่าง</label><input type="range" id="fe-sp" min="10" max="300" value="${spacing}"><span class="fe-val" id="fe-spv">${spacing}%</span></div>
+          <div class="fe-shape"><span id="fe-cur"></span><button class="btn sm primary" id="fe-lib-open">${ICON('brush')} คลังรูปทรง</button></div>
+          <div class="fe-basic" id="fe-basic">${BASIC_SHAPES.map(s => `<button class="fe-sh" data-b="${s.id}" title="${esc(s.name)}">${shapeSvg(s.d)}</button>`).join('')}</div>
+          <div class="fe-recent" id="fe-recent"></div>
+          <div class="fe-pal" id="fe-palette">${PAINT.map(c => `<button class="swatch" data-p="${c}" style="--sw:${c}" aria-label="สี ${c}"></button>`).join('')}<label class="swatch fe-custom" title="เลือกสีอื่น"><input type="color" id="fe-custom" value="${/^#[0-9a-f]{6}$/i.test(paint) ? paint : '#e3b33c'}" aria-label="เลือกสีอื่น"></label></div>
+          <div class="tiny muted">ลากบนผืนธงเพื่อวาด แตะครั้งเดียวเพื่อวางรูปทรงหนึ่งอัน หมุนล้อเมาส์บนธงหรือกด [ กับ ] เพื่อปรับขนาด ยางลบลบเฉพาะภาพวาด ลายพื้นยังอยู่</div>
+        </div>
+        <div class="fe-lib hidden" id="fe-lib">
+          <div class="fe-row"><input id="fe-q" placeholder="ค้นหา เช่น มงกุฎ ดาบ eagle" autocomplete="off"><button class="btn sm" id="fe-lib-close">ปิดคลัง</button></div>
+          <div class="fe-libhead hidden" id="fe-libhead"><button class="btn sm" id="fe-back">← หมวดทั้งหมด</button><b id="fe-catname"></b></div>
+          <div class="tiny muted" id="fe-lib-n">กำลังโหลดคลังรูปทรง</div>
+          <div class="fe-cats" id="fe-cats"></div>
+          <div class="fe-grid" id="fe-grid"></div>
+          <button class="btn sm hidden" id="fe-more">แสดงเพิ่ม</button>
+        </div>
+      </div>
+    </div>
+    <div class="mfoot"><span class="tiny muted grow" id="fe-credit">รูปทรงในคลังแปลงจากชุดไอคอน game-icons.net โดย Lorc, Delapouite และผู้ร่วมสร้าง ใช้ตามสัญญาอนุญาต CC BY 3.0</span><button class="btn" id="fe-cancel">ยกเลิก</button><button class="btn primary" id="fe-ok">ใช้ธงนี้</button></div>`, 'wide fe-box');
+  const q = s => box.querySelector(s);
+  const view = q('#fe-view'), vctx = view.getContext('2d'), over = q('#fe-over'), octx = over.getContext('2d');
+  const mk = () => { const c = document.createElement('canvas'); c.width = FW; c.height = FH; return c; };
+  const bgC = mk(), bctx = bgC.getContext('2d'), paintC = mk(), pctx = paintC.getContext('2d', { willReadFrequently: true });
+
+  // ---------- layers ----------
+  let bgToken = 0;
+  const compose = () => { vctx.clearRect(0, 0, FW, FH); vctx.drawImage(bgC, 0, 0); vctx.drawImage(paintC, 0, 0); };
+  const loadImg = src => new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
+  const svgSrc = svg => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" '));
+  async function renderBg() {
+    const my = ++bgToken;
+    if (bg.t === 'pat') {
+      bctx.clearRect(0, 0, FW, FH); (PAT_BY_ID[bg.id] || FLAG_PATTERNS[0]).draw(bctx, FW, FH, bg.cols);
+    } else {
+      const im = await loadImg(bg.t === 'img' ? bg.src : svgSrc(flagSVG(bg.seed || 1, base)));
+      if (my !== bgToken) return;
+      bctx.clearRect(0, 0, FW, FH); if (im) bctx.drawImage(im, 0, 0, FW, FH); else fpRect(bctx, 0, 0, FW, FH, base);
+    }
+    compose(); syncPatUI();
+  }
+  const setPattern = id => { bg = { t: 'pat', id, cols: cols.slice() }; renderBg(); };
+
+  // ---------- undo ----------
+  const undo = [], redo = [];
+  const state = () => ({ paint: pctx.getImageData(0, 0, FW, FH), bg: JSON.parse(JSON.stringify(bg)), cols: cols.slice() });
+  const snap = () => { undo.push(state()); if (undo.length > 40) undo.shift(); redo.length = 0; };
+  const restore = s => { pctx.putImageData(s.paint, 0, 0); bg = s.bg; cols = s.cols.slice(); syncSlots(); renderBg(); };
+  const doUndo = () => { if (!undo.length) return; redo.push(state()); restore(undo.pop()); };
+  const doRedo = () => { if (!redo.length) return; undo.push(state()); restore(redo.pop()); };
+
+  // ---------- painting ----------
+  const pos = e => { const r = view.getBoundingClientRect(); return { x: (e.clientX - r.left) * FW / r.width, y: (e.clientY - r.top) * FH / r.height }; };
+  const isRound = () => sel.k !== 'icon' && sel.id === 'round';
+  function stampAt(ctx, path, x, y) {
+    ctx.save(); ctx.translate(x, y); if (angle) ctx.rotate(angle * Math.PI / 180);
+    const s = size / 512; ctx.scale(s, s); ctx.translate(-256, -256); ctx.fill(path); ctx.restore();
+  }
+  let drawing = false, last = null, lastStamp = null, curPath = null;
+  function beginPaint(p) {
+    pctx.save();
+    pctx.globalCompositeOperation = tool === 'erase' ? 'destination-out' : 'source-over';
+    pctx.fillStyle = pctx.strokeStyle = paint;
+    if (isRound()) { pctx.lineWidth = size; pctx.lineCap = 'round'; pctx.lineJoin = 'round'; pctx.beginPath(); pctx.moveTo(p.x, p.y); pctx.lineTo(p.x + 0.01, p.y); pctx.stroke(); }
+    else { curPath = shapePath(sel); if (curPath) stampAt(pctx, curPath, p.x, p.y); }
+    last = lastStamp = p;
+  }
+  function paintTo(p) {
+    if (isRound()) { pctx.beginPath(); pctx.moveTo(last.x, last.y); pctx.lineTo(p.x, p.y); pctx.stroke(); last = p; return; }
+    if (!curPath) return;
+    const step = Math.max(1, size * spacing / 100);
+    let dx = p.x - lastStamp.x, dy = p.y - lastStamp.y, dist = Math.hypot(dx, dy);
+    while (dist >= step) {
+      lastStamp = { x: lastStamp.x + dx * step / dist, y: lastStamp.y + dy * step / dist };
+      stampAt(pctx, curPath, lastStamp.x, lastStamp.y);
+      dx = p.x - lastStamp.x; dy = p.y - lastStamp.y; dist = Math.hypot(dx, dy);
+    }
+    last = p;
+  }
+  function fillAt(p) {
+    const x0 = Math.max(0, Math.min(FW - 1, Math.floor(p.x))), y0 = Math.max(0, Math.min(FH - 1, Math.floor(p.y)));
+    const comp = vctx.getImageData(0, 0, FW, FH).data, pim = pctx.getImageData(0, 0, FW, FH), pd = pim.data;
+    const n = parseInt(paint.slice(1), 16), fr = (n >> 16) & 255, fg = (n >> 8) & 255, fb = n & 255;
+    const i0 = (y0 * FW + x0) * 4, sr = comp[i0], sg = comp[i0 + 1], sb = comp[i0 + 2];
+    const seen = new Uint8Array(FW * FH), st = [y0 * FW + x0];
+    while (st.length) {
+      const k = st.pop(); if (seen[k]) continue; seen[k] = 1;
+      const i = k * 4; if (Math.abs(comp[i] - sr) + Math.abs(comp[i + 1] - sg) + Math.abs(comp[i + 2] - sb) >= 60) continue;
+      pd[i] = fr; pd[i + 1] = fg; pd[i + 2] = fb; pd[i + 3] = 255;
+      const x = k % FW;
+      if (x > 0) st.push(k - 1); if (x < FW - 1) st.push(k + 1); if (k >= FW) st.push(k - FW); if (k < FW * (FH - 1)) st.push(k + FW);
+    }
+    pctx.putImageData(pim, 0, 0);
+  }
+  function pickAt(p) {
+    const d = vctx.getImageData(Math.max(0, Math.min(FW - 1, Math.floor(p.x))), Math.max(0, Math.min(FH - 1, Math.floor(p.y))), 1, 1).data;
+    setPaint('#' + [d[0], d[1], d[2]].map(v => v.toString(16).padStart(2, '0')).join(''));
+  }
+  view.onpointerdown = e => {
+    e.preventDefault(); view.setPointerCapture(e.pointerId);
+    const p = pos(e);
+    if (tool === 'pick') { pickAt(p); return; }
+    snap();
+    if (tool === 'fill') { fillAt(p); compose(); return; }
+    drawing = true; beginPaint(p); compose(); preview(null);
+  };
+  view.onpointermove = e => { const p = pos(e); if (drawing) { paintTo(p); compose(); } else preview(p); };
+  const stop = () => { if (drawing) { drawing = false; pctx.restore(); compose(); } curPath = null; };
+  view.onpointerup = view.onpointercancel = stop;
+  view.onpointerleave = () => preview(null);
+  view.addEventListener('wheel', e => { e.preventDefault(); setSize(Math.round(size * (e.deltaY < 0 ? 1.12 : 1 / 1.12)) + (e.deltaY < 0 ? 1 : 0)); preview(pos(e)); }, { passive: false });
+
+  // hover preview: where the stamp will land, at its size and angle
+  function preview(p) {
+    octx.clearRect(0, 0, FW, FH);
+    if (!p || drawing || tool === 'fill' || tool === 'pick') return;
+    octx.save();
+    if (isRound()) { octx.beginPath(); octx.arc(p.x, p.y, Math.max(1, size / 2), 0, Math.PI * 2); octx.lineWidth = 1.5; octx.strokeStyle = 'rgba(0,0,0,.55)'; octx.stroke(); octx.lineWidth = 0.75; octx.strokeStyle = 'rgba(255,255,255,.9)'; octx.stroke(); }
+    else { const path = shapePath(sel); if (path) { octx.globalAlpha = tool === 'erase' ? 0.35 : 0.55; octx.fillStyle = tool === 'erase' ? '#ffffff' : paint; stampAt(octx, path, p.x, p.y); } }
+    octx.restore();
+  }
+
+  // ---------- controls ----------
+  function clampN(v, lo, hi) { v = Math.round(+v); return isFinite(v) ? Math.max(lo, Math.min(hi, v)) : lo; }
+  let saveT = 0;
+  const savePrefs = () => { clearTimeout(saveT); saveT = setTimeout(() => store.set('flagPrefs', { size, angle, spacing, shape: sel, paint }), 300); };
+  function setSize(v) { size = clampN(v, 1, 240); q('#fe-size').value = size; q('#fe-sizen').value = size; savePrefs(); }
+  function setPaint(c) {
+    paint = c; q('#fe-custom').value = c;
+    box.querySelectorAll('[data-p]').forEach(x => x.classList.toggle('on', x.dataset.p.toLowerCase() === c.toLowerCase()));
+    savePrefs();
+  }
+  function setShape(s) {
+    sel = s; if (s.k === 'icon') { const r = recent().filter(n => n !== s.name); r.unshift(s.name); store.set('flagRecent', r.slice(0, 14)); }
+    // round strokes read best close together, stamps read best apart
+    if (s.k !== 'icon' && (s.id === 'round' || s.id === 'square')) { if (spacing > 60) setSpacing(25); } else if (spacing < 60) setSpacing(110);
+    if (tool !== 'brush' && tool !== 'erase') setTool('brush');
+    syncShapeUI(); savePrefs();
+  }
+  function setSpacing(v) { spacing = clampN(v, 10, 300); q('#fe-sp').value = spacing; q('#fe-spv').textContent = spacing + '%'; savePrefs(); }
+  function setTool(t) { tool = t; box.querySelectorAll('[data-t]').forEach(x => x.classList.toggle('on', x.dataset.t === t)); view.dataset.tool = t; preview(null); }
+  function syncShapeUI() {
+    q('#fe-cur').innerHTML = `${shapeSvg(shapeD(sel), 'big')}<span><b>${esc(shapeName(sel))}</b><small>${sel.k === 'icon' ? 'จากคลังรูปทรง' : 'รูปทรงพื้นฐาน'}</small></span>`;
+    box.querySelectorAll('[data-b]').forEach(x => x.classList.toggle('on', sel.k !== 'icon' && x.dataset.b === sel.id));
+    const r = iconSet ? recent().filter(n => iconSet.byName.has(n)) : [];
+    q('#fe-recent').innerHTML = r.length ? `<span class="tiny muted">ใช้ล่าสุด</span>${r.map(n => `<button class="fe-sh${sel.k === 'icon' && sel.name === n ? ' on' : ''}" data-icon="${n}" title="${esc(n.replace(/-/g, ' '))}">${shapeSvg(iconSet.byName.get(n))}</button>`).join('')}` : '';
+  }
+  function syncSlots() { box.querySelectorAll('[data-slot]').forEach(l => { const i = +l.dataset.slot; l.querySelector('input').value = cols[i]; l.style.setProperty('--sw', cols[i]); }); }
+  function syncPatUI() {
+    const pat = bg.t === 'pat' ? PAT_BY_ID[bg.id] : null;
+    box.querySelectorAll('[data-pat]').forEach(b => {
+      b.classList.toggle('on', !!pat && b.dataset.pat === pat.id);
+      const c = b.querySelector('canvas').getContext('2d'); c.clearRect(0, 0, 48, 32); PAT_BY_ID[b.dataset.pat].draw(c, 48, 32, cols);
+    });
+    const n = pat ? pat.n : 4;
+    box.querySelectorAll('[data-slot]').forEach(l => l.classList.toggle('off', +l.dataset.slot >= n));
+    q('#fe-note').textContent = bg.t === 'pat' ? `${pat.name} · แบบ ${pat.ex}` : 'ลายพื้นตอนนี้คือธงเดิมของท่าน เลือกลายด้านล่างเพื่อเปลี่ยน';
+  }
+
+  q('#fe-size').oninput = e => { setSize(e.target.value); };
+  q('#fe-sizen').onchange = e => { setSize(e.target.value); };
+  q('#fe-ang').oninput = e => { angle = clampN(e.target.value, 0, 359); q('#fe-angv').textContent = angle + '°'; savePrefs(); };
+  q('#fe-sp').oninput = e => setSpacing(e.target.value);
+  box.querySelectorAll('[data-t]').forEach(b => b.onclick = () => setTool(b.dataset.t));
+  box.querySelectorAll('[data-p]').forEach(b => b.onclick = () => setPaint(b.dataset.p));
+  q('#fe-custom').oninput = e => setPaint(e.target.value);
+  q('#fe-basic').onclick = e => { const b = e.target.closest('[data-b]'); if (b) setShape({ k: 'b', id: b.dataset.b }); };
+  q('#fe-recent').onclick = e => { const b = e.target.closest('[data-icon]'); if (b) setShape({ k: 'icon', name: b.dataset.icon }); };
+  q('#fe-pats').onclick = e => { const b = e.target.closest('[data-pat]'); if (!b) return; snap(); setPattern(b.dataset.pat); };
+  box.querySelectorAll('[data-slot] input').forEach(inp => {
+    let snapped = false;
+    inp.onfocus = () => { snapped = false; };
+    inp.oninput = () => {
+      if (!snapped) { snap(); snapped = true; }
+      cols[+inp.closest('[data-slot]').dataset.slot] = inp.value; syncSlots();
+      if (bg.t === 'pat') { bg.cols = cols.slice(); renderBg(); } else syncPatUI();
+    };
+  });
+  q('#fe-pal').onclick = () => {
+    snap();
+    const pal = REAL_PALETTES[Math.floor(Math.random() * REAL_PALETTES.length)].slice();
+    for (let i = pal.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pal[i], pal[j]] = [pal[j], pal[i]]; }
+    cols = pal.concat(defCols.filter(c => !pal.includes(c))).slice(0, 4); syncSlots();
+    if (bg.t === 'pat') { bg.cols = cols.slice(); renderBg(); } else setPattern('h3');
+  };
+  q('#fe-rnd').onclick = () => {
+    snap();
+    const pal = REAL_PALETTES[Math.floor(Math.random() * REAL_PALETTES.length)];
+    cols = pal.concat(defCols.filter(c => !pal.includes(c))).slice(0, 4); syncSlots();
+    setPattern(FLAG_PATTERNS[1 + Math.floor(Math.random() * (FLAG_PATTERNS.length - 1))].id);
+  };
+  q('#fe-clear').onclick = () => { snap(); pctx.clearRect(0, 0, FW, FH); compose(); };
+  q('#fe-undo').onclick = doUndo;
+  q('#fe-redo').onclick = doRedo;
+
+  // ---------- icon library: category tiles first, then the icons of one category; search works on either ----------
+  let libList = [], libShown = 0, libCat = null;
+  const PAGE = 160;
+  const fmt = n => n.toLocaleString();
+  function renderLib(reset) {
+    const grid = q('#fe-grid');
+    if (reset) { grid.innerHTML = ''; libShown = 0; grid.scrollTop = 0; }
+    const next = libList.slice(libShown, libShown + PAGE);
+    grid.insertAdjacentHTML('beforeend', next.map(([n, d]) => `<button class="fe-ic${sel.k === 'icon' && sel.name === n ? ' on' : ''}" data-icon="${n}" title="${esc(n.replace(/-/g, ' '))}">${shapeSvg(d)}</button>`).join(''));
+    libShown += next.length;
+    q('#fe-more').classList.toggle('hidden', libShown >= libList.length);
+    const scope = libCat ? libCat.th : 'ทุกหมวด';
+    q('#fe-lib-n').textContent = libList.length ? `${scope} · แสดง ${fmt(libShown)} จาก ${fmt(libList.length)} รูปทรง` : 'ไม่พบรูปทรงที่ตรงกับคำค้น ลองคำอื่น หรือพิมพ์ชื่ออังกฤษ';
+  }
+  function renderCats() {
+    q('#fe-cats').innerHTML = `<button class="fe-cat" data-cat="*">${shapeSvg(shapeD({ k: 'b', id: 'star' }))}<span><b>ทุกหมวด</b><small>${fmt(iconSet.list.length)} รูปทรง</small></span></button>` +
+      iconSet.cats.map(c => {
+        const face = iconSet.byName.get(CAT_FACE[c.id]) || c.list[0][1];
+        return `<button class="fe-cat" data-cat="${c.id}">${shapeSvg(face)}<span><b>${esc(c.th)}</b><small>${fmt(c.list.length)} รูปทรง</small></span></button>`;
+      }).join('');
+  }
+  function queryWords() {
+    const raw = q('#fe-q').value.trim().toLowerCase();
+    if (!raw) return [];
+    // Thai words become their English icon names; anything else is matched as typed
+    return raw.split(/[\s,]+/).filter(Boolean).map(w => ICON_TH[w] || Object.keys(ICON_TH).filter(k => k.length > 1 && w.includes(k)).map(k => ICON_TH[k])[0] || w);
+  }
+  function showLib() {
+    const words = queryWords();
+    const home = !libCat && !words.length;
+    q('#fe-cats').classList.toggle('hidden', !home);
+    q('#fe-grid').classList.toggle('hidden', home);
+    q('#fe-libhead').classList.toggle('hidden', !libCat);
+    if (libCat) q('#fe-catname').textContent = libCat.th;
+    if (home) {
+      q('#fe-more').classList.add('hidden');
+      q('#fe-lib-n').textContent = `${fmt(iconSet.list.length)} รูปทรงใน ${iconSet.cats.length} หมวด เลือกหมวด หรือพิมพ์ค้นหา`;
+      return;
+    }
+    const pool = libCat ? libCat.list : iconSet.list;
+    libList = words.length ? pool.filter(([n]) => words.every(w => n.includes(w))) : pool;
+    renderLib(true);
+  }
+  function openLib() {
+    q('#fe-tools').classList.add('hidden'); q('#fe-lib').classList.remove('hidden');
+    loadFlagIcons().then(() => { if (!q('#fe-cats').childElementCount) renderCats(); showLib(); syncShapeUI(); q('#fe-q').focus(); })
+      .catch(() => { q('#fe-lib-n').textContent = 'ไม่พบไฟล์คลังรูปทรง (flag-icons.js ต้องอยู่โฟลเดอร์เดียวกับไฟล์เกม) ใช้รูปทรงพื้นฐานไปก่อนได้'; });
+  }
+  const closeLib = () => { q('#fe-lib').classList.add('hidden'); q('#fe-tools').classList.remove('hidden'); };
+  q('#fe-lib-open').onclick = openLib;
+  q('#fe-lib-close').onclick = closeLib;
+  let qT = 0;
+  q('#fe-q').oninput = () => { clearTimeout(qT); qT = setTimeout(() => iconSet && showLib(), 120); };
+  q('#fe-cats').onclick = e => {
+    const b = e.target.closest('[data-cat]'); if (!b) return;
+    libCat = b.dataset.cat === '*' ? { id: '*', th: 'ทุกหมวด', list: iconSet.list } : iconSet.cats.find(c => c.id === b.dataset.cat) || null;
+    showLib();
+  };
+  q('#fe-back').onclick = () => { libCat = null; showLib(); };
+  q('#fe-more').onclick = () => renderLib(false);
+  q('#fe-grid').onscroll = e => { const g = e.target; if (g.scrollTop + g.clientHeight > g.scrollHeight - 200 && libShown < libList.length) renderLib(false); };
+  q('#fe-grid').onclick = e => { const b = e.target.closest('[data-icon]'); if (!b) return; setShape({ k: 'icon', name: b.dataset.icon }); closeLib(); };
+
+  // ---------- keyboard ----------
+  const onKey = e => {
+    if (!box.isConnected) { document.removeEventListener('keydown', onKey); return; }
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '') && e.target.type !== 'range';
+    if ((e.ctrlKey || e.metaKey) && !typing && e.key.toLowerCase() === 'z') { e.preventDefault(); e.shiftKey ? doRedo() : doUndo(); return; }
+    if ((e.ctrlKey || e.metaKey) && !typing && e.key.toLowerCase() === 'y') { e.preventDefault(); doRedo(); return; }
+    if (typing) return;
+    if (e.key === '[') setSize(size - Math.max(1, Math.round(size * 0.1)));
+    else if (e.key === ']') setSize(size + Math.max(1, Math.round(size * 0.1)));
+  };
+  document.addEventListener('keydown', onKey);
+  const close = () => { document.removeEventListener('keydown', onKey); clearTimeout(saveT); closeDialog2(); };
+
+  // ---------- start ----------
+  setTool('brush'); setPaint(paint); setSize(size); setSpacing(spacing); syncSlots(); syncShapeUI();
+  const ready = renderBg().then(async () => {
+    if (L0 && L0.paint) { const im = await loadImg(L0.paint); if (im) pctx.drawImage(im, 0, 0, FW, FH); compose(); }
+  });
+  // icons named in prefs or the recent list need the library before they can draw
+  const dropMissing = () => { if (sel.k === 'icon' && !(iconSet && iconSet.byName.has(sel.name))) sel = { k: 'b', id: 'round' }; syncShapeUI(); };
+  if (sel.k === 'icon' || recent().length) loadFlagIcons().then(dropMissing, dropMissing);
+
+  q('#fe-cancel').onclick = close;
+  q('#fe-ok').onclick = () => ready.then(() => {
+    compose();
     const small = document.createElement('canvas'); small.width = 120; small.height = 80;
-    const sc = small.getContext('2d'); sc.imageSmoothingQuality = 'high'; sc.drawImage(cv, 0, 0, 120, 80);
+    const sc = small.getContext('2d'); sc.imageSmoothingQuality = 'high'; sc.drawImage(view, 0, 0, 120, 80);
     let img = small.toDataURL('image/png');
     if (img.length > 14000) img = small.toDataURL('image/jpeg', 0.85);
     // a 48x32 thumbnail travels in hall-of-fame records and lobby presence
     const th = document.createElement('canvas'); th.width = 48; th.height = 32;
-    const tc = th.getContext('2d'); tc.imageSmoothingQuality = 'high'; tc.drawImage(cv, 0, 0, 48, 32);
+    const tc = th.getContext('2d'); tc.imageSmoothingQuality = 'high'; tc.drawImage(view, 0, 0, 48, 32);
     let thumb = th.toDataURL('image/png');
     if (thumb.length > 4000) thumb = th.toDataURL('image/jpeg', 0.8);
-    closeDialog2(); onSave({ img, thumb });
-  };
-}
-function floodFill(ctx, x0, y0, hex, W, H) {
-  const im = ctx.getImageData(0, 0, W, H), d = im.data;
-  const n = parseInt(hex.slice(1), 16), fr = (n >> 16) & 255, fg = (n >> 8) & 255, fb = n & 255;
-  const i0 = (y0 * W + x0) * 4, sr = d[i0], sg = d[i0 + 1], sb = d[i0 + 2];
-  if (Math.abs(sr - fr) + Math.abs(sg - fg) + Math.abs(sb - fb) < 6) return;
-  const match = i => Math.abs(d[i] - sr) + Math.abs(d[i + 1] - sg) + Math.abs(d[i + 2] - sb) < 60;
-  const st = [[x0, y0]], seen = new Uint8Array(W * H);
-  while (st.length) {
-    const [x, y] = st.pop();
-    if (x < 0 || y < 0 || x >= W || y >= H) continue;
-    const k = y * W + x; if (seen[k]) continue; seen[k] = 1;
-    const i = k * 4; if (!match(i)) continue;
-    d[i] = fr; d[i + 1] = fg; d[i + 2] = fb; d[i + 3] = 255;
-    st.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
-  }
-  ctx.putImageData(im, 0, 0);
+    // the layers stay on this device so the flag can be edited again; they never leave in records or presence
+    const pd = pctx.getImageData(0, 0, FW, FH).data; let painted = false;
+    for (let i = 3; i < pd.length; i += 4) if (pd[i]) { painted = true; break; }
+    const layers = { bg: bg.t === 'pat' ? { t: 'pat', id: bg.id, cols: bg.cols.slice() } : bg.t === 'img' ? { t: 'img', src: bg.src } : { t: 'seed', seed: bg.seed }, paint: painted ? paintC.toDataURL('image/png') : null };
+    close(); onSave({ img, thumb, layers });
+  });
 }
 
 // =====================================================================
@@ -7452,7 +8038,7 @@ function showMenu() {
   const onlineOk = netAvailable();
   app.innerHTML = `<div class="menu">
     <div class="menu-art" aria-hidden="true"><span class="m1"></span><span class="m2"></span><span class="m3"></span></div>
-    <header class="menu-top"><button class="pcard-prof" id="m-prof" title="แก้ไขรัฐของท่าน">${flagHtml({ flag: profile.flag, color: profile.color }, 'lg')}<span><b>${esc(profile.leader || 'ยังไม่ตั้งชื่อผู้นำ')}</b><small>${esc(profile.state && profile.state.th ? profile.state.th : 'ชื่อรัฐสุ่มทุกเกม')} · ${esc(shortId(profile.id))}</small></span>${ICON('brush')}</button></header>
+    <header class="menu-top"><button class="pcard-prof" id="m-prof" title="แก้ไขรัฐของท่าน">${flagHtml({ flag: profile.flag, color: profile.color }, 'lg')}<span><b>${esc(fullLeader(profile) || 'ยังไม่ตั้งชื่อผู้นำ')}</b><small>${esc(profile.state && profile.state.th ? profile.state.th : 'ชื่อรัฐสุ่มทุกเกม')} · ${esc(shortId(profile.id))}</small>${traitLine(profile) ? `<small class="ptraits">${esc(traitLine(profile))}</small>` : ''}</span>${ICON('brush')}</button></header>
     <div class="menu-main">
       <div class="title-block"><div class="kicker">แห่งคีรันนา</div><h1>สหพันธรัฐ</h1><div class="sub">ตระกูลผู้ปกครองสี่รัฐแย่งความชอบธรรมในสภา 16 รอบ 4 ยุค สร้างรัฐให้เก่งเรื่องที่ระบอบให้ค่า แล้วดัดระบอบให้หันมาให้ค่ากับเรื่องที่รัฐคุณเก่ง</div></div>
       <nav class="menu-list">
@@ -7499,7 +8085,7 @@ const soloState = store.get('solo', { n: 4, styles: ['balanced', 'warlord', 'mer
 function showSoloSetup() {
   const T = soloState;
   const styleOpts = cur => STYLE_KEYS.map(k => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(AI.STYLES[k].name)}</option>`).join('');
-  let seats = `<div class="sseat me" style="--pc:${esc(profile.color)}">${flagHtml({ flag: profile.flag, color: profile.color }, 'lg')}<div><b>${esc(profile.state && profile.state.th ? profile.state.th : 'ชื่อสุ่มอัลธาลานี')}</b><div class="tiny muted">คุณ · ${esc(profile.leader)}</div></div></div>`;
+  let seats = `<div class="sseat me" style="--pc:${esc(profile.color)}">${flagHtml({ flag: profile.flag, color: profile.color }, 'lg')}<div><b>${esc(profile.state && profile.state.th ? profile.state.th : 'ชื่อสุ่มอัลธาลานี')}</b><div class="tiny muted">คุณ · ${esc(fullLeader(profile))}</div></div></div>`;
   for (let i = 1; i < T.n; i++) {
     seats += `<div class="sseat" style="--pc:${COLORS[i]}"><span class="flag lg ghostflag">${ICON('dice')}</span><div class="grow">
       <input data-name="${i}" value="${esc(T.names[i] || '')}" maxlength="24" placeholder="เว้นว่าง = สุ่มชื่ออัลธาลานี">
@@ -7538,12 +8124,12 @@ function launchSolo(watch) {
   for (let i = 0; i < T.n; i++) {
     if (i === 0 && !watch) {
       const nm = profileStateName(r);
-      draft.push({ name: nm.th, latin: nm.latin || '', meaning: nm.meaning || '', color: profile.color || COLORS[0], flag: profile.flag, leader: profile.leader, human: true, owner: pubId(), style: 'balanced' });
+      draft.push({ name: nm.th, latin: nm.latin || '', meaning: nm.meaning || '', color: profile.color || COLORS[0], flag: seatFlag(profile.flag), ...seatLeader(profile), human: true, owner: pubId(), style: 'balanced' });
     } else {
       const n = T.names[i] ? { th: T.names[i], latin: '', meaning: '' } : althName(r);
       const lp = althPerson(r);
       let color = COLORS[i % 4]; if (!watch && color === profile.color) color = COLORS[0];
-      draft.push({ name: n.th, latin: n.latin, meaning: n.meaning, color, flag: { seed: (r() * 2 ** 31) >>> 0 }, leader: 'ท่าน' + lp.th, human: false, style: watch && i === 0 ? 'balanced' : T.styles[i] || 'balanced' });
+      draft.push({ name: n.th, latin: n.latin, meaning: n.meaning, color, flag: { seed: (r() * 2 ** 31) >>> 0 }, leader: lp.th, title: aiTitle(watch && i === 0 ? 'balanced' : T.styles[i] || 'balanced', K.rng((seed ^ 0x71e1) + i)), human: false, style: watch && i === 0 ? 'balanced' : T.styles[i] || 'balanced' });
     }
   }
   const dice = diceOrder(draft.length, K.rng(seed ^ 0xd1ce));
@@ -7607,7 +8193,7 @@ async function showHallOfFame() {
     const remote = await fetchRepoJSON('comments.json');
     const list = cmtMerge(store.get('comments', []), remote.concat(lobbyComments()));
     store.set('comments', list);
-    body.innerHTML = `<form class="cform" id="cm-form"><div class="row">${flagHtml({ flag: profile.flag, color: profile.color }, 'sm')}<b>${esc(profile.leader || 'ผู้เล่น')}</b><span class="tiny muted">${esc(profile.state && profile.state.th || '')}</span></div>
+    body.innerHTML = `<form class="cform" id="cm-form"><div class="row">${flagHtml({ flag: profile.flag, color: profile.color }, 'sm')}<b>${esc(fullLeader(profile) || 'ผู้เล่น')}</b><span class="tiny muted">${esc(profile.state && profile.state.th || '')}</span></div>
       <textarea id="cm-text" maxlength="280" rows="3" placeholder="เขียนความคิดเห็นเกี่ยวกับเกม กติกา หรือชวนเพื่อนมาเล่น (ไม่เกิน 280 ตัวอักษร)"></textarea>
       <div class="row"><span class="tiny muted grow" id="cm-msg">ความคิดเห็นขึ้นในเครื่องนี้ทันที และส่งต่อให้ผู้เล่นที่ออนไลน์${repoInfo() ? ' กดส่งถาวรเพื่อเก็บไว้ในคลัง GitHub' : ''}</span><button class="btn primary">ส่ง</button></div></form>
       <div class="clist">${list.map(cmtHtml).join('') || '<p class="muted">ยังไม่มีความคิดเห็น</p>'}</div>`;
@@ -7615,10 +8201,10 @@ async function showHallOfFame() {
       e.preventDefault();
       if (!profileReady()) { showWelcome(() => showHallOfFame()); return; }
       const text = body.querySelector('#cm-text').value.trim().slice(0, 280); if (!text) return;
-      const c = { id: uid(8), leader: profile.leader, state: profile.state && profile.state.th || '', text, at: new Date().toISOString().slice(0, 16).replace('T', ' '), by: hashStr(profile.id).toString(36) };
+      const c = { id: uid(8), leader: profile.leader, title: String(profile.title || '').slice(0, 32), state: profile.state && profile.state.th || '', text, at: new Date().toISOString().slice(0, 16).replace('T', ' '), by: hashStr(profile.id).toString(36) };
       store.set('comments', cmtMerge(store.get('comments', []), [c]));
       shareComment(c);
-      const url = issueURL('[COMMENT]', `${c.leader}: ${c.text.slice(0, 40)}`, c);
+      const url = issueURL('[COMMENT]', `${fullLeader(c)}: ${c.text.slice(0, 40)}`, c);
       if (url) window.open(url, '_blank', 'noopener');
       showHallOfFame();
     };
@@ -7628,7 +8214,7 @@ function hofTable(list) {
   if (!list.length) return '<p class="muted">ยังไม่มีผู้ชนะในหอเกียรติยศ ชนะเกมแรกแล้วชื่อของท่านจะขึ้นที่นี่</p>';
   return `<div class="hof">${list.map((r, i) => `<div class="hrow${i < 3 ? ' top' + (i + 1) : ''}" style="--pc:${esc(r.color || '#888')}">
     <div class="hr-rank">${i === 0 ? ICON('crown') : ''}${i + 1}</div>${flagHtml({ flag: r.flag, color: r.color }, 'lg')}
-    <div class="hr-name"><b data-tip="${esc(`<div class="tt">${esc(r.state)}${r.latin ? ' · ' + esc(r.latin) : ''}</div>${r.meaning ? `<div>${esc(r.meaning)}</div>` : ''}`)}">${esc(r.state)}</b><small>${esc(r.leader)} · ${esc(r.at || '')} · ${r.mode === 'online' ? 'ออนไลน์' : 'เล่นกับ AI'} ${r.n} รัฐ</small></div>
+    <div class="hr-name"><b data-tip="${esc(`<div class="tt">${esc(r.state)}${r.latin ? ' · ' + esc(r.latin) : ''}</div>${r.meaning ? `<div>${esc(r.meaning)}</div>` : ''}`)}">${esc(r.state)}</b><small>${esc(fullLeader(r))} · ${esc(r.at || '')} · ${r.mode === 'online' ? 'ออนไลน์' : 'เล่นกับ AI'} ${r.n} รัฐ</small>${traitLine(r) ? `<small class="ptraits">${esc(traitLine(r))}</small>` : ''}</div>
     <div class="hr-score"><b>${r.score}</b><small>ชนะห่าง ${r.margin}</small></div>
     <div class="hr-cards"><span data-g="การ์ดวิจัย">${ICON('research')} ${(r.research.culture || 0) + (r.research.innovation || 0) + (r.research.building || 0)}<small>วัฒนธรรม ${r.research.culture || 0} · นวัตกรรม ${r.research.innovation || 0} · สิ่งปลูกสร้าง ${r.research.building || 0}</small></span>
       <span data-g="การ์ดทหาร">${ICON('military')} ${r.military}<small>การ์ดทหาร</small></span><span data-g="โครงการ">${ICON('building')} ${r.projects}<small>โครงการ</small></span></div>
@@ -7636,10 +8222,10 @@ function hofTable(list) {
 }
 function cmtMerge(list, add) {
   const by = new Map(list.map(c => [c.id, c]));
-  for (const c of add || []) if (c && typeof c.id === 'string' && c.id.length < 20 && typeof c.text === 'string' && c.text.length <= 280 && typeof c.leader === 'string' && c.leader.length <= 24 && !by.has(c.id)) by.set(c.id, c);
+  for (const c of add || []) if (c && typeof c.id === 'string' && c.id.length < 20 && typeof c.text === 'string' && c.text.length <= 280 && typeof c.leader === 'string' && c.leader.length <= 24 && (c.title == null || (typeof c.title === 'string' && c.title.length <= 32)) && !by.has(c.id)) by.set(c.id, c);
   return [...by.values()].sort((a, b) => String(b.at).localeCompare(String(a.at))).slice(0, 200);
 }
-const cmtHtml = c => `<div class="cmt"><div class="ch"><b>${esc(c.leader)}</b>${c.state ? `<span class="tiny muted">${esc(c.state)}</span>` : ''}<span class="grow"></span><span class="tiny muted">${esc(c.at || '')}</span></div><div>${esc(c.text)}</div></div>`;
+const cmtHtml = c => `<div class="cmt"><div class="ch"><b>${esc(fullLeader(c))}</b>${c.state ? `<span class="tiny muted">${esc(c.state)}</span>` : ''}<span class="grow"></span><span class="tiny muted">${esc(c.at || '')}</span></div><div>${esc(c.text)}</div></div>`;
 
 // ---------- designer room: many AI games, compared against the rulebook's playtest targets ----------
 let batchStop = false;
@@ -7934,7 +8520,7 @@ function showDiceRoll(seats, dice, o) {
     const box = openModal(`<div class="diceroll">
       <h2>${ICON('dice')} ทอยลูกเต๋า D6 จัดลำดับการเล่น</h2>
       <p class="small muted">แต้มสูงสุดได้เป็นผู้เล่นคนแรกของรอบแรก ลำดับที่เหลือเรียงตามแต้ม ใครแต้มเท่ากันทอยใหม่เฉพาะกลุ่มนั้น</p>
-      <div class="dr-seats">${seats.map((s, i) => `<div class="dr-seat" data-i="${i}" style="--pc:${esc(s.color)}">${flagHtml(s, 'lg')}<div class="nm">${esc(s.name)}</div><div class="ld tiny muted">${esc(s.leader || '')}</div><div class="dr-die" data-d="${i}">${dieFace(1)}</div><div class="dr-hist tiny" data-h="${i}"></div><div class="dr-rank" data-r="${i}"></div></div>`).join('')}</div>
+      <div class="dr-seats">${seats.map((s, i) => `<div class="dr-seat" data-i="${i}" style="--pc:${esc(s.color)}">${flagHtml(s, 'lg')}<div class="nm">${esc(s.name)}</div><div class="ld tiny muted">${esc(fullLeader(s))}</div><div class="dr-die" data-d="${i}">${dieFace(1)}</div><div class="dr-hist tiny" data-h="${i}"></div><div class="dr-rank" data-r="${i}"></div></div>`).join('')}</div>
       <div class="dr-msg small" id="dr-msg"></div>
       <div class="mfoot">${o.auto ? '' : '<button class="btn primary" id="dr-roll">ทอยลูกเต๋า</button>'}</div></div>`, 'wide');
     const msg = box.querySelector('#dr-msg');
@@ -8971,9 +9557,9 @@ function startTutorial() {
   const r = K.rng(seed ^ 0x7e57);
   const me = profileStateName(r);
   const draft = [
-    { name: me.th, latin: me.latin || '', meaning: me.meaning || '', color: profile.color || COLORS[0], flag: profile.flag, leader: profile.leader || 'ผู้เล่น', human: true, owner: pubId(), style: 'balanced' },
+    { name: me.th, latin: me.latin || '', meaning: me.meaning || '', color: profile.color || COLORS[0], flag: seatFlag(profile.flag), ...seatLeader(profile), human: true, owner: pubId(), style: 'balanced' },
   ];
-  ['balanced', 'merchant'].forEach((st, i) => { const n = althName(r); const lp = althPerson(r); draft.push({ name: n.th, latin: n.latin, meaning: n.meaning, color: COLORS[(COLORS.indexOf(profile.color) + i + 1 + 4) % 4] || COLORS[i + 1], flag: { seed: (r() * 2 ** 31) >>> 0 }, leader: 'ท่าน' + lp.th, human: false, style: st }); });
+  ['balanced', 'merchant'].forEach((st, i) => { const n = althName(r); const lp = althPerson(r); draft.push({ name: n.th, latin: n.latin, meaning: n.meaning, color: COLORS[(COLORS.indexOf(profile.color) + i + 1 + 4) % 4] || COLORS[i + 1], flag: { seed: (r() * 2 ** 31) >>> 0 }, leader: lp.th, title: aiTitle(st, K.rng((seed ^ 0x71e1) + i + 1)), human: false, style: st }); });
   const dice = diceOrder(draft.length, K.rng(seed ^ 0xd1ce));
   const cfg = { mode: 'tutorial', rules: '0.3', seed, seats: orderSeats(draft, dice), dice };
   settings.speed = Math.max(settings.speed, 450);
@@ -9118,7 +9704,7 @@ function hofRecord(G2, P) {
   const ps = playstyle(P);
   const rec = {
     v: 1, at: new Date().toISOString().slice(0, 10), mode: S.mode, rules: S.cfg.rules, n: G2.n, seed: G2.seed,
-    leader: String(s.leader || 'ผู้เล่น').slice(0, 24), state: String(P.name).slice(0, 24), latin: String(s.latin || '').slice(0, 24), meaning: String(s.meaning || '').slice(0, 60),
+    leader: String(s.leader || 'ผู้เล่น').slice(0, 24), title: String(s.title || '').slice(0, 32), traits: Array.isArray(s.traits) ? s.traits.slice(0, 3).map(x => String(x).slice(0, 24)) : [], state: String(P.name).slice(0, 24), latin: String(s.latin || '').slice(0, 24), meaning: String(s.meaning || '').slice(0, 60),
     color: s.color || P.color, flag: s.flag && (s.flag.thumb || (s.flag.img && s.flag.img.length < 9000)) ? { img: s.flag.thumb || s.flag.img } : { seed: (s.flag && s.flag.seed) || 1 },
     score: P.legit - P.stigma, legit: P.legit, stigma: P.stigma, grav: P.grav,
     research: { culture: P.research.filter(r => r.d.kind === 'culture').length, innovation: P.research.filter(r => r.d.kind === 'innovation').length, building: K.buildingsOf(P).length },
@@ -9140,6 +9726,8 @@ function hofMerge(list, add) {
 function validRecord(r) {
   return r && typeof r === 'object' && typeof r.id === 'string' && r.id.length < 20 && typeof r.score === 'number' && isFinite(r.score) && Math.abs(r.score) < 500
     && typeof r.state === 'string' && r.state.length <= 24 && typeof r.leader === 'string' && r.leader.length <= 24
+    && (r.title == null || (typeof r.title === 'string' && r.title.length <= 32))
+    && (r.traits == null || (Array.isArray(r.traits) && r.traits.length <= 3 && r.traits.every(x => typeof x === 'string' && x.length <= 24)))
     && (!r.flag || !r.flag.img || (typeof r.flag.img === 'string' && /^data:image\/(png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(r.flag.img) && r.flag.img.length < 9000));
 }
 function hofAdd(rec) { store.set('hof', hofMerge(hofLocal(), [rec])); }
@@ -9169,7 +9757,7 @@ function showEnd() {
   const box = openModal(`<div class="endbox"><h2>${ICON('crown')} ${esc(win.name)} ชนะ</h2>
     ${h ? `<p>${win === h ? 'รัฐของคุณชนะเกมนี้' : `รัฐของคุณได้อันดับ ${myRank}`}${mine ? ` · การเล่นของคุณอ่านได้ว่าเป็น <b>${esc(mine.label)}</b>: ${esc(mine.desc)}` : ''}</p>` : ''}
     <div class="podium">${podium}</div>
-    ${rec ? `<div class="hofnote">${ICON('star')} บันทึก ${esc(rec.state)} ของ${esc(rec.leader)} เข้าหอเกียรติยศในเครื่องนี้แล้ว${S.mode === 'online' ? ' และส่งให้ผู้เล่นในห้องแล้ว' : ''}${gh ? ` <a class="btn sm" href="${esc(gh)}" target="_blank" rel="noopener">ส่งเข้าหอเกียรติยศถาวรผ่าน GitHub</a>` : ''}</div>` : ''}
+    ${rec ? `<div class="hofnote">${ICON('star')} บันทึก ${esc(rec.state)} ของ ${esc(fullLeader(rec))} เข้าหอเกียรติยศในเครื่องนี้แล้ว${S.mode === 'online' ? ' และส่งให้ผู้เล่นในห้องแล้ว' : ''}${gh ? ` <a class="btn sm" href="${esc(gh)}" target="_blank" rel="noopener">ส่งเข้าหอเกียรติยศถาวรผ่าน GitHub</a>` : ''}</div>` : ''}
     <details class="dz"><summary>ระบอบตลอดเกม และตัวชี้วัดสำหรับผู้ออกแบบ</summary>
       <ol class="small">${regs}</ol>
       <table class="tbl"><tr><th>ตัวชี้วัด</th><th class="num">ค่า</th><th>เป้า</th><th>สถานะ</th></tr>${metricRows(m, false)}</table>
@@ -9199,8 +9787,8 @@ function issueURL(prefix, title, payload) {
   return `https://github.com/${R.owner}/${R.repo}/issues/new?title=${encodeURIComponent(prefix + ' ' + title)}&body=${encodeURIComponent(body)}`;
 }
 function hofIssueURL(rec) {
-  let url = issueURL('[HOF]', `${rec.leader} · ${rec.state} · ${rec.score}`, rec);
-  if (url && url.length > 7000) url = issueURL('[HOF]', `${rec.leader} · ${rec.state} · ${rec.score}`, Object.assign({}, rec, { flag: { seed: 1 } }));
+  let url = issueURL('[HOF]', `${fullLeader(rec)} · ${rec.state} · ${rec.score}`, rec);
+  if (url && url.length > 7000) url = issueURL('[HOF]', `${fullLeader(rec)} · ${rec.state} · ${rec.score}`, Object.assign({}, rec, { flag: { seed: 1 } }));
   return url;
 }
 async function fetchRepoJSON(name) {
@@ -9288,12 +9876,12 @@ function cleanFlag(f) {
 function cleanProfile(p) {
   if (!p || typeof p !== 'object') return null;
   const id = str(p.id, 16); if (!id) return null;
-  return { id, leader: str(p.leader, 24) || 'ผู้เล่น', state: str(p.state, 24), latin: str(p.latin, 24), meaning: str(p.meaning, 60), color: /^#[0-9a-f]{6}$/i.test(p.color) ? p.color : '#888888', flag: cleanFlag(p.flag) };
+  return { id, leader: str(p.leader, 24) || 'ผู้เล่น', title: str(p.title, 32), traits: Array.isArray(p.traits) ? p.traits.slice(0, 3).map(x => str(x, 24)).filter(Boolean) : [], state: str(p.state, 24), latin: str(p.latin, 24), meaning: str(p.meaning, 60), color: /^#[0-9a-f]{6}$/i.test(p.color) ? p.color : '#888888', flag: cleanFlag(p.flag) };
 }
 function pubProfile(big) {
   const st = profile.state && profile.state.th ? profile.state : null;
   const f = profile.flag || {};
-  return { id: pubId(), leader: profile.leader, state: st ? st.th : '', latin: st ? st.latin || '' : '', meaning: st ? st.meaning || '' : '', color: profile.color, flag: f.img ? (big ? { img: f.img, thumb: f.thumb } : { img: f.thumb || f.img }) : { seed: f.seed || 1 } };
+  return { id: pubId(), leader: profile.leader, title: String(profile.title || '').slice(0, 32), traits: Array.isArray(profile.traits) ? profile.traits.slice(0, 3) : [], state: st ? st.th : '', latin: st ? st.latin || '' : '', meaning: st ? st.meaning || '' : '', color: profile.color, flag: f.img ? (big ? { img: f.img, thumb: f.thumb } : { img: f.thumb || f.img }) : { seed: f.seed || 1 } };
 }
 function cleanAns(e) {
   if (!e || typeof e !== 'object') return null;
@@ -9303,7 +9891,7 @@ function cleanAns(e) {
   if (Array.isArray(e.c)) out.c = e.c.filter(c => c && int(c.reclaim) != null).map(c => ({ reclaim: c.reclaim })).slice(0, 4);
   return out;
 }
-const cleanChat = c => c && typeof c === 'object' && typeof c.text === 'string' ? { id: str(c.id, 16) || uid(6), by: str(c.by, 16), leader: str(c.leader, 24) || 'ผู้เล่น', color: /^#[0-9a-f]{6}$/i.test(c.color) ? c.color : '#888888', text: c.text.slice(0, 300), at: int(c.at) || Date.now() } : null;
+const cleanChat = c => c && typeof c === 'object' && typeof c.text === 'string' ? { id: str(c.id, 16) || uid(6), by: str(c.by, 16), leader: str(c.leader, 60) || 'ผู้เล่น', color: /^#[0-9a-f]{6}$/i.test(c.color) ? c.color : '#888888', text: c.text.slice(0, 300), at: int(c.at) || Date.now() } : null;
 
 // =====================================================================
 // LOBBY: who is online, open rooms, lobby chat; hall of fame and comments gossip between peers
@@ -9362,7 +9950,7 @@ function showLobby() {
   q('#l-code').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) q('#l-join').click(); });
   q('#l-chatf').onsubmit = e => {
     e.preventDefault(); const inp = q('#l-chatin'); const t = inp.value.trim(); if (!t) return;
-    const c = { id: uid(8), by: pubId(), leader: profile.leader, color: profile.color, text: t.slice(0, 300), at: Date.now() };
+    const c = { id: uid(8), by: pubId(), leader: fullLeader(profile).slice(0, 60), color: profile.color, text: t.slice(0, 300), at: Date.now() };
     L.chat.push(c); lobbySend({ t: 'lchat', c }); inp.value = ''; renderLobbyParts();
   };
   renderLobbyParts();
@@ -9371,8 +9959,8 @@ function showLobby() {
 function renderLobbyParts() {
   const pe = document.getElementById('l-peers');
   if (pe) {
-    const me = `<div class="pi me" style="--pc:${esc(profile.color)}">${flagHtml({ flag: profile.flag, color: profile.color }, 'sm')}<b>${esc(profile.leader)}</b><span class="tiny muted">คุณ · ${esc(L.status)}</span></div>`;
-    setHTML(pe, me + [...L.peers.values()].map(v => `<div class="pi" style="--pc:${esc(v.p.color)}">${flagHtml(v.p, 'sm')}<b>${esc(v.p.leader)}</b><span class="tiny muted">${esc(v.p.state || '')} · ${esc(v.s || '')}</span></div>`).join('') + (L.peers.size ? '' : `<p class="tiny muted">${L.net ? 'ยังไม่พบผู้เล่นคนอื่น รอสักครู่ หรือส่งลิงก์ห้องให้เพื่อน' : 'เชื่อมต่อไม่ได้'}</p>`));
+    const me = `<div class="pi me" style="--pc:${esc(profile.color)}">${flagHtml({ flag: profile.flag, color: profile.color }, 'sm')}<b>${esc(fullLeader(profile))}</b><span class="tiny muted">คุณ · ${esc(L.status)}</span></div>`;
+    setHTML(pe, me + [...L.peers.values()].map(v => `<div class="pi" style="--pc:${esc(v.p.color)}">${flagHtml(v.p, 'sm')}<b${traitLine(v.p) ? ` data-tip="${esc(`<div class='tt'>${esc(fullLeader(v.p))}</div><div>${esc(traitLine(v.p))}</div>`)}"` : ''}>${esc(fullLeader(v.p))}</b><span class="tiny muted">${esc(v.p.state || '')} · ${esc(v.s || '')}</span></div>`).join('') + (L.peers.size ? '' : `<p class="tiny muted">${L.net ? 'ยังไม่พบผู้เล่นคนอื่น รอสักครู่ หรือส่งลิงก์ห้องให้เพื่อน' : 'เชื่อมต่อไม่ได้'}</p>`));
   }
   const ro = document.getElementById('l-rooms');
   if (ro) {
@@ -9487,7 +10075,7 @@ function fixColors() {
 }
 function cleanCfg(c) {
   if (!c || typeof c !== 'object' || !Array.isArray(c.seats) || c.seats.length < 3 || c.seats.length > 4 || !RULESETS[c.rules] || int(c.seed) == null) return null;
-  const seats = c.seats.map(s => ({ name: str(s.name, 24) || 'รัฐ', latin: str(s.latin, 24), meaning: str(s.meaning, 60), color: /^#[0-9a-f]{6}$/i.test(s.color) ? s.color : '#888888', flag: cleanFlag(s.flag), leader: str(s.leader, 30), human: !!s.human, owner: s.human ? str(s.owner, 16) : null, style: STYLE_KEYS.includes(s.style) ? s.style : 'balanced' }));
+  const seats = c.seats.map(s => ({ name: str(s.name, 24) || 'รัฐ', latin: str(s.latin, 24), meaning: str(s.meaning, 60), color: /^#[0-9a-f]{6}$/i.test(s.color) ? s.color : '#888888', flag: cleanFlag(s.flag), leader: str(s.leader, 30), title: str(s.title, 32), traits: Array.isArray(s.traits) ? s.traits.slice(0, 3).map(x => str(x, 24)).filter(Boolean) : [], human: !!s.human, owner: s.human ? str(s.owner, 16) : null, style: STYLE_KEYS.includes(s.style) ? s.style : 'balanced' }));
   const dice = c.dice && Array.isArray(c.dice.order) && Array.isArray(c.dice.rolls) ? { order: c.dice.order.map(int).filter(x => x != null && x < 4), rolls: c.dice.rolls.slice(0, 12).map(r => ({ who: (r.who || []).map(int).filter(x => x != null), vals: (r.vals || []).map(int).filter(x => x != null) })) } : null;
   return { mode: 'online', rules: c.rules, seed: c.seed >>> 0, seats, dice };
 }
@@ -9500,7 +10088,7 @@ function renderRoom() {
   const seats = [];
   for (let i = 0; i < R.n; i++) {
     const s = R.seats[i];
-    seats.push(s ? `<div class="sseat${s.id === pubId() ? ' me' : ''}" style="--pc:${esc(s.color)}">${flagHtml(s, 'lg')}<div><b>${esc(s.state || 'ชื่อสุ่มอัลธาลานี')}</b><div class="tiny muted">${esc(s.leader)}${s.id === R.hostId ? ' · ผู้สร้างห้อง' : ''}${s.id === pubId() ? ' · คุณ' : ''}</div></div></div>`
+    seats.push(s ? `<div class="sseat${s.id === pubId() ? ' me' : ''}" style="--pc:${esc(s.color)}">${flagHtml(s, 'lg')}<div><b>${esc(s.state || 'ชื่อสุ่มอัลธาลานี')}</b><div class="tiny muted">${esc(fullLeader(s))}${s.id === R.hostId ? ' · ผู้สร้างห้อง' : ''}${s.id === pubId() ? ' · คุณ' : ''}</div></div></div>`
       : `<div class="sseat empty"><span class="flag lg ghostflag">${ICON('cloak')}</span><div class="grow"><b>ที่นั่งว่าง</b><div class="tiny muted">ถ้าเริ่มเกมตอนนี้ AI เล่นแทน</div>${R.host ? `<select data-style="${i}">${STYLE_KEYS.map(k => `<option value="${k}"${R.styles[i] === k ? ' selected' : ''}>${esc(AI.STYLES[k].name)}</option>`).join('')}</select>` : ''}</div></div>`);
   }
   app.innerHTML = `<div class="page room"><div class="page-h"><button class="btn sm" id="r-back">ออกจากห้อง</button><h1>ห้อง ${esc(R.code)}</h1><span class="grow"></span><button class="btn sm" id="r-copy">คัดลอกลิงก์ชวนเพื่อน</button></div>
@@ -9529,8 +10117,8 @@ function hostStart() {
   const draft = [];
   for (let i = 0; i < R.n; i++) {
     const p = R.seats[i];
-    if (p) { const nm = p.state ? { th: p.state, latin: p.latin, meaning: p.meaning } : althName(r); draft.push({ name: nm.th, latin: nm.latin || '', meaning: nm.meaning || '', color: p.color, flag: p.flag, leader: p.leader, human: true, owner: p.id, style: 'balanced' }); }
-    else { const n = althName(r), lp = althPerson(r); draft.push({ name: n.th, latin: n.latin, meaning: n.meaning, color: COLORS.find(c => !draft.some(d => d.color === c) && !R.seats.some(s => s && s.color === c)) || COLORS[i], flag: { seed: (r() * 2 ** 31) >>> 0 }, leader: 'ท่าน' + lp.th, human: false, owner: null, style: R.styles[i] || 'balanced' }); }
+    if (p) { const nm = p.state ? { th: p.state, latin: p.latin, meaning: p.meaning } : althName(r); draft.push({ name: nm.th, latin: nm.latin || '', meaning: nm.meaning || '', color: p.color, flag: p.flag, ...seatLeader(p), human: true, owner: p.id, style: 'balanced' }); }
+    else { const n = althName(r), lp = althPerson(r); draft.push({ name: n.th, latin: n.latin, meaning: n.meaning, color: COLORS.find(c => !draft.some(d => d.color === c) && !R.seats.some(s => s && s.color === c)) || COLORS[i], flag: { seed: (r() * 2 ** 31) >>> 0 }, leader: lp.th, title: aiTitle(R.styles[i] || 'balanced', K.rng((seed ^ 0x71e1) + i)), human: false, owner: null, style: R.styles[i] || 'balanced' }); }
   }
   const dice = diceOrder(draft.length, K.rng(seed ^ 0xd1ce));
   const cfg = { mode: 'online', rules: R.rules, seed, seats: orderSeats(draft, dice), dice };
@@ -9548,7 +10136,7 @@ function beginOnlineGame(cfg) {
   if (cfg.dice && !settings.autoplay) showDiceRoll(draft, cfg.dice, { auto: true }).then(go); else go();
 }
 function sendChat(text) {
-  const c = { id: uid(8), by: pubId(), leader: profile.leader, color: profile.color, text: text.slice(0, 300), at: Date.now() };
+  const c = { id: uid(8), by: pubId(), leader: fullLeader(profile).slice(0, 60), color: profile.color, text: text.slice(0, 300), at: Date.now() };
   R.chat.push(c); roomSend({ t: 'chat', c });
   if (S) { renderChat(); }
 }

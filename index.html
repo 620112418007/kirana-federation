@@ -11,7 +11,7 @@
 <script src="config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chonburi&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Taviraj:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 <style>
 /* layout idea: a federal council table seen from above. Green baize in the middle, one brass-railed board,
    cards that look like printed cards, and each state's tray laid out where a player would sit. */
@@ -1132,6 +1132,271 @@ body[data-view="table"] .online-pill { bottom: auto; top: 60px; left: auto; righ
 .currents .cur.hot .col { box-shadow: 0 0 0 2px var(--lc), 0 0 22px color-mix(in srgb, var(--lc) 75%, transparent); }
 .currents .cur.ruling .col { border-width: 3px; }
 @media (prefers-reduced-motion: reduce) { .xtag { animation: none; } .currents .cur .fill { transition: none; } }
+
+/* =====================================================================
+   GOTHIC INDUSTRIAL: Luxonia after dark.
+   Soot and wet slate, wrought iron held by brass rivets, gaslight amber, stained-glass jewel colours for
+   the eras, parchment cards with burnt edges, a brass cog that counts the rounds. Loaded after style.css
+   and style2.css: it restyles what they lay out and leaves the layout alone.
+   (style3.src.css is the source; tools/theme.py fills in the SVG pictures and writes style3.css.)
+   ===================================================================== */
+:root {
+  --felt: #16171b; --felt-hi: #22242a; --felt-deep: #060709;
+  --board: #1b1d22; --tray: rgba(12, 12, 15, .62);
+  --brass: #c99b4b; --brass-hi: #f1d08a; --brass-dim: #7c5c28;
+  --gas: #ffb45e; --blood: #8e1c2c; --blood-hi: #c8404f;
+  --card: #e8dab8; --card-edge: #a08659; --ink: #22190f; --ink-soft: #5b4a35;
+  --text: #ece3d2; --muted: #b3a690; --dim: #82776a;
+  --good: #7fcf95; --bad: #ef7a68; --warn: #f0b24f;
+  --era0: #4d7d3a; --era1: #3a56a3; --era2: #1b7672; --era3: #9a302d; --eraS: #6f5c45;
+  --f-display: "Taviraj", "Trirong", "Noto Serif Thai", Georgia, serif;
+  --f-gothic: "UnifrakturMaguntia", "Taviraj", Georgia, serif;
+  --iron-line: #50483a;
+  --plate: linear-gradient(180deg, rgba(50, 53, 60, .96), rgba(30, 32, 37, .97) 55%, rgba(21, 22, 26, .98));
+  --rv: #f6dc9c 0, #b98a3a 1.3px, #4a3311 2.3px, transparent 2.9px;
+  --rivets: radial-gradient(circle at 9px 9px, var(--rv)), radial-gradient(circle at calc(100% - 9px) 9px, var(--rv)), radial-gradient(circle at 9px calc(100% - 9px), var(--rv)), radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), var(--rv));
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .38 0 0 0 0 .26 0 0 0 0 .12 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  --soot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .11 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  --edge-in: inset 0 1px 0 rgba(255, 236, 190, .07), inset 0 0 0 1px rgba(0, 0, 0, .5);
+  accent-color: #c99b4b;
+}
+body {
+  background-color: #121317;
+  background-image:
+    radial-gradient(ellipse 70% 45% at 50% -6%, rgba(255, 170, 80, .10), transparent 70%),
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 48%, rgba(0, 0, 0, .82) 100%),
+    var(--soot);
+}
+::selection { background: rgba(200, 64, 79, .55); color: #fff; }
+* { scrollbar-width: thin; scrollbar-color: #6b5426 rgba(0, 0, 0, .3); }
+input, select, textarea, .cform textarea { background: rgba(8, 8, 10, .6); border: 1px solid #5a4d36; border-radius: 5px; color: var(--text); }
+select:focus-visible, input:focus-visible, button:focus-visible, summary:focus-visible, textarea:focus-visible { outline: 2px solid var(--gas); outline-offset: 2px; }
+
+/* type: Victorian print for every heading, plain sans for the small print */
+.title-block h1, .page-h h1, .mbox h2, .box h2, .setup .box h2, .decision h3, .coach h3, .banner .t, .splash .t, .hh b, .top .brand,
+.acard .an, .regcard .rname, .mat .mh .nm, .lane .who .nm, .podium .pl .nm, .bwin, .battlebox .vs, .rtrack .en, .hr-rank, .playcard .an, .tray h3, .mbox h3 { font-family: var(--f-display); font-weight: 600; }
+.box h2, .tray h3 { font-size: 18px; }
+.mbox h3 { font-size: 16px; }
+.pcard .band .cn, .rcard .rn, .mcard .mn, .bcard .bn { font-family: var(--f-display); font-weight: 600; letter-spacing: .1px; }
+.pcard .band .cn { font-size: 13.5px; }
+.sh .nm small { font-family: var(--f-gothic); font-size: 13.5px; font-weight: 400; color: #c9b892; letter-spacing: .2px; }
+
+/* ---------- buttons: iron plates, polished brass, oxblood enamel ---------- */
+.btn { background: linear-gradient(#3b3f47, #25282e); border: 1px solid #5a4d36; border-radius: 6px; box-shadow: inset 0 1px 0 rgba(255, 240, 210, .09), 0 2px 0 rgba(0, 0, 0, .55); color: var(--text); }
+.btn:hover:not(:disabled) { border-color: var(--brass); background: linear-gradient(#474b54, #2c2f36); box-shadow: inset 0 1px 0 rgba(255, 240, 210, .1), 0 0 0 1px rgba(201, 155, 75, .3), 0 0 16px rgba(255, 170, 80, .22), 0 2px 0 rgba(0, 0, 0, .55); }
+.btn.primary { background: linear-gradient(#f4d895, #cf9f4c 46%, #9b6f2b); border-color: #f7e2a8; color: #2a1906; text-shadow: 0 1px 0 rgba(255, 240, 200, .55); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), inset 0 -2px 0 rgba(90, 60, 15, .45), 0 2px 0 rgba(0, 0, 0, .55); }
+.btn.primary:hover:not(:disabled) { background: linear-gradient(#fbe3a8, #dcae58 46%, #a87a31); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), inset 0 -2px 0 rgba(90, 60, 15, .45), 0 0 18px rgba(255, 180, 90, .45), 0 2px 0 rgba(0, 0, 0, .55); }
+.btn.ghost { background: rgba(0, 0, 0, .18); border-color: rgba(201, 155, 75, .32); box-shadow: none; }
+.btn.danger { background: linear-gradient(#93283a, #5e1520); border-color: #c8404f; }
+.btn.sm { border-radius: 5px; }
+.stepper button { background: linear-gradient(#3b3f47, #25282e); border-color: #5a4d36; border-radius: 5px; }
+.seg { border-color: #5a4d36; border-radius: 6px; }
+.seg button.on { background: rgba(201, 155, 75, .22); }
+
+/* ---------- top bar ---------- */
+.top { background: linear-gradient(rgba(22, 23, 27, .97), rgba(14, 15, 18, .9)); border-bottom: 1px solid rgba(201, 155, 75, .5); box-shadow: 0 1px 0 #000, 0 10px 24px rgba(0, 0, 0, .45); }
+.top .brand { font-weight: 700; color: var(--brass-hi); text-shadow: 0 1px 0 #000, 0 0 14px rgba(255, 170, 80, .25); letter-spacing: .3px; }
+.top .status .pill { background: rgba(0, 0, 0, .38); border-color: #5a4d36; border-radius: 5px; }
+.top .status .pill.ph { border-color: var(--brass); }
+.badge { background: var(--blood-hi); }
+
+/* ---------- panels: wrought iron held by brass rivets ---------- */
+.box, .setup .box, .tray, .decision { background: var(--rivets), radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 175, 90, .06), transparent 70%), var(--plate); border: 1px solid var(--iron-line); border-top: 2px solid var(--brass-dim); border-radius: 8px; box-shadow: var(--edge-in), 0 18px 40px rgba(0, 0, 0, .45); }
+.decision { border-top: 3px solid var(--brass); }
+.decision.idle { background: var(--rivets), rgba(14, 14, 17, .62); border-top-color: var(--iron-line); }
+.tray { border-top: 3px solid var(--brass); }
+.modal { background: rgba(6, 6, 8, .74); }
+.modal.moved { background: rgba(6, 6, 8, .32); }
+.mbox { background: var(--rivets), radial-gradient(ellipse 70% 38% at 50% 0%, rgba(255, 175, 90, .08), transparent 70%), var(--plate); border: 1px solid #5a4d36; border-top: 3px solid var(--brass); border-radius: 10px; box-shadow: var(--edge-in), 0 0 0 1px #000, 0 30px 80px rgba(0, 0, 0, .65); }
+.mbox > h2 { font-size: 24px; color: var(--brass-hi); text-shadow: 0 2px 0 rgba(0, 0, 0, .55), 0 0 18px rgba(255, 170, 80, .18); }
+.mbox > h2::after { content: ""; display: block; height: 16px; margin-top: 6px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='16' viewBox='0 0 120 16'%3E%3Cg fill='none' stroke='%23c99b4b' stroke-width='1.2'%3E%3Cpath d='M60 1.5L66.5 8L60 14.5L53.5 8Z'/%3E%3Cpath d='M60 4.5L63.5 8L60 11.5L56.5 8Z'/%3E%3C/g%3E%3Ccircle cx='47' cy='8' r='2.2' fill='%23c99b4b'/%3E%3Ccircle cx='73' cy='8' r='2.2' fill='%23c99b4b'/%3E%3Ccircle cx='39' cy='8' r='1.2' fill='%237c5c28'/%3E%3Ccircle cx='81' cy='8' r='1.2' fill='%237c5c28'/%3E%3C/svg%3E") center / auto 16px no-repeat, linear-gradient(90deg, transparent, rgba(124, 92, 40, .9) 14%, rgba(124, 92, 40, .9) 86%, transparent) center / 100% 1px no-repeat; }
+.mgrip i { background: #5a4d36; }
+.mbox:hover .mgrip i { background: var(--brass); }
+.form-sec, .summary, .bside, .exchange, .wpool, .idbox, .cmt, .ri, .pi, .sseat, .crow, .rail-wrap { background: rgba(0, 0, 0, .3); border-color: rgba(201, 155, 75, .14); border-radius: 6px; }
+.tip { background-color: #f3e8cd; background-image: var(--paper); border: 1px solid var(--card-edge); border-radius: 6px; box-shadow: 0 14px 30px rgba(0, 0, 0, .55), inset 0 0 0 1px rgba(255, 255, 255, .35); }
+.drawer { background: var(--soot), linear-gradient(#22242a, #141518); border-left: 1px solid #5a4d36; }
+.dtabs { border-bottom-color: #3a352c; }
+.logbox .lt { background: #17181c; }
+.acct, .pcard-prof, .online-pill { background: rgba(14, 14, 17, .86); border: 1px solid #5a4d36; border-radius: 7px; }
+.online-pill { border-radius: 999px; }
+body[data-view="menu"] .online-pill { left: auto; right: 12px; }
+.acct.on { border-color: #5f8f6c; }
+.hofnote { background: rgba(201, 155, 75, .1); border-color: rgba(201, 155, 75, .42); border-radius: 6px; }
+
+/* ---------- seats, the board, your mat ---------- */
+.seat { background: var(--rivets), linear-gradient(180deg, rgba(42, 44, 50, .9), rgba(20, 21, 25, .84)); border: 1px solid var(--iron-line); border-top: 3px solid var(--pc); border-radius: 8px; box-shadow: var(--edge-in), 0 10px 26px rgba(0, 0, 0, .4); }
+.netb { background: rgba(0, 0, 0, .42); border-color: rgba(201, 155, 75, .5); border-radius: 6px; }
+.board { border-radius: 12px; border: 3px solid #5d4521; background:
+    var(--rivets),
+    radial-gradient(ellipse 60% 42% at 50% 0%, rgba(255, 175, 90, .12), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .012) 0 2px, transparent 2px 7px),
+    radial-gradient(ellipse 80% 90% at 50% 40%, #2c2f36, #1a1c21 72%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .7), inset 0 0 0 4px rgba(201, 155, 75, .2), inset 0 0 60px rgba(0, 0, 0, .55), 0 0 0 1px #000, 0 22px 50px rgba(0, 0, 0, .6); }
+/* the gas jets over the council table flicker a little */
+.board::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(ellipse 55% 30% at 50% 0%, rgba(255, 180, 95, .10), transparent 72%); animation: gasjet 6.5s steps(1, end) infinite; }
+@keyframes gasjet { 0% { opacity: .85; } 9% { opacity: 1; } 11% { opacity: .78; } 14% { opacity: .96; } 41% { opacity: .9; } 44% { opacity: 1; } 47% { opacity: .84; } 73% { opacity: .95; } 76% { opacity: .8; } 79% { opacity: .92; } }
+body.scene-still .board::after { animation: none; }
+.mymat .mat { background: var(--rivets), radial-gradient(ellipse 60% 70% at 50% 0%, rgba(255, 175, 90, .07), transparent 70%), linear-gradient(rgba(48, 34, 25, .9), rgba(26, 19, 14, .93)); border: 1px solid #6b5426; border-top: 3px solid var(--pc); border-radius: 10px; }
+.hand-in { background: linear-gradient(rgba(14, 14, 16, 0), rgba(17, 16, 18, .95) 40px); }
+.handtab { background: linear-gradient(#f4d895, #c99b4b 50%, #9b6f2b); border-radius: 7px 7px 0 0; }
+
+/* the round track reads like a row of stained-glass panes */
+.rtrack .era { border-radius: 6px; background: linear-gradient(165deg, color-mix(in srgb, var(--ec) 58%, #000 14%), color-mix(in srgb, var(--ec) 30%, #000 62%)); border: 1px solid rgba(0, 0, 0, .85); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), inset 0 -10px 18px rgba(0, 0, 0, .35); opacity: .6; }
+.rtrack .era.now { opacity: 1; box-shadow: 0 0 0 1.5px var(--brass), 0 0 22px color-mix(in srgb, var(--ec) 70%, transparent), inset 0 0 18px color-mix(in srgb, var(--ec) 55%, rgba(255, 220, 160, .25)); }
+.rtrack .en { color: #fff3dc; letter-spacing: .3px; text-shadow: 0 1px 0 rgba(0, 0, 0, .7); }
+.rtrack .cell { border-radius: 3px; background: rgba(0, 0, 0, .45); border: 1px solid rgba(0, 0, 0, .6); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05); color: #dccfb5; }
+.rtrack .cell.past { background: rgba(0, 0, 0, .6); }
+/* the round marker is a brass cog: it turns as the rounds go by */
+.rmark { width: 36px; height: 36px; margin: -18px 0 0 -18px; border-radius: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='b' cx='35%25' cy='30%25' r='75%25'%3E%3Cstop offset='0' stop-color='%23fbe3a3'/%3E%3Cstop offset='.5' stop-color='%23c99b4b'/%3E%3Cstop offset='1' stop-color='%235e4216'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath fill='url(%23b)' stroke='%233b2709' stroke-width='1.2' d='M57.5 32.0L62.9 33.9L62.0 40.0L56.2 40.1L54.1 44.8L57.8 49.2L53.9 53.9L48.9 51.1L44.8 54.1L45.8 59.8L40.1 61.9L37.1 57.0L32.0 57.5L30.1 62.9L24.0 62.0L23.9 56.2L19.3 54.1L14.8 57.8L10.1 53.9L12.9 48.9L9.9 44.8L4.2 45.8L2.1 40.1L7.0 37.1L6.5 32.0L1.1 30.1L2.0 24.0L7.8 23.9L9.9 19.3L6.2 14.8L10.1 10.1L15.1 12.9L19.2 9.9L18.2 4.2L23.9 2.1L26.9 7.0L32.0 6.5L33.9 1.1L40.0 2.0L40.1 7.8L44.8 9.9L49.2 6.2L53.9 10.1L51.1 15.1L54.1 19.2L59.8 18.2L61.9 23.9L57.0 26.9Z'/%3E%3Ccircle cx='32' cy='32' r='17' fill='%233b2709'/%3E%3Ccircle cx='32' cy='32' r='15.5' fill='%235a3f14' stroke='%23e6c27a' stroke-width='1'/%3E%3Ccircle cx='12' cy='32' r='1.6' fill='%233b2709'/%3E%3Ccircle cx='52' cy='32' r='1.6' fill='%233b2709'/%3E%3Ccircle cx='32' cy='12' r='1.6' fill='%233b2709'/%3E%3Ccircle cx='32' cy='52' r='1.6' fill='%233b2709'/%3E%3C/svg%3E") center / 100% no-repeat; box-shadow: none; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .65)); transform: rotate(calc(var(--r, 1) * 60deg)); transition: left .7s cubic-bezier(.5, -.3, .4, 1.4), top .7s, transform 1.2s cubic-bezier(.3, .9, .3, 1.1); }
+.rmark .ic { width: 15px; height: 15px; color: #f6dc9c; transform: rotate(calc(var(--r, 1) * -60deg)); transition: transform 1.2s cubic-bezier(.3, .9, .3, 1.1); }
+.phases span { border-radius: 5px; border-color: rgba(201, 155, 75, .2); }
+.phases span.on { background: linear-gradient(#f4d895, #c99b4b 55%, #9b6f2b); border-color: #f7e2a8; color: #2a1906; }
+.pile { border-radius: 6px; border-color: rgba(246, 220, 156, .35); }
+.xtok { border-radius: 6px; background: rgba(0, 0, 0, .42); }
+.scoreline .sc { border-radius: 6px; background: rgba(0, 0, 0, .4); }
+.tokens .xtok b { color: var(--brass-hi); }
+
+/* ---------- printed cards: parchment, sepia at the edges, glass-bright bands ---------- */
+.pcard, .regcard, .rcard, .acard, .bcard, .playcard, .opt {
+  background-color: var(--card);
+  background-image: radial-gradient(ellipse 130% 110% at 50% 42%, rgba(255, 252, 240, .5), transparent 58%), radial-gradient(ellipse 150% 130% at 50% 50%, transparent 60%, rgba(120, 72, 28, .3) 100%), var(--paper);
+  border-color: var(--card-edge);
+}
+.mcard { background-color: #ead3c1; background-image: radial-gradient(ellipse 150% 130% at 50% 50%, transparent 60%, rgba(120, 52, 28, .3) 100%), var(--paper); border-color: #a98068; }
+.pcard { border-radius: 8px; }
+.pcard:hover { box-shadow: 0 5px 0 rgba(0, 0, 0, .2), 0 16px 28px rgba(0, 0, 0, .5), 0 0 22px rgba(255, 170, 80, .28); }
+.pcard .band, .rcard .rb, .regcard .band { background-image: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, .2)); box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .35); }
+.pcard .tray-c, .pcard .tray { background: rgba(140, 104, 58, .2); }
+.pcard .bslot { background: rgba(255, 250, 235, .7); }
+.regcard { border-radius: 8px; }
+.rcard { border-radius: 7px; }
+.acard { border-radius: 10px; }
+.acard .mode { background: rgba(255, 250, 238, .78); border-color: #bea77b; border-radius: 6px; }
+.acard .mode:hover:not(:disabled) { background: #fffaf0; }
+.opt { border-radius: 7px; }
+.opt-card { border-radius: 8px; border-color: rgba(201, 155, 75, .18); background: rgba(0, 0, 0, .28); }
+.opt-card:hover:not(:disabled) { background: rgba(255, 170, 80, .1); box-shadow: 0 0 22px rgba(255, 170, 80, .16); }
+.tuck { border-radius: 0 0 6px 6px; }
+.apile { border-radius: 5px; }
+.bcard { border-radius: 7px; }
+.die { border-radius: 9px; background: linear-gradient(145deg, #fbf3dc, #d9c9a4); }
+.dr-seat { border-radius: 8px; background: var(--rivets), rgba(0, 0, 0, .32); }
+
+/* ---------- main menu: a brass nameplate for each door ---------- */
+.menu .title-block::before { content: "The Federation of Kirana"; display: block; font-family: var(--f-gothic); font-size: clamp(20px, 2.4vw, 30px); line-height: 1.2; color: var(--brass); letter-spacing: .4px; text-shadow: 0 2px 0 rgba(0, 0, 0, .65), 0 0 18px rgba(255, 170, 80, .2); margin-bottom: 4px; }
+.menu .title-block h1 { font-weight: 700; color: var(--brass-hi); letter-spacing: .4px; text-shadow: 0 1px 0 rgba(255, 240, 200, .3), 0 3px 0 #3a2508, 0 7px 16px rgba(0, 0, 0, .65), 0 0 36px rgba(255, 170, 80, .25); }
+.menu .title-block h1 .of { font-weight: 600; color: var(--brass); }
+.menu .title-block h1::after { content: ""; display: block; height: 16px; max-width: 360px; margin: 12px auto 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='16' viewBox='0 0 120 16'%3E%3Cg fill='none' stroke='%23c99b4b' stroke-width='1.2'%3E%3Cpath d='M60 1.5L66.5 8L60 14.5L53.5 8Z'/%3E%3Cpath d='M60 4.5L63.5 8L60 11.5L56.5 8Z'/%3E%3C/g%3E%3Ccircle cx='47' cy='8' r='2.2' fill='%23c99b4b'/%3E%3Ccircle cx='73' cy='8' r='2.2' fill='%23c99b4b'/%3E%3Ccircle cx='39' cy='8' r='1.2' fill='%237c5c28'/%3E%3Ccircle cx='81' cy='8' r='1.2' fill='%237c5c28'/%3E%3C/svg%3E") center / auto 16px no-repeat, linear-gradient(90deg, transparent, rgba(124, 92, 40, .95) 16%, rgba(124, 92, 40, .95) 84%, transparent) center / 100% 1px no-repeat; }
+.menu .title-block .sub { color: #d2c4a8; }
+.mbtn { position: relative; border-radius: 8px; border: 1px solid #5a4d36; padding: 8px 18px 8px 12px; background: var(--rivets), linear-gradient(180deg, rgba(52, 55, 62, .95), rgba(29, 31, 36, .96)); box-shadow: var(--edge-in), 0 6px 18px rgba(0, 0, 0, .45); }
+.mbtn:hover:not(:disabled) { border-color: var(--brass); box-shadow: var(--edge-in), 0 0 0 1px rgba(201, 155, 75, .35), 0 0 24px rgba(255, 170, 80, .18), 0 10px 26px rgba(0, 0, 0, .45); }
+.mbtn b { font-family: var(--f-display); font-weight: 600; font-size: 17px; color: #f4e8cf; }
+.mbtn.hot { border-color: #c8404f; background: var(--rivets), linear-gradient(180deg, rgba(112, 28, 42, .95), rgba(58, 13, 23, .96)); box-shadow: var(--edge-in), 0 0 0 1px rgba(200, 64, 79, .35), 0 0 26px rgba(200, 64, 79, .25), 0 8px 22px rgba(0, 0, 0, .45); }
+/* each door has a lancet window of stained glass with its sign lit behind it */
+.mbtn .mic { position: relative; flex: none; width: 42px; height: 50px; display: grid; place-items: center; padding-top: 10px; background: linear-gradient(170deg, #f3d58f, #a77a30 55%, #5e4216); clip-path: path("M0 50V21A24 24 0 0 1 21 0A24 24 0 0 1 42 21V50Z"); }
+.mbtn .mic::before { content: ""; position: absolute; left: 3px; top: 3px; width: 36px; height: 44px; clip-path: path("M0 44V18A21 21 0 0 1 18 0A21 21 0 0 1 36 18V44Z"); background: radial-gradient(ellipse 90% 55% at 50% 70%, rgba(255, 196, 120, .55), transparent 72%), linear-gradient(90deg, transparent 48.5%, rgba(0, 0, 0, .45) 48.5% 51.5%, transparent 51.5%), linear-gradient(165deg, #7c1e2f, #2b0b13 55%, #4c1321); transition: filter .2s; }
+.mbtn .mic .ic { position: relative; width: 24px; height: 24px; color: #ffe4ad; filter: drop-shadow(0 0 6px rgba(255, 170, 80, .7)); }
+.mbtn:hover .mic::before { filter: brightness(1.45) saturate(1.2); }
+.mbtn.hot .mic::before { background: radial-gradient(ellipse 90% 55% at 50% 70%, rgba(255, 210, 140, .7), transparent 72%), linear-gradient(90deg, transparent 48.5%, rgba(0, 0, 0, .45) 48.5% 51.5%, transparent 51.5%), linear-gradient(165deg, #b23446, #4a0f1b 60%, #6d1626); }
+.menu-row .btn.ghost { background: rgba(10, 10, 12, .5); }
+
+/* ---------- toasts, banners and the era splash ---------- */
+.toast { background: rgba(18, 18, 22, .95); border-radius: 6px; box-shadow: 0 10px 26px rgba(0, 0, 0, .55), 0 0 16px rgba(255, 170, 80, .1); }
+.banner { border-radius: 8px; border: 1px solid var(--brass); background: var(--rivets), linear-gradient(rgba(38, 40, 46, .97), rgba(18, 19, 23, .97)); box-shadow: 0 0 0 4px rgba(0, 0, 0, .6), 0 0 0 5px rgba(201, 155, 75, .5), 0 30px 70px rgba(0, 0, 0, .65), 0 0 40px rgba(255, 170, 80, .14); }
+.banner .t { font-weight: 700; }
+.banner .k { font-family: var(--f-display); letter-spacing: 3px; color: var(--brass); }
+.splash { overflow: hidden; background: radial-gradient(ellipse at center, color-mix(in srgb, var(--ec) 50%, rgba(0, 0, 0, .65)), rgba(6, 5, 6, .9) 70%); }
+.splash::before { content: ""; position: absolute; left: 50%; top: 50%; width: min(82vmin, 660px); aspect-ratio: 1; transform: translate(-50%, -50%); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='rgba(255,236,190,0.05)' stroke='%23d9ae5f' stroke-width='1.3'%3E%3Ccircle cx='100' cy='100' r='96'/%3E%3Ccircle cx='100' cy='100' r='88'/%3E%3Ccircle cx='100' cy='100' r='26'/%3E%3Ccircle cx='100' cy='100' r='12'/%3E%3Cpath d='M129.7 96.1 L165.0 91.5 Q183.8 94.0 184.0 100.0 Q183.8 106.0 165.0 108.5 L129.7 103.9 Z'/%3E%3Ccircle cx='167.6' cy='118.1' r='5'/%3E%3Cpath d='M127.7 111.5 L160.5 125.1 Q175.6 136.7 172.7 142.0 Q169.6 147.1 152.0 139.8 L123.8 118.2 Z'/%3E%3Ccircle cx='149.5' cy='149.5' r='5'/%3E%3Cpath d='M118.2 123.8 L139.8 152.0 Q147.1 169.6 142.0 172.7 Q136.7 175.6 125.1 160.5 L111.5 127.7 Z'/%3E%3Ccircle cx='118.1' cy='167.6' r='5'/%3E%3Cpath d='M103.9 129.7 L108.5 165.0 Q106.0 183.8 100.0 184.0 Q94.0 183.8 91.5 165.0 L96.1 129.7 Z'/%3E%3Ccircle cx='81.9' cy='167.6' r='5'/%3E%3Cpath d='M88.5 127.7 L74.9 160.5 Q63.3 175.6 58.0 172.7 Q52.9 169.6 60.2 152.0 L81.8 123.8 Z'/%3E%3Ccircle cx='50.5' cy='149.5' r='5'/%3E%3Cpath d='M76.2 118.2 L48.0 139.8 Q30.4 147.1 27.3 142.0 Q24.4 136.7 39.5 125.1 L72.3 111.5 Z'/%3E%3Ccircle cx='32.4' cy='118.1' r='5'/%3E%3Cpath d='M70.3 103.9 L35.0 108.5 Q16.2 106.0 16.0 100.0 Q16.2 94.0 35.0 91.5 L70.3 96.1 Z'/%3E%3Ccircle cx='32.4' cy='81.9' r='5'/%3E%3Cpath d='M72.3 88.5 L39.5 74.9 Q24.4 63.3 27.3 58.0 Q30.4 52.9 48.0 60.2 L76.2 81.8 Z'/%3E%3Ccircle cx='50.5' cy='50.5' r='5'/%3E%3Cpath d='M81.8 76.2 L60.2 48.0 Q52.9 30.4 58.0 27.3 Q63.3 24.4 74.9 39.5 L88.5 72.3 Z'/%3E%3Ccircle cx='81.9' cy='32.4' r='5'/%3E%3Cpath d='M96.1 70.3 L91.5 35.0 Q94.0 16.2 100.0 16.0 Q106.0 16.2 108.5 35.0 L103.9 70.3 Z'/%3E%3Ccircle cx='118.1' cy='32.4' r='5'/%3E%3Cpath d='M111.5 72.3 L125.1 39.5 Q136.7 24.4 142.0 27.3 Q147.1 30.4 139.8 48.0 L118.2 76.2 Z'/%3E%3Ccircle cx='149.5' cy='50.5' r='5'/%3E%3Cpath d='M123.8 81.8 L152.0 60.2 Q169.6 52.9 172.7 58.0 Q175.6 63.3 160.5 74.9 L127.7 88.5 Z'/%3E%3Ccircle cx='167.6' cy='81.9' r='5'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat; opacity: .34; filter: drop-shadow(0 0 22px var(--ec)); animation: rosespin 60s linear infinite; }
+.splash > * { position: relative; }
+.splash .t { font-weight: 700; text-shadow: 0 4px 0 rgba(0, 0, 0, .55), 0 0 40px var(--ec), 0 0 2px #000; }
+.splash .s { text-shadow: 0 1px 0 #000, 0 0 10px rgba(0, 0, 0, .9); }
+.splash .k { font-family: var(--f-display); }
+@keyframes rosespin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+/* ---------- small machines: a turning gear while a rival thinks, a gear for every wait ---------- */
+.thinking { width: 18px; height: 18px; display: block; background: var(--pc); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill-rule='evenodd' d='M57.5 32.0L62.9 33.9L62.0 40.0L56.2 40.1L54.1 44.8L57.8 49.2L53.9 53.9L48.9 51.1L44.8 54.1L45.8 59.8L40.1 61.9L37.1 57.0L32.0 57.5L30.1 62.9L24.0 62.0L23.9 56.2L19.3 54.1L14.8 57.8L10.1 53.9L12.9 48.9L9.9 44.8L4.2 45.8L2.1 40.1L7.0 37.1L6.5 32.0L1.1 30.1L2.0 24.0L7.8 23.9L9.9 19.3L6.2 14.8L10.1 10.1L15.1 12.9L19.2 9.9L18.2 4.2L23.9 2.1L26.9 7.0L32.0 6.5L33.9 1.1L40.0 2.0L40.1 7.8L44.8 9.9L49.2 6.2L53.9 10.1L51.1 15.1L54.1 19.2L59.8 18.2L61.9 23.9L57.0 26.9ZM41 32A9 9 0 1 0 23 32A9 9 0 1 0 41 32Z'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill-rule='evenodd' d='M57.5 32.0L62.9 33.9L62.0 40.0L56.2 40.1L54.1 44.8L57.8 49.2L53.9 53.9L48.9 51.1L44.8 54.1L45.8 59.8L40.1 61.9L37.1 57.0L32.0 57.5L30.1 62.9L24.0 62.0L23.9 56.2L19.3 54.1L14.8 57.8L10.1 53.9L12.9 48.9L9.9 44.8L4.2 45.8L2.1 40.1L7.0 37.1L6.5 32.0L1.1 30.1L2.0 24.0L7.8 23.9L9.9 19.3L6.2 14.8L10.1 10.1L15.1 12.9L19.2 9.9L18.2 4.2L23.9 2.1L26.9 7.0L32.0 6.5L33.9 1.1L40.0 2.0L40.1 7.8L44.8 9.9L49.2 6.2L53.9 10.1L51.1 15.1L54.1 19.2L59.8 18.2L61.9 23.9L57.0 26.9ZM41 32A9 9 0 1 0 23 32A9 9 0 1 0 41 32Z'/%3E%3C/svg%3E") center / contain no-repeat; animation: spin 1.8s linear infinite; }
+.thinking i { display: none; }
+.spin { width: 40px; height: 40px; border: 0; border-radius: 0; background: linear-gradient(140deg, #f6dc9c, #c99b4b 55%, #6b4c1c); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill-rule='evenodd' d='M57.5 32.0L62.9 33.9L62.0 40.0L56.2 40.1L54.1 44.8L57.8 49.2L53.9 53.9L48.9 51.1L44.8 54.1L45.8 59.8L40.1 61.9L37.1 57.0L32.0 57.5L30.1 62.9L24.0 62.0L23.9 56.2L19.3 54.1L14.8 57.8L10.1 53.9L12.9 48.9L9.9 44.8L4.2 45.8L2.1 40.1L7.0 37.1L6.5 32.0L1.1 30.1L2.0 24.0L7.8 23.9L9.9 19.3L6.2 14.8L10.1 10.1L15.1 12.9L19.2 9.9L18.2 4.2L23.9 2.1L26.9 7.0L32.0 6.5L33.9 1.1L40.0 2.0L40.1 7.8L44.8 9.9L49.2 6.2L53.9 10.1L51.1 15.1L54.1 19.2L59.8 18.2L61.9 23.9L57.0 26.9ZM41 32A9 9 0 1 0 23 32A9 9 0 1 0 41 32Z'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill-rule='evenodd' d='M57.5 32.0L62.9 33.9L62.0 40.0L56.2 40.1L54.1 44.8L57.8 49.2L53.9 53.9L48.9 51.1L44.8 54.1L45.8 59.8L40.1 61.9L37.1 57.0L32.0 57.5L30.1 62.9L24.0 62.0L23.9 56.2L19.3 54.1L14.8 57.8L10.1 53.9L12.9 48.9L9.9 44.8L4.2 45.8L2.1 40.1L7.0 37.1L6.5 32.0L1.1 30.1L2.0 24.0L7.8 23.9L9.9 19.3L6.2 14.8L10.1 10.1L15.1 12.9L19.2 9.9L18.2 4.2L23.9 2.1L26.9 7.0L32.0 6.5L33.9 1.1L40.0 2.0L40.1 7.8L44.8 9.9L49.2 6.2L53.9 10.1L51.1 15.1L54.1 19.2L59.8 18.2L61.9 23.9L57.0 26.9ZM41 32A9 9 0 1 0 23 32A9 9 0 1 0 41 32Z'/%3E%3C/svg%3E") center / contain no-repeat; animation: spin 2.6s linear infinite; }
+
+/* ---------- pages ---------- */
+.page-h h1 { color: var(--brass-hi); text-shadow: 0 2px 0 rgba(0, 0, 0, .55); }
+.hrow { border-radius: 6px; background: rgba(0, 0, 0, .32); }
+.hrow.top1 { background: linear-gradient(90deg, rgba(201, 155, 75, .24), rgba(0, 0, 0, .3)); }
+.podium .pl { border-radius: 8px; background: rgba(0, 0, 0, .32); }
+.howto .toc a { border-color: #5a4d36; border-radius: 5px; }
+.lane { border-radius: 8px; background: rgba(0, 0, 0, .32); }
+
+/* ---------- the scenes behind: soot on the menu, an old printed map under the table ---------- */
+body[data-view="menu"] .sc-veil { background: linear-gradient(90deg, rgba(11, 9, 9, .86) 0%, rgba(11, 9, 9, .68) 30%, rgba(11, 9, 9, .18) 56%, rgba(11, 9, 9, .06) 76%, rgba(11, 9, 9, .34) 100%), radial-gradient(ellipse 120% 100% at 62% 42%, transparent 58%, rgba(4, 3, 3, .72) 100%); }
+body[data-view="table"] .sc-veil { background: linear-gradient(rgba(20, 20, 24, .66), rgba(12, 12, 15, .78)), radial-gradient(ellipse 115% 95% at 50% 40%, transparent 48%, rgba(3, 3, 4, .82) 100%); }
+body[data-view="page"] .sc-veil { background: linear-gradient(rgba(16, 16, 20, .8), rgba(10, 10, 13, .86)), radial-gradient(ellipse 115% 95% at 50% 40%, transparent 55%, rgba(3, 3, 4, .7) 100%); }
+@media (max-width: 1099px) { body[data-view="menu"] .sc-veil { background: linear-gradient(rgba(11, 9, 9, .66), rgba(11, 9, 9, .8)); } }
+#scene[data-scene="map"] .sc-img { filter: sepia(.5) saturate(.72) contrast(1.06) brightness(.84); }
+body[data-view="table"] .sc-tint { opacity: .22; }
+@media (min-width: 1100px) { body[data-scene="study"] .menu .title-block h1::after { margin-left: 0; } }
+
+/* ---------- the tutorial: Nemessiah at the table ---------- */
+.coachveil { background: rgba(6, 5, 6, .5); }
+.coachring { border-radius: 8px; box-shadow: 0 0 0 3px var(--gas), 0 0 26px rgba(255, 170, 80, .55), 0 0 0 9999px rgba(6, 5, 6, .56); }
+.coach.nem { width: min(640px, calc(100vw - 20px)); padding: 0 0 10px; color: var(--text); border-radius: 10px; border: 1px solid #6e2a35; border-top: 3px solid var(--blood-hi);
+  background: radial-gradient(ellipse 60% 80% at 14% 40%, rgba(142, 28, 44, .26), transparent 70%), radial-gradient(ellipse 80% 40% at 60% 0%, rgba(255, 175, 90, .07), transparent 70%), linear-gradient(180deg, rgba(40, 30, 34, .985), rgba(21, 17, 20, .985));
+  box-shadow: inset 0 1px 0 rgba(255, 220, 200, .06), 0 0 0 1px #000, 0 30px 70px rgba(0, 0, 0, .7), 0 0 44px rgba(142, 28, 44, .26); }
+.coach.nem .ck { margin: 0; padding: 6px 10px 6px 8px; border-bottom: 1px solid rgba(200, 64, 79, .3); color: #c9a7a3; background: rgba(0, 0, 0, .22); border-radius: 8px 8px 0 0; }
+.coach.nem .ck .grip .ic { color: #8a5a5f; }
+.coach.nem .ck .who { display: inline-flex; gap: 8px; align-items: center; min-width: 0; }
+.coach.nem .ck .who b { font-family: var(--f-display); font-weight: 700; font-size: 15px; color: #ffd9a0; letter-spacing: .3px; }
+.coach.nem .ck .who small { font-size: 11px; color: #c98f97; white-space: nowrap; }
+.coach.nem .ck .cnum { font-size: 11px; color: #b89a8f; white-space: nowrap; }
+.coach.nem .nem-av { width: 26px; height: 26px; flex: none; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 70%, #6e1a28, #22070d); box-shadow: 0 0 0 1.5px #c99b4b, 0 0 8px rgba(200, 64, 79, .45); }
+.coach.nem .nem-av img { width: 210%; margin: -4% 0 0 -55%; display: block; pointer-events: none; }
+.coach.nem .cmin { border-color: rgba(200, 64, 79, .45); color: #d9b9b3; }
+.coach.nem .cmin:hover { background: rgba(255, 255, 255, .06); }
+.coach.nem .cbody { display: grid; grid-template-columns: 172px minmax(0, 1fr); gap: 14px; align-items: start; padding: 10px 14px 0 10px; }
+.coach.nem.noimg .cbody { grid-template-columns: minmax(0, 1fr); padding-left: 14px; }
+.coach.nem.noimg .nem-por, .coach.nem.noimg .nem-av { display: none; }
+/* she stands before a lancet window of red glass */
+.nem-por { position: sticky; top: 0; width: 172px; height: 206px; margin: 0; isolation: isolate; }
+.nem-por::before { content: ""; position: absolute; z-index: 0; left: 7px; top: 6px; width: 158px; height: 200px; clip-path: path("M0 200V60A83 83 0 0 1 79 0A83 83 0 0 1 158 60V200Z"); background: linear-gradient(170deg, #f3d58f, #8f6527 55%, #4d3511); }
+.nem-por::after { content: ""; position: absolute; z-index: 1; left: 10px; top: 9px; width: 152px; height: 197px; clip-path: path("M0 197V58A80 80 0 0 1 76 0A80 80 0 0 1 152 58V197Z");
+  background: radial-gradient(ellipse 70% 45% at 50% 38%, rgba(255, 190, 120, .5), transparent 70%), linear-gradient(90deg, transparent 49%, rgba(0, 0, 0, .35) 49% 51%, transparent 51%), linear-gradient(0deg, transparent 58%, rgba(0, 0, 0, .3) 58% 59.5%, transparent 59.5%), linear-gradient(170deg, #8c2236, #2a0a12 55%, #571627); }
+.nem-por img { position: absolute; z-index: 2; left: 0; bottom: 0; width: 172px; height: 206px; display: block; pointer-events: none; user-select: none; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .55)); animation: nemin .45s cubic-bezier(.2, .8, .3, 1.1) both; }
+@keyframes nemin { from { transform: translateY(14px); opacity: 0; } }
+.nem-por[data-face="mad"]::after { animation: nemmad 1.6s ease-in-out infinite; }
+@keyframes nemmad { 50% { filter: brightness(1.6) saturate(1.4); } }
+.nem-por[data-face="panic"] img { animation: nemin .45s cubic-bezier(.2, .8, .3, 1.1) both, nemshake .5s .45s ease-in-out 2; }
+@keyframes nemshake { 25% { transform: translateX(-2px) rotate(-.8deg); } 75% { transform: translateX(2px) rotate(.8deg); } }
+.nem-por[data-face="surprise"] img { animation: nemin .45s cubic-bezier(.2, .8, .3, 1.1) both, nemhop .4s .45s ease-out 1; }
+@keyframes nemhop { 40% { transform: translateY(-6px); } }
+.nem-say { position: relative; min-width: 0; }
+.nem-say::before { content: "\201C"; position: absolute; left: -8px; top: -14px; font-family: var(--f-display); font-size: 64px; line-height: 1; color: rgba(200, 64, 79, .28); pointer-events: none; }
+.coach.nem h3 { position: relative; margin: 2px 0 6px; font-weight: 700; font-size: 21px; color: var(--brass-hi); text-shadow: 0 2px 0 rgba(0, 0, 0, .5); }
+.coach.nem .nem-say p { margin: 0 0 8px; font-family: var(--f-display); font-size: 15px; line-height: 1.72; color: #efe5d4; }
+.coach.nem .nem-say p:last-child { margin-bottom: 2px; }
+.coach.nem .nem-say .g { border-bottom-color: rgba(255, 200, 150, .6); }
+.coach.nem .cf { padding: 0 14px; }
+.coach.nem .btn.ghost { color: #d8c2b8; border-color: rgba(200, 64, 79, .45); background: rgba(0, 0, 0, .2); }
+@media (max-height: 640px) {
+  .coach.nem .cbody { grid-template-columns: 118px minmax(0, 1fr); gap: 10px; padding-top: 8px; }
+  .nem-por { width: 118px; height: 142px; }
+  .nem-por img { width: 118px; height: 142px; }
+  .nem-por::before { transform: scale(.686); transform-origin: 0 0; left: 5px; top: 4px; }
+  .nem-por::after { transform: scale(.686); transform-origin: 0 0; left: 7px; top: 6px; }
+  .coach.nem h3 { font-size: 18px; margin-bottom: 4px; }
+  .coach.nem .nem-say p { font-size: 13.5px; line-height: 1.6; margin-bottom: 6px; }
+}
+@media (max-width: 560px) {
+  .coach.nem .cbody { grid-template-columns: 84px minmax(0, 1fr); gap: 10px; padding-left: 8px; }
+  .nem-por { width: 84px; height: 101px; }
+  .nem-por img { width: 84px; height: 101px; }
+  .nem-por::before { transform: scale(.488); transform-origin: 0 0; left: 3px; top: 3px; }
+  .nem-por::after { transform: scale(.488); transform-origin: 0 0; left: 5px; top: 4px; }
+  .coach.nem .ck .who small { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board::after, .splash::before, .thinking, .spin, .nem-por img, .nem-por::after { animation: none !important; }
+  .rmark, .rmark .ic { transition: none !important; }
+}
 
 </style>
 </head>
@@ -7060,6 +7325,12 @@ function noise(t0, dur, vol, freq) {
   f.type = 'bandpass'; f.frequency.value = freq || 2400; g.gain.value = vol || 0.05;
   s.buffer = buf; s.connect(f); f.connect(g); g.connect(a.destination); s.start(a.currentTime + t0);
 }
+// a church bell: a low hum and inharmonic partials that ring out at different speeds
+function bell(t0, v) {
+  [[0.5, 3.4, 0.045], [1, 2.8, 0.06], [1.19, 1.7, 0.03], [1.5, 1.5, 0.026], [2, 1.25, 0.024], [2.52, 0.95, 0.016], [3.01, 0.75, 0.012]]
+    .forEach(([m, d, a]) => tone(196 * m, t0, d, 'sine', a * v));
+  noise(t0, 0.05, 0.03 * v, 1800);
+}
 function sfx(name) {
   if (!settings.sound || (S && S.replaying)) return;
   switch (name) {
@@ -7070,9 +7341,9 @@ function sfx(name) {
     case 'hit': tone(110, 0, 0.22, 'sine', 0.12); noise(0, 0.08, 0.04, 600); break;
     case 'win': [523, 659, 784].forEach((f, i) => tone(f, i * 0.09, 0.22, 'triangle', 0.06)); break;
     case 'lose': [392, 330, 262].forEach((f, i) => tone(f, i * 0.1, 0.24, 'sine', 0.06)); break;
-    case 'era': [262, 330, 392, 523].forEach((f, i) => tone(f, i * 0.07, 0.9, 'triangle', 0.045)); break;
-    case 'gavel': tone(180, 0, 0.12, 'square', 0.03); tone(140, 0.14, 0.14, 'square', 0.03); break;
-    case 'tick': tone(880, 0, 0.04, 'square', 0.02); break;
+    case 'era': bell(0, 1); bell(1.7, 0.7); break;   // the tower bell tolls twice for a new era
+    case 'gavel': tone(180, 0, 0.12, 'square', 0.03); tone(140, 0.14, 0.14, 'square', 0.03); tone(1240, 0.14, 0.55, 'sine', 0.012); tone(1870, 0.14, 0.32, 'sine', 0.007); break;
+    case 'tick': noise(0, 0.02, 0.05, 5200); tone(2100, 0, 0.03, 'square', 0.008); break;
     case 'dice': for (let i = 0; i < 5; i++) noise(i * 0.07, 0.05, 0.05, 1800 + i * 300); break;
     case 'shuffle': for (let i = 0; i < 6; i++) noise(i * 0.045, 0.04, 0.04, 3000); break;
     case 'chat': tone(990, 0, 0.08, 'sine', 0.04); tone(1320, 0.06, 0.1, 'sine', 0.035); break;
@@ -7429,113 +7700,122 @@ const HOWTO = [
     'เกมจบหลังสภารอบที่ 16 คะแนนสุทธิสูงสุดชนะ เสมอดูเกรฟ แล้วดูสินค้ารวม ถ้าผู้ชนะเป็นผู้เล่น ผลจะบันทึกเข้าหอเกียรติยศพร้อมการวิเคราะห์ว่ารัฐนั้นเล่นสายใด'] },
 ];
 
-// ---------- tutorial: shown once each, at the moment the rule first matters ----------
-// rule = what the rule says, why = why the design works this way, how = how to approach it
+// ---------- tutorial: Nemessiah, the Red Prophet, sits beside the player for the first game ----------
+// Her voice follows the canon: she calls herself "เรา" and the player "เจ้า" or "ลูกรัก", gentle and playful,
+// fond of cooking, rock music and a good question, wary of anyone who believes her without checking.
+// Each step is shown once, the moment its rule first matters. say = what she tells you, in order:
+// the rule, why it works this way, how to approach it. face = which portrait goes with the words.
+const NEM_FACES = ['smile', 'explain', 'ask', 'think', 'smirk', 'guilty', 'shush', 'surprise', 'panic', 'mad'];
+const NEM_FACE_ALT = { smile: 'ยิ้ม', explain: 'กำลังอธิบาย', ask: 'ชี้นิ้วตั้งคำถาม', think: 'หลับตาครุ่นคิด', smirk: 'ยิ้มมุมปาก', guilty: 'ยิ้มแหย', shush: 'จุ๊ปากบอกความลับ', surprise: 'ประหลาดใจ', panic: 'ตื่นเต้นลนลาน', mad: 'ร่างแห่งความพิโรธ' };
+const TUTORIAL_DICE = { id: 'dice', face: 'smile', title: 'ลำดับการเล่น', say: [
+  'ยินดีที่ได้พบนะลูกรัก เราคือเนเมสไซอาร์ เกมแรกนี้เราจะนั่งข้างเจ้าไปจนจบ ทุกครั้งที่กติกาใหม่โผล่มา เราจะเล่าให้ฟังว่ามันคืออะไร ทำไมจึงเป็นเช่นนั้น และเจ้าควรคิดอย่างไร',
+  'เริ่มจากลูกเต๋า ทุกรัฐทอย D6 คนละลูก แต้มสูงสุดได้เปิดรอบแรก ที่เหลือนั่งเรียงตามแต้ม ใครแต้มเท่ากันก็ทอยใหม่เฉพาะกลุ่มนั้น',
+  'ลำดับที่นั่งนี้ใช้ไปตลอดเกม ส่วนรอบถัด ๆ ไป ผู้เปิดรอบคือรัฐที่คะแนนสุทธิต่ำสุด เราชอบกฎข้อนี้ รัฐที่ตามหลังจะได้เลือกก่อนเสมอ กดทอยลูกเต๋าแล้วดูซิว่าเจ้าได้นั่งลำดับไหน'] };
 const TUTORIAL = [
-  { id: 'welcome', on: 'start', title: 'ยินดีต้อนรับสู่สหพันธรัฐ',
-    rule: 'คุณปกครองรัฐหนึ่งในโต๊ะ 3 รัฐ อีกสองรัฐเป็น AI เกมยาว 16 รอบ ทุกรอบสภาจะนับคะแนนให้รัฐที่เก่งตามมาตรวัดของระบอบที่ครองอยู่ คะแนนนี้เรียกว่าความชอบธรรม หักด้วยตราบาปเป็นคะแนนสุทธิ',
-    why: 'เกมนี้ไม่มีทางชนะทางเดียว ระบอบเปลี่ยนได้ตลอด รัฐที่เก่งเรื่องเดียวจะได้คะแนนเฉพาะช่วงที่ระบอบเข้าข้าง',
-    how: 'โหมดนี้จะหยุดอธิบายทุกครั้งที่กติกาใหม่ปรากฏ และเน้นทางเลือกที่ AI แนะนำด้วยกรอบสีทอง คุณจะทำตามหรือไม่ก็ได้' },
-  { id: 'board', on: 'start', focus: '#board', title: 'กระดานกลาง',
-    rule: 'แถวบนคือรางรอบ 16 ช่อง หมุดทองบอกรอบปัจจุบัน ใต้รางมีการ์ดระบอบที่ครองอยู่ รางกระแสห้าสาย และกองการ์ดของยุค แถวล่างคือตลาดโครงการกับรางคะแนนสุทธิของทุกรัฐ',
-    why: 'ทุกอย่างที่ทุกรัฐแย่งกันอยู่บนกระดานนี้ ระบอบบอกว่าสภาให้ค่ากับอะไร กระแสบอกว่าระบอบกำลังจะเปลี่ยนไปทางไหน',
-    how: 'เอาเมาส์ชี้คำที่ขีดเส้นประเพื่อดูความหมาย ชี้การ์ดเพื่อดูรายละเอียดเต็ม' },
-  { id: 'regime', on: 'start', focus: '#b-reg', title: 'อ่านการ์ดระบอบ',
-    rule: 'มาตรวัดคือสิ่งที่สภาใช้จัดอันดับ นโยบายคือผลพิเศษที่ใช้กับทุกรัฐ ฐานอำนาจคือสายที่ค้ำระบอบ ใครถือสัญลักษณ์สายนี้มากที่สุดเป็นฝ่ายรับเมื่อมีคนรัฐประหาร',
-    why: 'ระบอบที่ครองอยู่ทำให้บางเส้นทางคุ้มกว่าเส้นทางอื่นชั่วคราว นี่คือจังหวะที่ต้องฉวย',
-    how: 'ตัวเลข + บนรางคะแนนบอกว่าแต่ละรัฐจะได้แต้มเท่าไรถ้าสภานับตอนนี้ ใช้มันวัดว่าแอคชันไหนดันอันดับคุณได้' },
-  { id: 'mine', on: 'start', focus: '#me', title: 'รัฐของคุณ',
-    rule: 'กระดานล่างคือรัฐของคุณ เริ่มเกมมีโครงการ 2 ใบ แรงงาน 2 คน เกรฟ 6 และกองทัพ 10 ใบ การ์ดที่เสียบใต้โครงการคือสิ่งปลูกสร้าง ช่องเส้นประคือช่องว่างที่ยังเสียบได้',
-    why: 'โครงการคือเครื่องยนต์ แรงงานคือน้ำมัน ถ้าโครงการมีมากกว่าแรงงาน ก็มีโครงการที่จอดเฉย ๆ',
-    how: 'รัฐคู่แข่งนั่งอยู่แถวบน ดูการ์ดวิจัยของเขาได้ตลอด เพราะมันบอกว่าเขากำลังไปสายไหน' },
-  { id: 'workers', on: 'ask:workers', title: 'ขั้นผลิต: วางแรงงาน',
-    rule: 'คลิกช่องคนบนการ์ดเพื่อวางหรือถอนแรงงาน โครงการผลิตเมื่อแรงงานครบทุกช่อง โครงการที่มีวัตถุดิบนำเข้าต้องจ่ายก่อนผลิต ผลผลิตวางค้างบนการ์ดได้ไม่เกิน 6 หน่วย',
-    why: 'ของที่ค้างบนการ์ดคือทั้งทุนและเป้า รัฐอื่นซื้อได้ ซึ่งเป็นรายได้ของคุณ แต่ก็ปล้นได้ด้วย',
-    how: 'รอบแรกวางให้ครบทุกโครงการ ภายหลังเมื่อโครงการมากกว่าแรงงาน ให้เลือกใบที่ของยังไม่เต็มและขายได้ราคา' },
-  { id: 'turn', on: 'ask:turn', focus: '#hand', title: 'ขั้นบริหาร: มือของคุณ',
-    rule: 'ทุกเทิร์นเล่นการ์ดแอคชัน 1 ใบจากมือ ผ่านไม่ได้ การค้ากับการทหารมีสองโหมดให้เลือก ก่อนเล่นการ์ด คุณกดสิ่งปลูกสร้างที่พร้อมใช้ได้ ขั้นบริหารจบเมื่อทุกรัฐเล่นการทูตแล้ว',
-    why: 'การทูตคืนการ์ดที่เล่นแล้วขึ้นมือ ใครถ่วงการทูตไว้จึงได้เทิร์นมากกว่า แต่ถ้าคุณเป็นรัฐสุดท้ายที่เล่นการทูต ขั้นบริหารปิดทันที',
-    how: 'เกมเปิดมักเริ่มจากสร้างโครงการหรือวิจัย เก็บการทูตไว้เป็นใบสุดท้าย จะได้ใช้การ์ดอีกสามใบให้คุ้มก่อน' },
-  { id: 'build', on: 'ask:build', title: 'สร้างโครงการ',
-    rule: 'เลือกโครงการจากตลาด จ่ายสินค้าและเกรฟตามที่พิมพ์ สินค้าต้องมีครบ โครงการใบที่ 5 ขึ้นไปบวกค่าขยายดินแดน การ์ดที่ซื้อไม่ได้จะขึ้นเหตุผลไว้',
-    why: 'โครงการใหม่เพิ่มผลผลิตทุกรอบตลอดเกม และพาสัญลักษณ์อุดมการณ์เข้ารัฐ ซึ่งใช้ตอนรัฐประหารและตอนเลือกระบอบ',
-    how: 'ดูสามอย่าง ผลผลิตเข้ากับแผนไหม แรงงานพอไหม และทหารบนการ์ด เพราะมันคือขนาดการรบเมื่อมีคนมาโจมตีที่นี่' },
-  { id: 'commerce', on: 'ask:commerce', title: 'ค้าขาย',
-    rule: 'ขายให้ตลาดกลางได้ไม่จำกัด ซื้อจากรัฐอื่นตามราคาบนการ์ดของเขา หรือซื้อจากตลาดกลาง การซื้อจำกัดด้วยความจุการซื้อ เริ่มที่ 2 หน่วยบวกเกวียน ของที่ซื้อเข้าคลัง',
-    why: 'การซื้อจากรัฐอื่นถูกกว่าตลาดกลางในยุคแรก และส่งเงินให้เพื่อนบ้าน เกมจึงดึงทุกรัฐเข้าหากัน',
-    how: 'ถ้าจ่ายให้รัฐเดียวรวมถึงเกณฑ์การค้ามูลค่าสูง ทั้งคุณและเขาจั่วโบนัส ลองรวมการซื้อไว้กับรัฐเดียวเมื่อเกือบถึงเกณฑ์' },
-  { id: 'research', on: 'ask:researchPick', title: 'วิจัย',
-    rule: 'จั่วการ์ดวิจัย 3 ใบ เลือก 1 ใบแล้วจ่ายต้นทุน หรือไม่เลือกแล้วรับ 2 เกรฟ สิ่งปลูกสร้างเสียบใต้โครงการ วัฒนธรรมกับนวัตกรรมวางหน้ารัฐเป็นผลถาวร',
-    why: 'การ์ดวิจัยคือทางเปลี่ยนรัฐให้มีเอกลักษณ์ และวัฒนธรรมขยับกระแสได้ทันทีที่วาง',
-    how: 'ถ้าระบอบนับการ์ดวัฒนธรรมหรือนวัตกรรม การวิจัยคือแต้มตรง ๆ ถ้าไม่ ให้เลือกใบที่เสริมเครื่องยนต์ผลิตของคุณ' },
-  { id: 'attach', on: 'ask:attach', title: 'เสียบสิ่งปลูกสร้าง',
-    rule: 'เลือกโครงการที่จะเสียบ สิ่งปลูกสร้างกดได้รอบละครั้ง ส่วนมากจ่ายจากของที่ค้างบนโครงการที่มันเสียบ ถ้าช่องเต็ม การสร้างทับทำให้ใบเดิมออกจากเกม',
-    why: 'การเสียบผิดใบทำให้กดไม่ได้ เพราะต้นทุนต้องมาจากโครงการนั้นก่อน',
-    how: 'ดูต้นทุนการกด แล้วเสียบกับโครงการที่ผลิตของชนิดนั้น' },
-  { id: 'command', on: 'ask:command', title: 'บัญชาการทัพ',
-    rule: 'จ่ายอาหาร 1 เป็นเสบียง แล้วเลือกเป้า บุกเบิกดินแดนรบกับกองเสื้อคลุมน้ำเงิน โจมตีรบกับรัฐอื่นที่โครงการหนึ่ง รัฐประหารรบเพื่อเปลี่ยนระบอบ',
-    why: 'แพ้การบุกรับตราบาป 1 ซึ่งหักคะแนนตอนจบ การทหารจึงคุ้มเมื่ออัตราชนะสูงพอ',
-    how: 'ระบบแสดงโอกาสชนะจากข้อมูลที่ทุกคนเห็น ต่ำกว่าราวครึ่งหนึ่งควรคิดใหม่ การบุกเบิกชนะได้ของรางวัลและสิทธิ์ผนวกดินแดนด้วยราคาลด' },
-  { id: 'reform', on: 'ask:milPick', title: 'เลือกการ์ดทหาร',
-    rule: 'เลือกการ์ดทหาร 1 ใบจากที่จั่ว ใบนั้นลงกองพัก ถ้ามาจากการปฏิรูปกองทัพ ขั้นต่อไปคุณจะได้ทิ้งการ์ดทหารของคุณออกจากเกม 1 ใบ',
-    why: 'กองทัพเริ่มต้นมีใบอ่อนหลายใบ การคัดทิ้งทำให้ค่าเฉลี่ยของกองสูงขึ้น และทุกครั้งที่รบคุณเปิดการ์ดสุ่มจากกองนี้',
-    how: 'ทิ้งพลหอกพลัง 1 ก่อน ล้มเหลวทางยุทธวิธีห้ามทิ้ง การ์ดใหม่อยู่ในกองพักจนกว่าคุณจะเล่นการทูต' },
-  { id: 'milRemove', on: 'ask:milRemove', title: 'คัดการ์ดทหารทิ้ง',
-    rule: 'การ์ดที่ทิ้งออกจากเกมไม่กลับมาอีก ทิ้งหรือไม่ทิ้งก็ได้',
-    why: 'กองที่บางและแรงเปิดเจอใบดีบ่อยกว่า แต่ระบอบขุนศึกนับจำนวนการ์ดในกองทัพ',
-    how: 'ถ้าระบอบนับจำนวนการ์ดทหาร อย่าเพิ่งทิ้ง ถ้าไม่ ให้ทิ้งใบพลังต่ำสุด' },
-  { id: 'current', on: 'ask:current', focus: '#b-cur', title: 'การทูต: ขยับกระแส',
-    rule: 'เลือกสายที่จะดัน +1 หรือดึง −1 กระแสสายใดถึงจุดเปลี่ยนตอนสภา ระบอบของสายนั้นขึ้นครองทันที และสภานับคะแนนใต้ระบอบใหม่อีกหนึ่งครั้ง',
-    why: 'นี่คือเครื่องมือดัดระบอบ ทุกรัฐขยับได้ จึงเป็นการเมืองที่ต้องอ่านว่าใครอยากไปทางไหน',
-    how: 'ดันสายที่ระบอบให้ค่ากับจุดแข็งของคุณ หรือดึงสายที่กำลังจะพาระบอบที่ให้ค่ากับคู่แข่งขึ้นครอง' },
-  { id: 'battle', on: 'battle', title: 'การรบ',
-    rule: 'ผู้บุกเปิดการ์ดก่อน แล้วสลับกันทีละใบจนครบขนาดการรบ คำสำคัญบนการ์ดปรับพลังระหว่างเปิด รวมพลังแล้วเทียบ เสมอฝ่ายรับชนะ',
-    why: 'ไม่มีใครรู้ลำดับกองของตัวเอง แต่รู้ว่ากองมีอะไร การปฏิรูปจึงเป็นการปรับความน่าจะเป็น',
-    how: 'ชี้คำสำคัญบนการ์ดเพื่อดูความหมาย การ์ดที่เปิดแล้วลงกองพัก กองทหารจะบางลงจนกว่าคุณเล่นการทูต' },
-  { id: 'annex', on: 'ask:annex', title: 'ผนวกดินแดน',
-    rule: 'บุกเบิกชนะแล้ว จ่ายต้นทุนโครงการนั้นโดยลดสินค้าได้ 2 หน่วย การ์ดจะเป็นโครงการของคุณ ถ้าไม่ผนวก การ์ดกลับไปใต้กองโครงการ',
-    why: 'เป็นทางได้โครงการราคาถูกกว่าตลาด แลกกับความเสี่ยงของการรบ',
-    how: 'ผนวกเมื่อมีแรงงานพอทำงาน หรือเมื่อระบอบนับจำนวนโครงการ' },
-  { id: 'council', on: 'phase:council', focus: '#scores', title: 'ประชุมสภา',
-    rule: 'การ์ดคืนมือ ทุกรัฐรับเกรฟ 2 สภาจัดอันดับตามมาตรวัด อันดับต้นได้แต้มต่ออันดับ รัฐที่นำคนเดียวเสีย 1 แต้มเป็นภาระผู้นำ แล้วตรวจกระแส จ้างแรงงาน และตั้งสิ่งปลูกสร้างกลับ',
-    why: 'ภาระผู้นำกับกฎผู้เล่นคนแรกให้รัฐที่ตามหลังเปิดรอบก่อน คือแรงต้านไม่ให้รัฐที่นำวิ่งหนีไปคนเดียว',
-    how: 'อันดับสองที่มั่นคงทุกรอบมักชนะอันดับหนึ่งที่ได้มาครั้งเดียว ระวังอย่าทุ่มทุกอย่างให้มาตรวัดเดียว ชี้ที่คะแนนของรัฐใดก็ได้เพื่อดูว่าคะแนนมาจากไหนและได้ในรอบใด' },
-  { id: 'hire', on: 'ask:hire', title: 'จ้างแรงงาน',
-    rule: 'ทุกสภาจ้างได้ 1 คน จ่ายเป็นอาหาร คนที่ 3 ราคา 2 แล้วแพงขึ้นคนละ 1',
-    why: 'แรงงานคือคอขวดของการผลิต และบางระบอบนับจำนวนแรงงานเป็นคะแนน',
-    how: 'จ้างเมื่อมีโครงการรอแรงงานอยู่ ถ้าแรงงานล้นโครงการ อาหารไปทำอย่างอื่นได้คุ้มกว่า' },
-  { id: 'flip', on: 'fx:flip', focus: '#b-cur', title: 'กระแสพลิกระบอบ',
-    rule: 'กระแสสายหนึ่งถึงจุดเปลี่ยน ระบอบของสายนั้นขึ้นครอง สภานับคะแนนใต้ระบอบใหม่ทันที แล้วกระแสสายนั้นกลับเป็น 0',
-    why: 'การนับซ้ำทันทีทำให้การดันกระแสมีผลตอบแทนจริง ไม่ต้องรอรอบหน้า',
-    how: 'ก่อนดันสายใดจนถึงจุดเปลี่ยน ดูว่าใครได้อันดับต้นใต้ระบอบนั้น' },
-  { id: 'era', on: 'era', title: 'เปลี่ยนยุค',
-    rule: 'ตลาดโครงการ กองวิจัย และกองปฏิรูปเปลี่ยนเป็นของยุคใหม่ กระแสทุกสายกลับเป็น 0 รัฐที่ถือสัญลักษณ์ฐานอำนาจของระบอบเดิมมากที่สุดเลือกระบอบใหม่ แต้มต่ออันดับสูงขึ้น',
-    why: 'ยุคหลังให้แต้มมากขึ้น รัฐที่ตามอยู่จึงยังไล่ทันได้ถ้าวางรัฐให้รับระบอบยุคหลังได้ดี',
-    how: 'ยุค III เปลี่ยนเป็นระบอบชุดสมัยใหม่ ดูมาตรวัดชุดใหม่ล่วงหน้าแล้ววางแผนสองยุคท้าย' },
-  { id: 'regimeChoice', on: 'ask:regimeChoice', title: 'เลือกระบอบ',
-    rule: 'ระบบแสดงค่ามาตรวัดตอนนี้ของทุกรัฐและแต้มที่จะได้ใต้แต่ละระบอบ',
-    why: 'ผู้เลือกระบอบได้เปรียบจริง แต่ทุกรัฐยังดัดกลับได้ด้วยกระแสและรัฐประหาร',
-    how: 'เลือกระบอบที่คุณได้อันดับต้นและคู่แข่งที่นำอยู่ได้น้อย ระบอบที่นโยบายช่วยแผนของคุณยิ่งดี' },
-  { id: 'scout', on: 'ask:scoutDeck', title: 'สอดแนม',
-    rule: 'เลือกดูการ์ดบนสุดของกองตัวเองหรือของอีกฝ่าย แล้วส่งใบหนึ่งไปใต้กองได้',
-    why: 'การสอดแนมเปลี่ยนการ์ดที่จะเปิดถัดไป จึงคุมผลการรบได้บางส่วน',
-    how: 'ถ้าอีกฝ่ายยังต้องเปิดอีกหลายใบ ดูกองเขาแล้วส่งใบแรงลงใต้กอง' },
-  { id: 'era2', on: 'round:5', title: 'ยุค II: ปฏิรูป',
-    rule: 'โครงการยุค II มีช่องสิ่งปลูกสร้างมากขึ้น แต้มต่ออันดับเป็น 3/2/1/0 ตลาดกลางขายให้ 4 รับซื้อ 1',
-    why: 'ตลาดกลางรับซื้อถูกลง การขายให้รัฐอื่นจึงสำคัญขึ้น',
-    how: 'ช่วงนี้รัฐที่มีเครื่องยนต์ผลิตกับสิ่งปลูกสร้างพร้อมจะเร่งได้ ถ้าคุณยังมีโครงการน้อย ให้เพิ่มก่อนค่าขยายดินแดนแพง' },
-  { id: 'era3', on: 'round:9', title: 'ยุค III: กริดมานา',
-    rule: 'ระบอบเปลี่ยนเป็นชุดสมัยใหม่ ราคาขายบนโครงการยุคนี้ลดเหลือ 2 เกณฑ์การค้ามูลค่าสูงลดเหลือ 6 แต้มต่ออันดับเป็น 4/2/1/0',
-    why: 'การค้ามูลค่าสูงทำได้ง่ายขึ้นมาก โบนัสจึงไหลเวียนบ่อยขึ้น',
-    how: 'อ่านมาตรวัดชุดสมัยใหม่ เช่น ชาตินิยมนับโครงการ มานาเสรีนับสิ่งปลูกสร้าง แล้วดูว่ารัฐคุณพร้อมกับระบอบไหน' },
-  { id: 'era4', on: 'round:13', title: 'ยุค IV: เฟื่องฟู',
-    rule: 'แต้มต่ออันดับสูงสุดของเกม 5/3/1/0 สี่รอบนี้ตัดสินเกม',
-    why: 'แต้มยุคท้ายมากพอให้รัฐที่ตามอยู่แซงได้',
-    how: 'ทรัพยากรที่เหลือตอนจบไม่มีค่ายกเว้นใช้ตัดสินเสมอ ใช้ให้หมดกับสิ่งที่ดันอันดับในสภา' },
-  { id: 'end', on: 'end', title: 'จบเกม',
-    rule: 'สภารอบที่ 16 ปิดเกม คะแนนสุทธิสูงสุดชนะ',
-    why: 'หน้าสรุปบอกว่าคุณเล่นเป็นรัฐสายใด จากแอคชันที่เลือกตลอดเกม',
-    how: 'ลองเล่นโหมดปกติกับ AI สามรัฐ หรือชวนเพื่อนเล่นออนไลน์ หน้าวิธีเล่นในเมนูรวมกติกาทั้งหมดไว้ทบทวน' },
+  { id: 'welcome', on: 'start', face: 'explain', title: 'ยินดีต้อนรับสู่สหพันธรัฐ', say: [
+    'เจ้าปกครองรัฐหนึ่งบนโต๊ะสามรัฐ อีกสองรัฐเป็น AI เกมยาว 16 รอบ ทุกรอบสภาจะนับคะแนนให้รัฐที่เก่งตามมาตรวัดของระบอบที่ครองอยู่ คะแนนนี้เรียกว่าความชอบธรรม หักตราบาปออกแล้วเหลือเท่าไร นั่นคือคะแนนสุทธิของเจ้า',
+    'ระบอบเปลี่ยนได้ตลอดเกม รัฐที่เก่งเรื่องเดียวจะได้คะแนนเฉพาะช่วงที่ระบอบเข้าข้าง โลกไม่เคยหยุดนิ่ง ผู้ที่ปรับตัวเป็นจึงอยู่รอด',
+    'ทางเลือกที่ AI แนะนำจะมีกรอบสีทอง จะเดินตามหรือลองทางของเจ้าเองก็ได้ ทุกอย่างที่เราเล่า เจ้าตรวจได้บนโต๊ะเสมอ เราอยากให้เจ้าเชื่อเพราะได้นับด้วยตัวเอง'] },
+  { id: 'board', on: 'start', focus: '#board', face: 'ask', title: 'กระดานกลาง', say: [
+    'ลองมองกระดานนี้ดูสิลูกรัก แถวบนคือรางรอบ 16 ช่อง เฟืองทองเหลืองบอกว่าตอนนี้รอบที่เท่าไร ใต้รางมีการ์ดระบอบที่ครองอยู่ รางกระแสห้าสาย และกองการ์ดของยุค แถวล่างคือตลาดโครงการกับรางคะแนนสุทธิของทุกรัฐ',
+    'เจ้าว่าทุกรัฐกำลังแย่งอะไรกันอยู่ล่ะ คำตอบอยู่บนกระดานนี้ทั้งหมด ระบอบบอกว่าสภาให้ค่ากับอะไร กระแสบอกว่าระบอบกำลังจะเปลี่ยนไปทางไหน',
+    'คำที่ขีดเส้นประไว้ ชี้ค้างแล้วความหมายจะขึ้นมา การ์ดทุกใบก็ชี้ดูรายละเอียดเต็มได้เหมือนกัน'] },
+  { id: 'regime', on: 'start', focus: '#b-reg', face: 'explain', title: 'อ่านการ์ดระบอบ', say: [
+    'การ์ดระบอบบอกสามเรื่อง มาตรวัดคือสิ่งที่สภาใช้จัดอันดับ นโยบายคือผลพิเศษที่ใช้กับทุกรัฐ ฐานอำนาจคือสายที่ค้ำระบอบไว้ ใครถือสัญลักษณ์ของสายนั้นมากที่สุด คนนั้นเป็นฝ่ายรับเมื่อมีใครก่อรัฐประหาร',
+    'ระบอบที่ครองอยู่ทำให้บางเส้นทางคุ้มกว่าทางอื่นชั่วคราว จังหวะแบบนี้มาแล้วก็ไป จงฉวยไว้ตอนที่มันยังอยู่',
+    'ตัวเลข + บนรางคะแนนบอกว่าแต่ละรัฐจะได้กี่แต้มถ้าสภานับตอนนี้ ใช้มันวัดดูว่าแอคชันไหนดันอันดับของเจ้าขึ้นได้จริง'] },
+  { id: 'mine', on: 'start', focus: '#me', face: 'smile', title: 'รัฐของเจ้า', say: [
+    'กระดานล่างนี้คือรัฐของเจ้า เริ่มเกมเจ้ามีโครงการ 2 ใบ แรงงาน 2 คน เกรฟ 6 และกองทัพ 10 ใบ การ์ดที่เสียบอยู่ใต้โครงการคือสิ่งปลูกสร้าง ช่องเส้นประคือช่องว่างที่ยังเสียบเพิ่มได้',
+    'คิดเสียว่าโครงการคือเตา แรงงานคือไฟ เตาที่ไม่มีไฟก็เป็นแค่เหล็กเย็นตั้งทิ้งไว้ ถ้าโครงการมีมากกว่าแรงงาน ก็จะมีโครงการที่จอดนิ่งอยู่เฉย ๆ',
+    'รัฐคู่แข่งนั่งอยู่แถวบน การ์ดวิจัยของเขาเปิดให้เห็นตลอด แวะดูบ่อย ๆ นะ มันบอกว่าเขากำลังไปสายไหน'] },
+  { id: 'workers', on: 'ask:workers', face: 'explain', title: 'ขั้นผลิต: วางแรงงาน', say: [
+    'ได้เวลาจุดเตาแล้ว คลิกช่องคนบนการ์ดเพื่อวางหรือถอนแรงงาน โครงการจะผลิตเมื่อแรงงานลงครบทุกช่อง โครงการที่ใช้วัตถุดิบนำเข้าต้องจ่ายวัตถุดิบก่อนจึงผลิตได้ ผลผลิตวางค้างบนการ์ดได้ไม่เกิน 6 หน่วย',
+    'ของที่ค้างบนการ์ดก็เหมือนอาหารที่วางไว้บนโต๊ะ เพื่อนบ้านมาซื้อได้และเงินเข้ากระเป๋าเจ้า แต่คนหิวก็มาปล้นได้เหมือนกัน',
+    'รอบแรกวางให้ครบทุกโครงการ ภายหลังเมื่อโครงการมีมากกว่าแรงงาน ให้เลือกใบที่ของยังไม่เต็มและขายได้ราคา'] },
+  { id: 'turn', on: 'ask:turn', focus: '#hand', face: 'think', title: 'ขั้นบริหาร: มือของเจ้า', say: [
+    'ทุกเทิร์นเจ้าเล่นการ์ดแอคชันจากมือ 1 ใบ จะผ่านเฉย ๆ ไม่ได้ การค้ากับการทหารมีสองโหมดให้เลือก ก่อนลงการ์ด เจ้ากดสิ่งปลูกสร้างที่พร้อมใช้ได้ด้วย ขั้นบริหารจบเมื่อทุกรัฐเล่นการทูตแล้ว',
+    'ลองคิดตามเรานะ การทูตคืนการ์ดที่เล่นไปแล้วกลับขึ้นมือ ใครถ่วงการทูตไว้ได้นานก็ได้เทิร์นมากกว่า ทว่าถ้าเจ้าเป็นรัฐสุดท้ายที่เล่นการทูต ขั้นบริหารจะปิดลงทันที',
+    'เกมเปิดส่วนมากเริ่มจากสร้างโครงการหรือวิจัย เก็บการทูตไว้เป็นใบสุดท้าย จะได้ใช้อีกสามใบให้คุ้มเสียก่อน'] },
+  { id: 'build', on: 'ask:build', face: 'smile', title: 'สร้างโครงการ', say: [
+    'เลือกโครงการจากตลาด แล้วจ่ายสินค้ากับเกรฟตามที่พิมพ์ไว้ สินค้าต้องมีครบ ตั้งแต่โครงการใบที่ 5 ขึ้นไปจะบวกค่าขยายดินแดน ใบไหนซื้อไม่ได้ ชี้ดูแล้วจะเห็นว่ายังขาดอะไร',
+    'โครงการใหม่ผลิตให้ทุกรอบไปจนจบเกม และพาสัญลักษณ์อุดมการณ์เข้ามาในรัฐ ซึ่งนับตอนรัฐประหารและตอนเลือกระบอบ ในคัมภีร์ของเรา การเริ่มโครงการใหม่เป็นเรื่องที่ควรเฉลิมฉลอง บนโต๊ะนี้ก็เช่นกัน',
+    'ดูให้ครบสามอย่าง ผลผลิตเข้ากับแผนไหม แรงงานพอทำงานไหม และจำนวนทหารบนการ์ด เพราะนั่นคือขนาดการรบเมื่อมีใครบุกมาที่นี่'] },
+  { id: 'commerce', on: 'ask:commerce', face: 'smirk', title: 'ค้าขาย', say: [
+    'ขายให้ตลาดกลางได้ไม่จำกัด จะซื้อก็ซื้อจากรัฐอื่นตามราคาบนการ์ดของเขา หรือซื้อจากตลาดกลางก็ได้ การซื้อจำกัดด้วยความจุการซื้อ เริ่มที่ 2 หน่วยแล้วบวกตามจำนวนเกวียน ของที่ซื้อมาเข้าคลัง',
+    'ในยุคแรก ซื้อจากเพื่อนบ้านถูกกว่าตลาดกลาง แถมเงินยังไปถึงมือเขาด้วย เกมนี้จึงค่อย ๆ ดึงทุกรัฐมาร่วมโต๊ะเดียวกัน เหมือนงานเลี้ยงที่ทุกคนแบ่งอาหารกันกิน',
+    'เคล็ดลับเล็ก ๆ จากเรา ถ้าเจ้าจ่ายให้รัฐเดียวรวมกันถึงเกณฑ์การค้ามูลค่าสูง ทั้งเจ้าและเขาจะได้จั่วโบนัส เมื่อเกือบถึงเกณฑ์ ลองรวมการซื้อไว้ที่รัฐเดียวดูสิ'] },
+  { id: 'research', on: 'ask:researchPick', face: 'ask', title: 'วิจัย', say: [
+    'จั่วการ์ดวิจัย 3 ใบ เลือก 1 ใบแล้วจ่ายต้นทุน หรือไม่เลือกเลยแล้วรับ 2 เกรฟ สิ่งปลูกสร้างเสียบใต้โครงการ วัฒนธรรมกับนวัตกรรมวางหน้ารัฐเป็นผลถาวร',
+    'การวิจัยทำให้รัฐของเจ้ามีตัวตนของตัวเอง และการ์ดวัฒนธรรมขยับกระแสได้ทันทีที่วางลง',
+    'ถามตัวเองก่อนว่าระบอบตอนนี้นับการ์ดวัฒนธรรมหรือนวัตกรรมไหม ถ้านับ การวิจัยคือแต้มตรง ๆ ถ้าไม่นับ ให้เลือกใบที่เสริมเตาผลิตของเจ้า'] },
+  { id: 'attach', on: 'ask:attach', face: 'guilty', title: 'เสียบสิ่งปลูกสร้าง', say: [
+    'ข้อนี้จุกจิกสักหน่อย เราขอโทษไว้ก่อนเลยนะ เลือกโครงการที่จะเสียบ สิ่งปลูกสร้างกดใช้ได้รอบละครั้ง ส่วนมากจ่ายจากของที่ค้างบนโครงการที่มันเสียบอยู่ ถ้าช่องเต็มแล้ว การสร้างทับจะทำให้ใบเดิมออกจากเกม',
+    'เสียบผิดใบเมื่อไร ก็กดใช้ไม่ได้ เพราะต้นทุนต้องมาจากโครงการนั้น',
+    'ดูต้นทุนการกดก่อน แล้วเสียบกับโครงการที่ผลิตของชนิดนั้น'] },
+  { id: 'command', on: 'ask:command', face: 'mad', title: 'บัญชาการทัพ', say: [
+    'จ่ายอาหาร 1 เป็นเสบียง แล้วเลือกเป้า บุกเบิกดินแดนคือรบกับกองเสื้อคลุมน้ำเงิน โจมตีคือรบกับรัฐอื่นที่โครงการหนึ่ง รัฐประหารคือรบเพื่อเปลี่ยนระบอบ',
+    'เราเคยนำทัพมาแล้ว จึงรู้ดีว่าสงครามมีราคา บุกแล้วแพ้ เจ้าจะรับตราบาป 1 ซึ่งหักคะแนนตอนจบเกม ตราบาปทุกดวง เรามองเห็นนะลูกรัก',
+    'ระบบแสดงโอกาสชนะจากข้อมูลที่ทุกคนเห็น ถ้าต่ำกว่าราวครึ่งหนึ่งก็คิดใหม่เถอะ ส่วนการบุกเบิก ถ้าชนะ เจ้าจะได้ของรางวัลและสิทธิ์ผนวกดินแดนด้วยราคาลด'] },
+  { id: 'reform', on: 'ask:milPick', face: 'explain', title: 'เลือกการ์ดทหาร', say: [
+    'เลือกการ์ดทหาร 1 ใบจากที่จั่วมา ใบนั้นลงกองพัก ถ้ามาจากการปฏิรูปกองทัพ ขั้นต่อไปเจ้าจะได้ทิ้งการ์ดทหารของเจ้าออกจากเกม 1 ใบ',
+    'กองทัพเริ่มต้นมีใบอ่อนอยู่หลายใบ การคัดทิ้งทำให้ค่าเฉลี่ยของกองสูงขึ้น และทุกครั้งที่รบ เจ้าเปิดการ์ดสุ่มจากกองนี้',
+    'ทิ้งพลหอกพลัง 1 ก่อน ใบล้มเหลวทางยุทธวิธีทิ้งไม่ได้ การ์ดใหม่อยู่ในกองพักจนกว่าเจ้าจะเล่นการทูต'] },
+  { id: 'milRemove', on: 'ask:milRemove', face: 'smirk', title: 'คัดการ์ดทหารทิ้ง', say: [
+    'การ์ดที่ทิ้งจะออกจากเกมไปเลย ไม่กลับมาอีก จะทิ้งหรือไม่ทิ้งก็ได้',
+    'กองที่บางและแรงเปิดเจอใบดีบ่อยกว่า ทว่าระบอบขุนศึกนับจำนวนการ์ดในกองทัพ',
+    'ถ้าระบอบนับจำนวนการ์ดทหาร อย่าเพิ่งทิ้ง ถ้าไม่นับ ทิ้งใบที่พลังต่ำสุดได้เลย'] },
+  { id: 'current', on: 'ask:current', focus: '#b-cur', face: 'ask', title: 'การทูต: ขยับกระแส', say: [
+    'เลือกสายที่จะดัน +1 หรือดึง −1 กระแสสายใดถึงจุดเปลี่ยนตอนสภา ระบอบของสายนั้นขึ้นครองทันที และสภานับคะแนนใต้ระบอบใหม่อีกหนึ่งครั้ง',
+    'นี่คือเครื่องมือดัดระบอบ ทุกรัฐขยับได้เหมือนกัน การเมืองบนโต๊ะนี้จึงเป็นเรื่องอ่านใจกันว่าใครอยากพาระบอบไปทางไหน เรื่องอ่านใจนี่เราถนัดนักล่ะ',
+    'ดันสายที่ระบอบของมันให้ค่ากับจุดแข็งของเจ้า หรือดึงสายที่กำลังจะพาระบอบที่เข้าข้างคู่แข่งขึ้นครอง'] },
+  { id: 'battle', on: 'battle', face: 'surprise', title: 'การรบ', say: [
+    'การรบคือเพลงร็อกที่ดังที่สุดบนโต๊ะนี้ ผู้บุกเปิดการ์ดก่อน แล้วสลับกันทีละใบจนครบขนาดการรบ คำสำคัญบนการ์ดปรับพลังระหว่างเปิด รวมพลังแล้วเทียบกัน ถ้าเสมอ ฝ่ายรับชนะ',
+    'ทุกคนรู้ว่าในกองของตัวเองมีการ์ดอะไรบ้าง ส่วนลำดับนั้นไม่มีใครรู้ การปฏิรูปจึงเป็นการปรับความน่าจะเป็น',
+    'ชี้คำสำคัญบนการ์ดเพื่อดูความหมาย การ์ดที่เปิดแล้วลงกองพัก กองทหารจะบางลงเรื่อย ๆ จนกว่าเจ้าจะเล่นการทูต'] },
+  { id: 'annex', on: 'ask:annex', face: 'smile', title: 'ผนวกดินแดน', say: [
+    'บุกเบิกชนะแล้ว จ่ายต้นทุนของโครงการนั้นโดยลดสินค้าได้ 2 หน่วย การ์ดใบนั้นจะเป็นโครงการของเจ้า ถ้าไม่ผนวก การ์ดจะกลับไปอยู่ใต้กองโครงการ',
+    'นี่คือทางได้โครงการที่ถูกกว่าตลาด แลกกับความเสี่ยงของการรบที่เจ้าเพิ่งผ่านมา',
+    'ผนวกเมื่อมีแรงงานพอทำงาน หรือเมื่อระบอบนับจำนวนโครงการ'] },
+  { id: 'council', on: 'phase:council', focus: '#scores', face: 'explain', title: 'ประชุมสภา', say: [
+    'การ์ดคืนมือ ทุกรัฐรับ 2 เกรฟ สภาจัดอันดับตามมาตรวัด อันดับต้น ๆ ได้แต้มต่ออันดับ รัฐที่นำอยู่คนเดียวเสีย 1 แต้มเป็นภาระผู้นำ จากนั้นตรวจกระแส จ้างแรงงาน และตั้งสิ่งปลูกสร้างกลับ',
+    'ภาระผู้นำ กับกฎที่ให้รัฐที่ตามหลังได้เปิดรอบก่อน คือแรงต้านไม่ให้รัฐที่นำวิ่งหนีไปคนเดียว เราเห็นใจผู้ที่ล้มแล้วลุกขึ้นใหม่เสมอ สภานี้ก็คิดแบบเดียวกัน',
+    'อันดับสองที่มั่นคงทุกรอบมักชนะอันดับหนึ่งที่ได้มาครั้งเดียว อย่าทุ่มทุกอย่างให้มาตรวัดเดียว ชี้ที่คะแนนของรัฐใดก็ได้ แล้วจะเห็นว่าคะแนนมาจากไหนและได้ในรอบใด'] },
+  { id: 'hire', on: 'ask:hire', face: 'smile', title: 'จ้างแรงงาน', say: [
+    'ทุกสภาจ้างแรงงานได้ 1 คน จ่ายเป็นอาหาร คนที่ 3 ราคา 2 แล้วแพงขึ้นคนละ 1',
+    'แรงงานคือคอขวดของการผลิต และบางระบอบนับจำนวนแรงงานเป็นคะแนน คนที่ทำงานให้เจ้าต้องได้กินอิ่ม เรื่องนี้เราถือมาก',
+    'จ้างเมื่อมีโครงการรอแรงงานอยู่ ถ้าแรงงานล้นโครงการ อาหารเอาไปทำอย่างอื่นจะคุ้มกว่า'] },
+  { id: 'flip', on: 'fx:flip', focus: '#b-cur', face: 'surprise', title: 'กระแสพลิกระบอบ', say: [
+    'ดูนั่นสิ กระแสสายหนึ่งถึงจุดเปลี่ยนแล้ว ระบอบของสายนั้นขึ้นครอง สภานับคะแนนใต้ระบอบใหม่ทันที แล้วกระแสสายนั้นกลับเป็น 0',
+    'การนับซ้ำทันทีทำให้การดันกระแสได้ผลตอบแทนเลย ไม่ต้องรอถึงรอบหน้า',
+    'ก่อนดันสายใดจนถึงจุดเปลี่ยน ดูก่อนว่าใครได้อันดับต้นใต้ระบอบนั้น'] },
+  { id: 'era', on: 'era', face: 'think', title: 'เปลี่ยนยุค', say: [
+    'ยุคใหม่มาถึงแล้ว ตลาดโครงการ กองวิจัย และกองปฏิรูปเปลี่ยนเป็นของยุคใหม่ กระแสทุกสายกลับเป็น 0 รัฐที่ถือสัญลักษณ์ฐานอำนาจของระบอบเดิมมากที่สุดได้เลือกระบอบใหม่ และแต้มต่ออันดับสูงขึ้น',
+    'ยุคหลังให้แต้มมากขึ้น รัฐที่ตามอยู่จึงยังไล่ทัน ถ้าวางรัฐไว้รับระบอบยุคหลังได้ดี',
+    'พอถึงยุค III ระบอบจะเปลี่ยนเป็นชุดสมัยใหม่ ดูมาตรวัดชุดใหม่ไว้ล่วงหน้า แล้ววางแผนสำหรับสองยุคสุดท้าย'] },
+  { id: 'regimeChoice', on: 'ask:regimeChoice', face: 'smirk', title: 'เลือกระบอบ', say: [
+    'อำนาจเลือกอยู่ในมือเจ้าแล้ว ระบบแสดงค่ามาตรวัดตอนนี้ของทุกรัฐ และแต้มที่แต่ละรัฐจะได้ใต้แต่ละระบอบ',
+    'ผู้เลือกระบอบได้เปรียบจริง ทว่าทุกรัฐยังดัดกลับได้ด้วยกระแสและรัฐประหาร',
+    'เลือกระบอบที่เจ้าได้อันดับต้นและคู่แข่งที่นำอยู่ได้น้อย ถ้านโยบายของมันช่วยแผนของเจ้าด้วยก็ยิ่งดี'] },
+  { id: 'scout', on: 'ask:scoutDeck', face: 'shush', title: 'สอดแนม', say: [
+    'จุ๊ ๆ เรื่องนี้รู้กันแค่เรากับเจ้า เลือกดูการ์ดบนสุดของกองตัวเองหรือของอีกฝ่าย แล้วส่งใบหนึ่งไปไว้ใต้กองได้',
+    'การสอดแนมเปลี่ยนการ์ดที่จะเปิดใบถัดไป เจ้าจึงคุมผลการรบได้บางส่วน',
+    'ถ้าอีกฝ่ายยังต้องเปิดอีกหลายใบ ดูกองของเขาแล้วส่งใบแรงลงใต้กอง'] },
+  { id: 'era2', on: 'round:5', face: 'explain', title: 'ยุค II: ปฏิรูป', say: [
+    'โครงการยุค II มีช่องสิ่งปลูกสร้างมากขึ้น แต้มต่ออันดับเป็น 3/2/1/0 ตลาดกลางขายให้ 4 รับซื้อ 1',
+    'ตลาดกลางรับซื้อถูกลง การขายให้รัฐอื่นจึงสำคัญขึ้น',
+    'ช่วงนี้รัฐที่มีเตาผลิตกับสิ่งปลูกสร้างพร้อมจะเร่งเครื่องได้ ถ้าเจ้ายังมีโครงการน้อย ให้เพิ่มเสียก่อนที่ค่าขยายดินแดนจะแพง'] },
+  { id: 'era3', on: 'round:9', face: 'think', title: 'ยุค III: กริดมานา', say: [
+    'ระบอบเปลี่ยนเป็นชุดสมัยใหม่ ราคาขายบนโครงการยุคนี้ลดเหลือ 2 เกณฑ์การค้ามูลค่าสูงลดเหลือ 6 แต้มต่ออันดับเป็น 4/2/1/0',
+    'การค้ามูลค่าสูงทำได้ง่ายขึ้นมาก โบนัสจึงไหลเวียนบ่อยขึ้น',
+    'อ่านมาตรวัดชุดสมัยใหม่ให้ดี เช่น ชาตินิยมนับโครงการ มานาเสรีนับสิ่งปลูกสร้าง แล้วถามตัวเองว่ารัฐของเจ้าพร้อมรับระบอบไหน'] },
+  { id: 'era4', on: 'round:13', face: 'panic', title: 'ยุค IV: เฟื่องฟู', say: [
+    'สี่รอบสุดท้ายแล้วลูกรัก แต้มต่ออันดับสูงสุดของเกมคือ 5/3/1/0 สี่รอบนี้ตัดสินทุกอย่าง เรานี่แหละตื่นเต้นแทนเจ้าจนนั่งไม่ติดแล้ว',
+    'แต้มยุคท้ายมากพอให้รัฐที่ตามอยู่แซงขึ้นมาได้',
+    'ทรัพยากรที่เหลือตอนจบไม่มีค่าอะไร ใช้ได้แค่ตัดสินตอนเสมอ ใช้ให้หมดกับสิ่งที่ดันอันดับในสภา'] },
+  { id: 'end', on: 'end', face: 'smile', title: 'จบเกม', say: [
+    'สภารอบที่ 16 ปิดเกม รัฐที่คะแนนสุทธิสูงสุดชนะ',
+    'หน้าสรุปจะบอกว่าเจ้าปกครองรัฐแบบไหน จากแอคชันที่เลือกมาตลอดเกม จงจดจำและเล่าขานเรื่องราวของรัฐเจ้าต่อไปนะ',
+    'ต่อจากนี้ลองโหมดปกติกับ AI สามรัฐ หรือชวนเพื่อนมาเล่นออนไลน์ หน้าวิธีเล่นในเมนูรวมกติกาทั้งหมดไว้ให้ทบทวน ราตรีสวัสดิ์ลูกรัก ขอให้สายเลือดของเจ้าสืบสานไปนานชั่วกัลป์'] },
 ];
 
 // =====================================================================
@@ -8424,7 +8704,8 @@ function openFlagEditor(initial, color, onSave) {
 // SCENES: painted backdrops behind every page. The study (main menu) has rain behind the window panes,
 // a lantern that flickers, dust drifting in its light and now and then a far flash of lightning. The map of
 // Kirana lies under the table and the other pages, tinted like the felt, with cloud shadows sliding over
-// it; the table tints it with the colour of the era, and each new era sweeps the view across the map.
+// it, factory smog rolling east and soot settling; the table tints it with the colour of the era, and each
+// new era sweeps the view across the map.
 // Images load from assets/ beside the page. If they are missing, the felt background stays as it was.
 // Effects follow the table-effects setting and reduced motion; the loop sleeps while the tab is hidden.
 // =====================================================================
@@ -8569,22 +8850,41 @@ function drawStudy(t, dt, still) {
   c.globalCompositeOperation = 'source-over';
 }
 
-// ---------- the map: cloud shadows drift with the wind ----------
+// ---------- the map: cloud shadows, factory smog and falling soot, all on the west wind ----------
+// Luxonia's chimneys stand outside the west gate and the wind blows from the west, so the smoke rolls
+// east across the map: everything here drifts left to right.
 function mapParts() {
   const cloud = (fresh) => ({ x: fresh ? Math.random() * 1.3 - 0.15 : -0.35, y: Math.random(), rx: 0.12 + Math.random() * 0.16, ry: 0.07 + Math.random() * 0.1, v: 0.006 + Math.random() * 0.008, a: 0.18 + Math.random() * 0.16 });
-  return { clouds: Array.from({ length: 7 }, () => cloud(true)), cloud };
+  const smog = (fresh) => ({ x: fresh ? Math.random() * 1.4 - 0.2 : -0.5, y: 0.08 + Math.random() * 0.86, rx: 0.22 + Math.random() * 0.24, ry: 0.05 + Math.random() * 0.05, v: 0.004 + Math.random() * 0.005, a: 0.05 + Math.random() * 0.05 });
+  const ash = (fresh) => ({ x: fresh ? Math.random() : Math.random() * 0.6 - 0.1, y: fresh ? Math.random() : -0.03, v: 0.018 + Math.random() * 0.022, ph: Math.random() * 6.28, r: 0.6 + Math.random() * 1.1, a: 0.22 + Math.random() * 0.3 });
+  return { clouds: Array.from({ length: 7 }, () => cloud(true)), cloud, smog: Array.from({ length: 6 }, () => smog(true)), smogOne: smog, ash: Array.from({ length: 70 }, () => ash(true)), ashOne: ash };
+}
+function blob(c, x, y, rx, ry, col, a) {
+  c.save(); c.translate(x, y); c.scale(1, ry / rx);
+  const g = c.createRadialGradient(0, 0, 0, 0, 0, rx);
+  g.addColorStop(0, `rgba(${col},${a})`); g.addColorStop(0.55, `rgba(${col},${a * 0.55})`); g.addColorStop(1, `rgba(${col},0)`);
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, rx, 0, 6.283); c.fill(); c.restore();
 }
 function drawMap(t, dt) {
-  const c = sc.ctx, W = sc.w, H = sc.h;
-  if (!sc.parts) sc.parts = mapParts();
-  for (const k of sc.parts.clouds) {
+  const c = sc.ctx, W = sc.w, H = sc.h, P0 = sc.parts || (sc.parts = mapParts());
+  for (const k of P0.clouds) {
     k.x += k.v * dt;
-    if (k.x - k.rx > 1.05) Object.assign(k, sc.parts.cloud(false));
-    const x = k.x * W, y = k.y * H, rx = k.rx * W, ry = k.ry * H;
-    c.save(); c.translate(x, y); c.scale(1, ry / rx);
-    const g = c.createRadialGradient(0, 0, 0, 0, 0, rx);
-    g.addColorStop(0, `rgba(4,10,9,${k.a})`); g.addColorStop(0.55, `rgba(4,10,9,${k.a * 0.55})`); g.addColorStop(1, 'rgba(4,10,9,0)');
-    c.fillStyle = g; c.beginPath(); c.arc(0, 0, rx, 0, 6.283); c.fill(); c.restore();
+    if (k.x - k.rx > 1.05) Object.assign(k, P0.cloud(false));
+    blob(c, k.x * W, k.y * H, k.rx * W, k.ry * H, '4,10,9', k.a);
+  }
+  // smog banks: long, low, the brown-grey of coal smoke
+  for (const k of P0.smog) {
+    k.x += k.v * dt;
+    if (k.x - k.rx > 1.1) Object.assign(k, P0.smogOne(false));
+    blob(c, k.x * W, k.y * H, k.rx * W, k.ry * H, '120,104,86', k.a);
+  }
+  // soot flakes settle slowly, swaying as they fall
+  const u = W / 900;
+  for (const f of P0.ash) {
+    f.y += f.v * dt; f.x += f.v * dt * 0.45; f.ph += dt * 1.3;
+    if (f.y > 1.03 || f.x > 1.03) Object.assign(f, P0.ashOne(false));
+    c.fillStyle = `rgba(28,24,22,${f.a})`;
+    c.beginPath(); c.arc((f.x + Math.sin(f.ph) * 0.004) * W, f.y * H, f.r * u, 0, 6.283); c.fill();
   }
 }
 
@@ -8611,11 +8911,11 @@ function showMenu() {
       <div class="title-block"><h1>สหพันธรัฐ<span class="of">แห่งคีรันนา</span></h1><div class="sub">ตระกูลผู้ปกครองสี่รัฐแย่งความชอบธรรมในสภา 16 รอบ 4 ยุค สร้างรัฐให้เก่งเรื่องที่ระบอบให้ค่า แล้วดัดระบอบให้หันมาให้ค่ากับเรื่องที่รัฐคุณเก่ง</div></div>
       <nav class="menu-list">
         <div class="resume-slot" id="m-resume-slot"></div>
-        <button class="mbtn" id="m-solo">${ICON('crown')}<span><b>เล่นกับ AI</b><small>ตั้งโต๊ะ 3 หรือ 4 รัฐ เลือกสไตล์ AI และชุดกฎ</small></span></button>
-        <button class="mbtn" id="m-tut">${ICON('book')}<span><b>โหมดสอนเล่น</b><small>เล่นเกมจริงกับ AI สองรัฐ มีคำอธิบายกติกา เหตุผล และแนวทางทุกครั้งที่เจอเรื่องใหม่</small></span></button>
-        <button class="mbtn" id="m-online"${onlineOk ? '' : ' disabled'}>${ICON('chat')}<span><b>เล่นออนไลน์กับเพื่อน</b><small>${onlineOk ? 'สร้างห้องหรือเข้าห้อง แชทได้ระหว่างเกม' : 'ใช้ได้เมื่อเปิดเกมจากหน้า GitHub Pages (หน้านี้ต่อเครือข่ายภายนอกไม่ได้)'}</small></span></button>
-        <button class="mbtn" id="m-how">${ICON('scroll')}<span><b>วิธีเล่น</b><small>กติกาทั้งหมดแบ่งเป็นหัวข้อ พร้อมคำศัพท์</small></span></button>
-        <button class="mbtn" id="m-hof">${ICON('star')}<span><b>หอเกียรติยศ และลานความคิดเห็น</b><small>ผู้ชนะ 10 อันดับแรก พร้อมวิเคราะห์ว่าเล่นเป็นรัฐสายใด</small></span></button>
+        <button class="mbtn" id="m-solo"><i class="mic">${ICON('crown')}</i><span><b>เล่นกับ AI</b><small>ตั้งโต๊ะ 3 หรือ 4 รัฐ เลือกสไตล์ AI และชุดกฎ</small></span></button>
+        <button class="mbtn" id="m-tut"><i class="mic">${ICON('book')}</i><span><b>โหมดสอนเล่น</b><small>เล่นเกมจริงกับ AI สองรัฐ เนเมสไซอาร์จะนั่งข้างท่านและอธิบายกติกา เหตุผล และแนวทางทุกครั้งที่เจอเรื่องใหม่</small></span></button>
+        <button class="mbtn" id="m-online"${onlineOk ? '' : ' disabled'}><i class="mic">${ICON('chat')}</i><span><b>เล่นออนไลน์กับเพื่อน</b><small>${onlineOk ? 'สร้างห้องหรือเข้าห้อง แชทได้ระหว่างเกม' : 'ใช้ได้เมื่อเปิดเกมจากหน้า GitHub Pages (หน้านี้ต่อเครือข่ายภายนอกไม่ได้)'}</small></span></button>
+        <button class="mbtn" id="m-how"><i class="mic">${ICON('scroll')}</i><span><b>วิธีเล่น</b><small>กติกาทั้งหมดแบ่งเป็นหัวข้อ พร้อมคำศัพท์</small></span></button>
+        <button class="mbtn" id="m-hof"><i class="mic">${ICON('star')}</i><span><b>หอเกียรติยศ และลานความคิดเห็น</b><small>ผู้ชนะ 10 อันดับแรก พร้อมวิเคราะห์ว่าเล่นเป็นรัฐสายใด</small></span></button>
         <div class="menu-row"><button class="btn ghost" id="m-lab">${ICON('gear')} ห้องผู้ออกแบบ: จำลอง AI หลายเกม</button><button class="btn ghost" id="m-set">${ICON('gear')} ตั้งค่า</button></div>
       </nav>
     </div></div>`;
@@ -8636,8 +8936,8 @@ function showMenu() {
 function renderResume() {
   const el = document.getElementById('m-resume-slot'); if (!el) return;
   const sv = savedGame('save.solo'), so = savedGame('save.online');
-  el.innerHTML = `${sv ? `<button class="mbtn hot" id="m-resume">${ICON('scroll')}<span><b>เล่นต่อ</b><small>เกมเดี่ยวที่ค้างไว้ รอบ ${sv.round}/16 · ${esc(new Date(sv.at).toLocaleString('th-TH-u-ca-gregory', { dateStyle: 'medium', timeStyle: 'short' }))}</small></span></button>` : ''}
-    ${so && so.room ? `<button class="mbtn hot" id="m-rejoin">${ICON('chat')}<span><b>กลับเข้าห้องออนไลน์</b><small>ห้อง ${esc(so.room)} · รอบ ${so.round}/16</small></span></button>` : ''}`;
+  el.innerHTML = `${sv ? `<button class="mbtn hot" id="m-resume"><i class="mic">${ICON('scroll')}</i><span><b>เล่นต่อ</b><small>เกมเดี่ยวที่ค้างไว้ รอบ ${sv.round}/16 · ${esc(new Date(sv.at).toLocaleString('th-TH-u-ca-gregory', { dateStyle: 'medium', timeStyle: 'short' }))}</small></span></button>` : ''}
+    ${so && so.room ? `<button class="mbtn hot" id="m-rejoin"><i class="mic">${ICON('chat')}</i><span><b>กลับเข้าห้องออนไลน์</b><small>ห้อง ${esc(so.room)} · รอบ ${so.round}/16</small></span></button>` : ''}`;
   if (el.querySelector('#m-resume')) el.querySelector('#m-resume').onclick = resumeSolo;
   if (el.querySelector('#m-rejoin')) el.querySelector('#m-rejoin').onclick = () => needProfile(() => rejoinOnline(so));
 }
@@ -9417,6 +9717,7 @@ function placeRoundMarker() {
   const c = document.querySelector(`.cell[data-rc="${Math.min(16, G.round)}"]`); if (!c) return;
   const tr = m.parentElement.getBoundingClientRect(), r = c.getBoundingClientRect();
   m.style.left = (r.left - tr.left + r.width / 2) + 'px'; m.style.top = (r.top - tr.top + r.height / 2) + 'px';
+  m.style.setProperty('--r', Math.min(16, G.round));   // the brass cog turns a notch every round
 }
 window.addEventListener('resize', () => { if (G) { placeRoundMarker(); queueRender(); } });
 // five current tracks; the discs persist between renders so they slide when a current moves
@@ -10213,8 +10514,10 @@ function showBattle(res) {
 }
 
 // =====================================================================
-// TUTORIAL: a real game against two AIs; each rule is explained the first time it matters
+// TUTORIAL: a real game against two AIs; each rule is explained the first time it matters,
+// by Nemessiah, the Red Prophet, whose portraits ship in assets/ beside the page (nem-<face>.webp)
 // =====================================================================
+const nemSrc = face => 'assets/nem-' + face + '.webp';
 function startTutorial() {
   const seed = 20251;
   const r = K.rng(seed ^ 0x7e57);
@@ -10226,7 +10529,8 @@ function startTutorial() {
   const dice = diceOrder(draft.length, K.rng(seed ^ 0xd1ce));
   const cfg = { mode: 'tutorial', rules: '0.3', seed, seats: orderSeats(draft, dice), dice };
   settings.speed = Math.max(settings.speed, 450);
-  coach({ id: 'dice', title: 'ลำดับการเล่น', rule: 'ก่อนเริ่ม ทุกรัฐทอยลูกเต๋า D6 แต้มสูงสุดเปิดรอบแรก ที่เหลือเรียงตามแต้ม ใครเท่ากันทอยใหม่เฉพาะกลุ่มนั้น', why: 'ลำดับที่นั่งใช้ไปตลอดเกม แต่ผู้เปิดรอบต่อ ๆ ไปคือรัฐที่คะแนนสุทธิต่ำสุด รัฐที่ตามหลังจึงได้เลือกก่อน', how: 'กดทอยลูกเต๋าแล้วดูว่าคุณนั่งลำดับไหน' })
+  NEM_FACES.forEach(f => { const im = new Image(); im.src = nemSrc(f); });   // every portrait ready before she speaks
+  coach(TUTORIAL_DICE)
     .then(() => showDiceRoll(draft, dice))
     .then(() => startGame(cfg));
 }
@@ -10251,13 +10555,20 @@ function coach(st) {
     if (coachOpen) coachOpen.close();
     const veil = document.createElement('div'); veil.className = 'coachveil';
     const ring = document.createElement('div'); ring.className = 'coachring';
-    const card = document.createElement('div'); card.className = 'coach'; card.setAttribute('role', 'dialog'); card.setAttribute('aria-label', st.title);
+    const card = document.createElement('div'); card.className = 'coach nem'; card.setAttribute('role', 'dialog'); card.setAttribute('aria-label', 'เนเมสไซอาร์: ' + st.title);
     const total = TUTORIAL.length, n = S && S.tutorial ? S.tutorial.seen.size : 0;
-    card.innerHTML = `<div class="ck" title="ลากตรงนี้เพื่อย้ายกล่องคำอธิบาย"><span class="grip">${ICON('grip')}</span><span>${ICON('book')} โหมดสอนเล่น${n ? ` · บทที่ ${n}/${total}` : ''}</span><span class="grow"></span><button class="cmin" id="co-min" title="ย่อหรือขยายกล่อง" aria-label="ย่อหรือขยายกล่อง">${ICON('minus')}</button></div>
-      <div class="cbody"><h3>${esc(st.title)}</h3>
-      <div class="cs"><b>กติกา</b><p>${gloss(st.rule)}</p></div><div class="cs"><b>ทำไมถึงเป็นแบบนี้</b><p>${gloss(st.why)}</p></div><div class="cs"><b>แนวทาง</b><p>${gloss(st.how)}</p></div></div>
+    const face = NEM_FACES.includes(st.face) ? st.face : 'explain', src = nemSrc(face), seen = new Set();
+    // she speaks in paragraphs: the rule, why it works this way, how to approach it
+    // a word joiner keeps her favourite words whole when Thai lines wrap (ลูกรัก must never break in two)
+    const keep = t => String(t).replace(/ลูกรัก/g, 'ลูก\u2060รัก').replace(/บางส่วน/g, 'บาง\u2060ส่วน');
+    const say = (st.say || [st.rule, st.why, st.how].filter(Boolean)).map(keep);
+    card.innerHTML = `<div class="ck" title="ลากตรงนี้เพื่อย้ายกล่องคำอธิบาย"><span class="grip">${ICON('grip')}</span><span class="who"><i class="nem-av"><img src="${src}" alt="" draggable="false"></i><b>เนเมสไซอาร์</b><small>ศาสดาสีชาด · ผู้สอนเล่น</small></span><span class="grow"></span>${n ? `<span class="cnum">บทที่ ${n}/${total}</span>` : ''}<button class="cmin" id="co-min" title="ย่อหรือขยายกล่อง" aria-label="ย่อหรือขยายกล่อง">${ICON('minus')}</button></div>
+      <div class="cbody"><figure class="nem-por" data-face="${face}"><img src="${src}" alt="เนเมสไซอาร์${NEM_FACE_ALT[face] ? ' ' + NEM_FACE_ALT[face] : ''}" draggable="false"></figure>
+      <div class="nem-say"><h3>${esc(st.title)}</h3>${say.map(p => `<p>${gloss(p, seen)}</p>`).join('')}</div></div>
       <div class="cf">${S && S.tutorial ? '<button class="btn sm ghost" id="co-off">ปิดคำอธิบายที่เหลือ</button>' : ''}<span class="grow"></span><button class="btn primary" id="co-ok">เข้าใจแล้ว</button></div>`;
     document.body.appendChild(veil); document.body.appendChild(ring); document.body.appendChild(card);
+    // without the portraits (an old copy of the page, a blocked folder) the card keeps its text and drops the picture
+    card.querySelectorAll('img').forEach(im => im.addEventListener('error', () => card.classList.add('noimg'), { once: true }));
     const target = st.focus && document.querySelector(st.focus);
     const fixedTarget = target && getComputedStyle(target).position === 'fixed';
     if (target && !fixedTarget) {

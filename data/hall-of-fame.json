@@ -1,1 +1,53 @@
-[]
+[
+ {
+  "v": 1,
+  "id": "kb9l15",
+  "at": "2026-11-07",
+  "mode": "online",
+  "rules": "0.3t5",
+  "n": 3,
+  "seed": 798449302,
+  "leader": "อลิซเซีย",
+  "title": "",
+  "traits": [],
+  "state": "อันเอล์มา",
+  "latin": "Anelma",
+  "meaning": "รุ่งอรุณแห่งปัญญาโบราณ",
+  "color": "#4fb3e8",
+  "flag": {
+   "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAgCAYAAABU1PscAAABwUlEQVR4AeySy0sCURTGvxzNR2WJUtGL3osiixatpGjXIqJNi4I2BdFCXPR/tAihRdCu9kH9AVLLiHJhRFREL9CwQkPFx0z3OhvBO2TgzB1pBs4w3HOY8/2+75oSsYhUzboJh6TeYa9mZUKNP/8DIJspIBnPQsyLustLOQEJSBDRJ8EHBNevsLsZxs7aJUKHz0glcroBUQT4jGZwtH2HyGkc+azsfDYt4vw4itDBC4HI6wKCCSAR96/P4og9pspEigUJ9xdfeLv9LuvxOGAC5Midf39Ko5AjJAxVqWQeH68ZUBhGW9MjJkBFCuoqmlJ9iAlgsQnw9NghmNkq7U1muDpsMAnsvuqqSxYwAeqIrhGfG619jpJR+ZOKHphsQedQg3zA+c0EoJpc7TYsbg1idNoNwSKPWawmTC20YXa1C45mCx3jXrIyhgyagtNTj3l/P/x749gIjiGwP4GZlW44nPoQT2UrAtBmsch1sjWSO08SMVuF4pGeXr8D6EktQ0vtA3h9y6hmzS0FGD6pd1T7CajnjTZ/NhLQxmflLX9IQPknPDsGAE/36W4jAeoCzzIS4Ok+3W0kQF3gWUYCPN2nu38AAAD///Cih6kAAAAGSURBVAMAHwXe0Va85J8AAAAASUVORK5CYII="
+  },
+  "score": 35,
+  "legit": 37,
+  "stigma": 2,
+  "grav": 33,
+  "research": {
+   "culture": 6,
+   "innovation": 3,
+   "building": 6
+  },
+  "military": 9,
+  "projects": 7,
+  "style": {
+   "label": "รัฐพาณิชย์สายวิทยาการ",
+   "desc": "ค้าขายเป็นแกนมากกว่าโต๊ะทั่วไป 32% เสริมด้วยวิทยาการ · ฐานอุดมการณ์หนักไปทางประชาชน (8 สัญลักษณ์)",
+   "key": "trade+lab"
+  },
+  "margin": 6,
+  "opp": [
+   {
+    "state": "อันคินา",
+    "score": 29,
+    "ai": true
+   },
+   {
+    "state": "ก่อร่าน",
+    "score": 28,
+    "ai": false
+   }
+  ],
+  "by": "6l123j",
+  "gh": "620112418007",
+  "lvl": "normal"
+ }
+]

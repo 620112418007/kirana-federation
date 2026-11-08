@@ -59,13 +59,14 @@
 <p>ออกจากระบบได้จากปุ่มในหน้าเกม ลบข้อมูลทั้งหมดในเครื่องได้ด้วยการล้างข้อมูลของเว็บไซต์นี้ในการตั้งค่าเบราว์เซอร์ และถอนสิทธิ์ที่ให้เกมไว้ได้ที่ <a href="https://myaccount.google.com/connections">myaccount.google.com/connections</a> ถ้าต้องการให้ลบผลในหอเกียรติยศหรือความคิดเห็น แจ้งได้ที่หน้า Issues ของคลังเกม</p>
 
 <h2>8. ติดต่อ</h2>
-<p>ถามหรือแจ้งเรื่องความเป็นส่วนตัวได้ที่ <a id="issues" href="https://github.com/620112418007/kirana-federation/issues">หน้า Issues ของคลังเกมบน GitHub</a> ถ้านโยบายนี้เปลี่ยน วันที่ปรับปรุงด้านบนจะเปลี่ยนตาม</p>
+<p>ถามหรือแจ้งเรื่องความเป็นส่วนตัวได้ที่ <a id="issues" href="https://github.com/Unilight-Games/kirana-federation/issues">หน้า Issues ของคลังเกมบน GitHub</a> ถ้านโยบายนี้เปลี่ยน วันที่ปรับปรุงด้านบนจะเปลี่ยนตาม</p>
 </main>
 <script>
-// a copy of the game on another GitHub Pages site points its contact link at its own repository
+// a copy of the game on another GitHub Pages site points its contact link at its own repository: a project site
+// (owner.github.io/repo/privacy.html) or an organisation or user site served from the root (owner.github.io/privacy.html)
 (function () {
   var m = location.hostname.match(/^([^.]+)\.github\.io$/i), seg = location.pathname.split('/').filter(Boolean);
-  if (m && seg.length > 1) document.getElementById('issues').href = 'https://github.com/' + m[1] + '/' + seg[0] + '/issues';
+  if (m) document.getElementById('issues').href = 'https://github.com/' + m[1] + '/' + (seg.length > 1 ? seg[0] : m[1] + '.github.io') + '/issues';
 })();
 </script>
 </body>

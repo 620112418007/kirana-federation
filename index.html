@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>สหพันธรัฐแห่งคีรันนา</title>
 <meta name="description" content="เกมกระดานการเมืองและเศรษฐกิจแห่งคีรันนา เล่นกับ AI หรือเล่นออนไลน์กับเพื่อน">
+<link rel="privacy-policy" href="privacy.html">
 <!-- fed-repo: ใส่ owner/repo ถ้าใช้โดเมนของตัวเอง เช่น <meta name="fed-repo" content="me/federation"> -->
 <!-- fed-google-client: OAuth Client ID ชนิด Web application จาก Google Cloud Console (ไม่ใช่ความลับ) ว่างไว้ = ใช้ค่าใน config.js -->
 <meta name="fed-google-client" content="">
@@ -1299,6 +1300,9 @@ body.scene-still .board::after { animation: none; }
 .mbtn:hover .mic::before { filter: brightness(1.45) saturate(1.2); }
 .mbtn.hot .mic::before { background: radial-gradient(ellipse 90% 55% at 50% 70%, rgba(255, 210, 140, .7), transparent 72%), linear-gradient(90deg, transparent 48.5%, rgba(0, 0, 0, .45) 48.5% 51.5%, transparent 51.5%), linear-gradient(165deg, #b23446, #4a0f1b 60%, #6d1626); }
 .menu-row .btn.ghost { background: rgba(10, 10, 12, .5); }
+.menu-legal { display: block; width: max-content; margin: 12px auto 0; font-size: 12.5px; color: #a99f8f; text-decoration: underline; text-decoration-color: rgba(201, 155, 75, .4); text-underline-offset: 3px; }
+.menu-legal:hover { color: var(--brass-hi); }
+@media (min-width: 1100px) { body[data-scene="study"] .menu-legal { margin-left: 0; } }
 
 /* ---------- toasts, banners and the era splash ---------- */
 .toast { background: rgba(18, 18, 22, .95); border-radius: 6px; box-shadow: 0 10px 26px rgba(0, 0, 0, .55), 0 0 16px rgba(255, 170, 80, .1); }
@@ -9048,6 +9052,7 @@ function showMenu() {
         <button class="mbtn" id="m-how"><i class="mic">${ICON('scroll')}</i><span><b>วิธีเล่น</b><small>กติกาทั้งหมดแบ่งเป็นหัวข้อ พร้อมคำศัพท์</small></span></button>
         <button class="mbtn" id="m-hof"><i class="mic">${ICON('star')}</i><span><b>หอเกียรติยศ และลานความคิดเห็น</b><small>ผู้ชนะ 10 อันดับแรก พร้อมวิเคราะห์ว่าเล่นเป็นรัฐสายใด</small></span></button>
         <div class="menu-row">${devView() ? `<button class="btn ghost" id="m-lab">${ICON('gear')} ห้องผู้ออกแบบ: จำลอง AI หลายเกม</button>` : ''}<button class="btn ghost" id="m-set">${ICON('gear')} ตั้งค่า</button></div>
+        <a class="menu-legal" id="m-privacy" href="privacy.html" target="_blank" rel="noopener">นโยบายความเป็นส่วนตัว</a>
       </nav>
     </div></div>`;
   const q = s => app.querySelector(s);

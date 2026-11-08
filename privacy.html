@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>นโยบายความเป็นส่วนตัว · สหพันธรัฐแห่งคีรันนา</title>
+<meta name="description" content="หน้าเกมสหพันธรัฐแห่งคีรันนาใช้ข้อมูลอะไร ส่งไปที่ไหน และลบได้อย่างไร">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Taviraj:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #121317 radial-gradient(ellipse 70% 40% at 50% -6%, rgba(255, 170, 80, .1), transparent 70%) no-repeat; color: #e9e2d4;
+    font: 16px/1.8 "IBM Plex Sans Thai", "Noto Sans Thai", system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 36px 22px 64px; }
+  h1, h2 { font-family: "Taviraj", "Noto Serif Thai", Georgia, serif; color: #f1d08a; line-height: 1.35; }
+  h1 { font-size: 34px; margin: 10px 0 2px; }
+  h2 { font-size: 21px; margin: 34px 0 6px; padding-top: 14px; border-top: 1px solid rgba(201, 155, 75, .25); }
+  p, li { margin: 0 0 12px; }
+  ul { padding-left: 22px; }
+  a { color: #ffb45e; }
+  .meta { color: #a99f8f; font-size: 14px; margin-bottom: 24px; }
+  .back { font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+<p class="back"><a href="./">กลับไปหน้าเกม</a></p>
+<h1>นโยบายความเป็นส่วนตัว</h1>
+<p class="meta">สหพันธรัฐแห่งคีรันนา · ปรับปรุงล่าสุด 8 พฤศจิกายน 2026</p>
+<p>หน้าเกมนี้เป็นเว็บนิ่งบน GitHub Pages ผู้ทำเกมไม่มีเซิร์ฟเวอร์ของตัวเอง ข้อมูลส่วนใหญ่จึงอยู่ในเบราว์เซอร์ของผู้เล่น หน้านี้อธิบายว่าเกมใช้ข้อมูลอะไร ส่งไปที่ไหน และลบได้อย่างไร</p>
+
+<h2>1. การลงชื่อเข้าใช้ด้วย Google</h2>
+<p>ผู้เล่นลงชื่อเข้าใช้ Google เพื่อให้เกมบันทึกเกมและโปรไฟล์แยกตามผู้เล่น และให้ชัยชนะเข้าหอเกียรติยศได้ ไม่ลงชื่อก็เล่นได้ทุกโหมด เมื่อลงชื่อ Google ส่งโทเค็นยืนยันตัวตนให้หน้าเกม ในโทเค็นมีรหัสบัญชี ชื่อ อีเมล และลิงก์รูปโปรไฟล์ เกมใช้เพียงสามอย่าง คือรหัสบัญชี (แปลงเป็นแฮชก่อนเก็บ) ชื่อต้น และลิงก์รูปโปรไฟล์ เกมไม่อ่านและไม่เก็บอีเมล และไม่ขอสิทธิ์เข้าถึงข้อมูลอื่นในบัญชี Google</p>
+
+<h2>2. ข้อมูลที่เก็บในเบราว์เซอร์ของผู้เล่น</h2>
+<p>เกมเก็บข้อมูลไว้ในพื้นที่เก็บข้อมูลของเบราว์เซอร์ (localStorage และ sessionStorage) ได้แก่ แฮชรหัสบัญชี ชื่อต้น ลิงก์รูปโปรไฟล์ โปรไฟล์ผู้นำ (ชื่อผู้นำ ชื่อรัฐ สี ธง คำนำหน้า และบุคลิก) เกมที่บันทึกไว้ และการตั้งค่า ข้อมูลชุดนี้อยู่ในเครื่องของผู้เล่น ผู้ทำเกมไม่ได้รับ เกมไม่ใช้คุกกี้ติดตาม</p>
+
+<h2>3. การเล่นออนไลน์และรายชื่อผู้เล่นออนไลน์</h2>
+<p>เพื่อให้ผู้เล่นเจอกัน เบราว์เซอร์ต่อรีเลย์ Nostr สาธารณะ แล้วต่อถึงกันโดยตรงด้วย WebRTC ผ่านเซิร์ฟเวอร์ STUN ของ Google และ Cloudflare (และเซิร์ฟเวอร์ TURN ถ้าเจ้าของเกมตั้งไว้) การต่อตรงทำให้เครื่องที่เชื่อมกันเห็นที่อยู่เครือข่าย (IP) ของกันและกัน และรีเลย์เห็นการเชื่อมต่อของผู้เล่น</p>
+<p>ข้อมูลที่ส่งถึงผู้เล่นคนอื่นมีชื่อผู้นำ ชื่อรัฐ สี ธง รหัสผู้เล่นแบบแฮช สิ่งที่กำลังทำในหน้าเกม การเดินในเกม และข้อความแชทในห้อง ผู้เล่นปิดการแสดงตัวในรายชื่อผู้เล่นออนไลน์ได้ที่ ตั้งค่า &gt; แสดงตัวว่าออนไลน์</p>
+
+<h2>4. หอเกียรติยศและลานความคิดเห็น</h2>
+<p>เมื่อผู้เล่นที่ลงชื่อเข้าใช้ชนะ ผลเกม (ชื่อผู้นำ ชื่อรัฐ คะแนน จำนวนการ์ด และสายการเล่น) ถูกส่งให้ผู้เล่นที่ออนไลน์อยู่ ถ้าเจ้าของเกมตั้งหอเกียรติยศอัตโนมัติไว้ (Google Sheet กับ Apps Script) หน้าเกมส่งโทเค็นการลงชื่อให้สคริปต์ของเจ้าของเกมหนึ่งครั้ง สคริปต์ตรวจโทเค็นกับ Google แล้วเก็บเพียงแฮชของรหัสบัญชีกับผลเกม ไม่เก็บอีเมล</p>
+<p>ผลที่ส่งเข้าหอเกียรติยศผ่าน GitHub และข้อความในลานความคิดเห็นเป็นข้อมูลสาธารณะในคลังของเกม และผูกกับบัญชี GitHub ของผู้ส่ง</p>
+
+<h2>5. บริการภายนอกที่หน้าเกมติดต่อ</h2>
+<ul>
+<li>Google: การลงชื่อเข้าใช้ และไฟล์ฟอนต์จาก Google Fonts</li>
+<li>GitHub: โฮสต์หน้าเกม และไฟล์บันทึกหอเกียรติยศที่อ่านจาก raw.githubusercontent.com</li>
+<li>รีเลย์ Nostr และเซิร์ฟเวอร์ STUN: ใช้เมื่อเล่นออนไลน์และเมื่อแสดงรายชื่อผู้เล่นออนไลน์</li>
+</ul>
+<p>ผู้ให้บริการเหล่านี้อาจบันทึกที่อยู่ IP และข้อมูลการเชื่อมต่อตามนโยบายของแต่ละราย</p>
+
+<h2>6. สิ่งที่เกมไม่ทำ</h2>
+<p>เกมไม่มีโฆษณา ไม่มีตัววิเคราะห์การใช้งาน และไม่ขายหรือส่งต่อข้อมูลผู้ใช้ การใช้ข้อมูลที่ได้จาก Google API เป็นไปตาม <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a> รวมถึงข้อกำหนด Limited Use</p>
+
+<h2>7. การลบข้อมูล</h2>
+<p>ออกจากระบบได้จากปุ่มในหน้าเกม ลบข้อมูลทั้งหมดในเครื่องได้ด้วยการล้างข้อมูลของเว็บไซต์นี้ในการตั้งค่าเบราว์เซอร์ และถอนสิทธิ์ที่ให้เกมไว้ได้ที่ <a href="https://myaccount.google.com/connections">myaccount.google.com/connections</a> ถ้าต้องการให้ลบผลในหอเกียรติยศหรือความคิดเห็น แจ้งได้ที่หน้า Issues ของคลังเกม</p>
+
+<h2>8. ติดต่อ</h2>
+<p>ถามหรือแจ้งเรื่องความเป็นส่วนตัวได้ที่ <a id="issues" href="https://github.com/620112418007/kirana-federation/issues">หน้า Issues ของคลังเกมบน GitHub</a> ถ้านโยบายนี้เปลี่ยน วันที่ปรับปรุงด้านบนจะเปลี่ยนตาม</p>
+</main>
+<script>
+// a copy of the game on another GitHub Pages site points its contact link at its own repository
+(function () {
+  var m = location.hostname.match(/^([^.]+)\.github\.io$/i), seg = location.pathname.split('/').filter(Boolean);
+  if (m && seg.length > 1) document.getElementById('issues').href = 'https://github.com/' + m[1] + '/' + seg[0] + '/issues';
+})();
+</script>
+</body>
+</html>

@@ -1057,6 +1057,9 @@ body.scene-still .sc-stage, body.scene-still #scene[data-scene="map"] .sc-stage,
 .acct.dev { border-color: var(--brass-dim); }
 .acct.off b { color: var(--warn); }
 .acct .gbtn { min-height: 32px; display: flex; align-items: center; }
+/* Google draws its button in an iframe with a light page; on the dark theme Chrome paints a white box behind it unless the
+   frame's color-scheme matches the page inside, so the slot that holds the button asks for a light scheme */
+.gbtn { color-scheme: light; }
 .acct-slot.inline .acct { padding: 4px 8px; }
 .hofnote .acct-slot { margin-left: 8px; vertical-align: middle; }
 

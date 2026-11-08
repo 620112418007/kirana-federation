@@ -1335,68 +1335,137 @@ body[data-view="page"] .sc-veil { background: linear-gradient(rgba(16, 16, 20, .
 body[data-view="table"] .sc-tint { opacity: .22; }
 @media (min-width: 1100px) { body[data-scene="study"] .menu .title-block h1::after { margin-left: 0; } }
 
-/* ---------- the tutorial: Nemessiah at the table ---------- */
-.coachveil { background: rgba(6, 5, 6, .5); }
+/* ---------- the tutorial: Nemessiah speaks like a visual novel ---------- */
+.coachveil { background: linear-gradient(180deg, rgba(6, 5, 6, .4), rgba(6, 5, 6, .58) 55%, rgba(6, 5, 6, .82)); }
 .coachring { border-radius: 8px; box-shadow: 0 0 0 3px var(--gas), 0 0 26px rgba(255, 170, 80, .55), 0 0 0 9999px rgba(6, 5, 6, .56); }
-.coach.nem { width: min(640px, calc(100vw - 20px)); padding: 0 0 10px; color: var(--text); border-radius: 10px; border: 1px solid #6e2a35; border-top: 3px solid var(--blood-hi);
-  background: radial-gradient(ellipse 60% 80% at 14% 40%, rgba(142, 28, 44, .26), transparent 70%), radial-gradient(ellipse 80% 40% at 60% 0%, rgba(255, 175, 90, .07), transparent 70%), linear-gradient(180deg, rgba(40, 30, 34, .985), rgba(21, 17, 20, .985));
-  box-shadow: inset 0 1px 0 rgba(255, 220, 200, .06), 0 0 0 1px #000, 0 30px 70px rgba(0, 0, 0, .7), 0 0 44px rgba(142, 28, 44, .26); }
-.coach.nem .ck { margin: 0; padding: 6px 10px 6px 8px; border-bottom: 1px solid rgba(200, 64, 79, .3); color: #c9a7a3; background: rgba(0, 0, 0, .22); border-radius: 8px 8px 0 0; }
-.coach.nem .ck .grip .ic { color: #8a5a5f; }
-.coach.nem .ck .who { display: inline-flex; gap: 8px; align-items: center; min-width: 0; }
-.coach.nem .ck .who b { font-family: var(--f-display); font-weight: 700; font-size: 15px; color: #ffd9a0; letter-spacing: .3px; }
-.coach.nem .ck .who small { font-size: 11px; color: #c98f97; white-space: nowrap; }
-.coach.nem .ck .cnum { font-size: 11px; color: #b89a8f; white-space: nowrap; }
-.coach.nem .nem-av { width: 26px; height: 26px; flex: none; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 70%, #6e1a28, #22070d); box-shadow: 0 0 0 1.5px #c99b4b, 0 0 8px rgba(200, 64, 79, .45); }
-.coach.nem .nem-av img { width: 210%; margin: -4% 0 0 -55%; display: block; pointer-events: none; }
-.coach.nem .cmin { border-color: rgba(200, 64, 79, .45); color: #d9b9b3; }
-.coach.nem .cmin:hover { background: rgba(255, 255, 255, .06); }
-.coach.nem .cbody { display: grid; grid-template-columns: 172px minmax(0, 1fr); gap: 14px; align-items: start; padding: 10px 14px 0 10px; }
-.coach.nem.noimg .cbody { grid-template-columns: minmax(0, 1fr); padding-left: 14px; }
-.coach.nem.noimg .nem-por, .coach.nem.noimg .nem-av { display: none; }
-/* she stands before a lancet window of red glass */
-.nem-por { position: sticky; top: 0; width: 172px; height: 206px; margin: 0; isolation: isolate; }
-.nem-por::before { content: ""; position: absolute; z-index: 0; left: 7px; top: 6px; width: 158px; height: 200px; clip-path: path("M0 200V60A83 83 0 0 1 79 0A83 83 0 0 1 158 60V200Z"); background: linear-gradient(170deg, #f3d58f, #8f6527 55%, #4d3511); }
-.nem-por::after { content: ""; position: absolute; z-index: 1; left: 10px; top: 9px; width: 152px; height: 197px; clip-path: path("M0 197V58A80 80 0 0 1 76 0A80 80 0 0 1 152 58V197Z");
-  background: radial-gradient(ellipse 70% 45% at 50% 38%, rgba(255, 190, 120, .5), transparent 70%), linear-gradient(90deg, transparent 49%, rgba(0, 0, 0, .35) 49% 51%, transparent 51%), linear-gradient(0deg, transparent 58%, rgba(0, 0, 0, .3) 58% 59.5%, transparent 59.5%), linear-gradient(170deg, #8c2236, #2a0a12 55%, #571627); }
-.nem-por img { position: absolute; z-index: 2; left: 0; bottom: 0; width: 172px; height: 206px; display: block; pointer-events: none; user-select: none; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .55)); animation: nemin .45s cubic-bezier(.2, .8, .3, 1.1) both; }
-@keyframes nemin { from { transform: translateY(14px); opacity: 0; } }
-.nem-por[data-face="mad"]::after { animation: nemmad 1.6s ease-in-out infinite; }
-@keyframes nemmad { 50% { filter: brightness(1.6) saturate(1.4); } }
-.nem-por[data-face="panic"] img { animation: nemin .45s cubic-bezier(.2, .8, .3, 1.1) both, nemshake .5s .45s ease-in-out 2; }
-@keyframes nemshake { 25% { transform: translateX(-2px) rotate(-.8deg); } 75% { transform: translateX(2px) rotate(.8deg); } }
-.nem-por[data-face="surprise"] img { animation: nemin .45s cubic-bezier(.2, .8, .3, 1.1) both, nemhop .4s .45s ease-out 1; }
-@keyframes nemhop { 40% { transform: translateY(-6px); } }
-.nem-say { position: relative; min-width: 0; }
-.nem-say::before { content: "\201C"; position: absolute; left: -8px; top: -14px; font-family: var(--f-display); font-size: 64px; line-height: 1; color: rgba(200, 64, 79, .28); pointer-events: none; }
-.coach.nem h3 { position: relative; margin: 2px 0 6px; font-weight: 700; font-size: 21px; color: var(--brass-hi); text-shadow: 0 2px 0 rgba(0, 0, 0, .5); }
-.coach.nem .nem-say p { margin: 0 0 8px; font-family: var(--f-display); font-size: 15px; line-height: 1.72; color: #efe5d4; }
-.coach.nem .nem-say p:last-child { margin-bottom: 2px; }
-.coach.nem .nem-say .g { border-bottom-color: rgba(255, 200, 150, .6); }
-.coach.nem .cf { padding: 0 14px; }
-.coach.nem .btn.ghost { color: #d8c2b8; border-color: rgba(200, 64, 79, .45); background: rgba(0, 0, 0, .2); }
+/* the .coach element is only a frame: the box draws the panel and she stands behind it */
+.coach.vn { display: block; width: min(1040px, calc(100vw - 20px)); max-height: none; padding: 0; overflow: visible; color: var(--text); background: none; border: 0; border-radius: 0; box-shadow: none; animation: none; }
+.coach.vn.dragging { box-shadow: none; opacity: 1; }
+.coach.vn .vn-box { position: relative; z-index: 1; display: flex; flex-direction: column; max-height: calc(100vh - 20px); border-radius: 10px; border: 1px solid #6e2a35; border-top: 3px solid var(--blood-hi);
+  background: radial-gradient(ellipse 45% 110% at 0% 100%, rgba(142, 28, 44, .32), transparent 70%), radial-gradient(ellipse 70% 50% at 70% 0%, rgba(255, 175, 90, .07), transparent 70%), linear-gradient(180deg, rgba(38, 28, 32, .975), rgba(17, 13, 16, .98));
+  box-shadow: inset 0 1px 0 rgba(255, 220, 200, .06), 0 0 0 1px #000, 0 24px 60px rgba(0, 0, 0, .72), 0 0 40px rgba(142, 28, 44, .22);
+  animation: vnbox .32s cubic-bezier(.2, .8, .3, 1) both; transition: box-shadow .3s, border-color .3s; }
+.coach.vn .vn-box::before { content: ""; position: absolute; inset: 4px; border: 1px solid rgba(201, 155, 75, .16); border-radius: 7px; pointer-events: none; }
+.coach.vn.dragging .vn-box { box-shadow: inset 0 1px 0 rgba(255, 220, 200, .06), 0 0 0 1px #000, 0 36px 80px rgba(0, 0, 0, .78), 0 0 40px rgba(142, 28, 44, .22); }
+.coach.vn[data-face="mad"] .vn-box { border-color: #9a2334; box-shadow: inset 0 1px 0 rgba(255, 220, 200, .06), 0 0 0 1px #000, 0 24px 60px rgba(0, 0, 0, .72), 0 0 60px rgba(200, 30, 50, .42); }
+@keyframes vnbox { from { opacity: 0; transform: translateY(18px); } }
+/* the header: a name plate hanging from the top edge, the chapter on the right; drag it to move the box */
+.coach.vn .ck { position: relative; margin: 0; padding: 0 8px 0 4px; min-height: 34px; gap: 8px; border-bottom: 1px solid rgba(200, 64, 79, .24); color: #c9a7a3; background: rgba(0, 0, 0, .24); border-radius: 7px 7px 0 0; }
+.coach.vn .ck .grip .ic { color: #8a5a5f; }
+.coach.vn .ck .who { display: inline-flex; gap: 8px; align-items: center; align-self: stretch; min-width: 0; margin: -3px 0 -6px; padding: 3px 16px 4px 12px; border: 1px solid #b4873e; border-top: 0; border-radius: 0 0 6px 6px;
+  background: linear-gradient(180deg, #8a2132, #4c101c 72%, #33090f); box-shadow: 0 6px 14px rgba(0, 0, 0, .5), inset 0 -1px 0 rgba(255, 210, 150, .22), inset 0 1px 0 rgba(0, 0, 0, .4); }
+.coach.vn .ck .who b { font-family: var(--f-display); font-weight: 700; font-size: 16px; color: #ffe0ae; letter-spacing: .3px; text-shadow: 0 1px 0 rgba(0, 0, 0, .6); white-space: nowrap; }
+.coach.vn .ck .who small { font-size: 11px; color: #e8b3b8; white-space: nowrap; }
+.coach.vn .ck h3 { margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 700; color: var(--brass-hi); text-shadow: 0 1px 0 rgba(0, 0, 0, .5); }
+.coach.vn .ck .cnum { font-size: 11.5px; color: #b89a8f; white-space: nowrap; }
+.coach.vn .cmin { border-color: rgba(200, 64, 79, .45); color: #d9b9b3; }
+.coach.vn .cmin:hover { background: rgba(255, 255, 255, .06); }
+.coach.vn .nem-av { display: none; width: 24px; height: 24px; flex: none; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 50% 70%, #6e1a28, #22070d); box-shadow: 0 0 0 1.5px #c99b4b; }
+.coach.vn .nem-av img { width: 250%; max-width: none; margin: -4% 0 0 -95%; display: block; pointer-events: none; }
+.coach.vn.min .nem-av { display: block; }
+/* the words: every line shares one grid cell, so the box keeps the height of the longest line */
+.coach.vn .cbody { display: flex; gap: 18px; align-items: flex-start; padding: 16px 30px 4px 28px; cursor: pointer; }
+.coach.vn.min .cbody { display: none; }
+.coach.vn .vn-lines { position: relative; display: grid; flex: 1 1 auto; min-width: 0; }
+.coach.vn .vn-lines p { grid-area: 1 / 1; margin: 0; visibility: hidden; font-family: var(--f-display); font-size: 17px; line-height: 1.8; color: #f1e7d6; text-shadow: 0 1px 1px rgba(0, 0, 0, .5); }
+.coach.vn .vn-lines p.vn-now { visibility: visible; }
+.coach.vn .vn-lines .g { border-bottom-color: rgba(255, 200, 150, .6); }
+.coach.vn .vn-lines p.typing .tw { opacity: 0; }
+.coach.vn .vn-lines p.typing .tw.on { opacity: 1; transition: opacity .12s linear; }
+.coach.vn .vn-lines p.typing .g { border-bottom-color: transparent; }
+/* the line is complete: a brass lozenge breathes in the corner, as in a visual novel */
+.coach.vn.done .vn-lines::after { content: ""; position: absolute; right: -18px; bottom: 9px; width: 8px; height: 8px; background: var(--brass-hi); transform: rotate(45deg); box-shadow: 0 0 8px rgba(255, 200, 120, .6); animation: vnnext 1.1s ease-in-out infinite; }
+@keyframes vnnext { 50% { opacity: .35; transform: translateY(3px) rotate(45deg); } }
+.vn-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.coach.vn .cf { margin: 0; padding: 8px 16px 12px 18px; gap: 8px; }
+.coach.vn .btn.ghost { color: #d8c2b8; border-color: rgba(200, 64, 79, .45); background: rgba(0, 0, 0, .2); }
+.coach.vn .btn.ghost:disabled { opacity: .38; cursor: default; }
+.coach.vn #co-ok { display: inline-flex; gap: 3px; align-items: center; justify-content: center; min-width: 124px; }
+.coach.vn #co-ok .ic { width: 15px; height: 15px; margin-right: -4px; }
+.coach.vn .vn-dots { display: inline-flex; gap: 6px; align-items: center; margin-left: 6px; }
+.coach.vn .vn-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, .14); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .45); transition: background .2s; }
+.coach.vn .vn-dots i.on { background: #9a3442; }
+.coach.vn .vn-dots i.vn-now { background: var(--brass-hi); box-shadow: 0 0 7px rgba(255, 200, 120, .65); }
+/* she stands behind the box, or leans in over its edge: the frame is cut exactly at the top of the box, so the
+   picture never shows where it ends; her figure rises and moves inside the frame, never the frame itself */
+.coach.vn .vn-sprite { position: absolute; z-index: 0; left: 18px; bottom: calc(100% - 3px); width: calc(var(--sh, 420px) * 640 / 902); height: var(--sv, 378px); clip-path: inset(-90px -90px 0 -90px); pointer-events: none; user-select: none; }
+.coach.vn.right .vn-sprite { left: auto; right: 18px; }
+.coach.vn.face .vn-sprite, .coach.vn.min .vn-sprite, .coach.vn.noimg .vn-sprite { display: none; }
+.coach.vn .vn-fig { position: absolute; left: 0; top: 0; width: 100%; height: var(--sh, 420px); animation: vnrise .55s cubic-bezier(.2, .8, .3, 1) both; }
+.coach.vn .vn-fig img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; filter: drop-shadow(0 14px 24px rgba(0, 0, 0, .6)); transition: opacity .22s ease; }
+.coach.vn .vn-fig img.off { opacity: 0; }
+.coach.vn .vn-fig { transition: opacity .2s ease; }
+.coach.vn.vn-ghost .vn-fig { opacity: .16; }
+.coach.vn[data-face="mad"] .vn-fig img.on { filter: drop-shadow(0 0 26px rgba(200, 30, 50, .5)) drop-shadow(0 14px 24px rgba(0, 0, 0, .6)); }
+@keyframes vnrise { from { opacity: 0; transform: translateY(34px); } }
+.coach.vn .vn-sprite.beat img.on { animation: vnbeat .34s ease-out; }
+.coach.vn[data-face="surprise"] .vn-sprite.beat img.on { animation: vnhop .42s ease-out; }
+.coach.vn[data-face="panic"] .vn-sprite.beat img.on { animation: vnshake .46s ease-in-out 2; }
+@keyframes vnbeat { 40% { transform: translateY(-4px); } }
+@keyframes vnhop { 35% { transform: translateY(-14px); } 70% { transform: translateY(2px); } }
+@keyframes vnshake { 25% { transform: translateX(-4px) rotate(-.7deg); } 75% { transform: translateX(4px) rotate(.7deg); } }
+/* no room on stage (the box at the top, or the part she explains too wide to stand beside): a lancet window at the left of the box */
+.coach.vn .vn-face { display: none; position: absolute; z-index: 2; left: 14px; top: 50%; width: 96px; height: 116px; margin: -58px 0 0; clip-path: polygon(0 100%, 0 58.5%, 1.65% 45.6%, 6.5% 33.3%, 14.3% 22.1%, 24.8% 12.4%, 37.5% 4.7%, 50% 0, 62.5% 4.7%, 75.2% 12.4%, 85.7% 22.1%, 93.5% 33.3%, 98.35% 45.6%, 100% 58.5%, 100% 100%); background: linear-gradient(170deg, #f3d58f, #8f6527 55%, #4d3511); }
+.coach.vn.face:not(.min):not(.noimg) .vn-face { display: block; }
+.coach.vn.face:not(.min):not(.noimg) .vn-box { padding-left: 118px; }
+.coach.vn.face:not(.min):not(.noimg) .ck { border-radius: 0 7px 0 0; }
+.coach.vn.noimg .nem-av { display: none; }
+.coach.vn .vn-face span { position: absolute; inset: 3px 3px 0; overflow: hidden; clip-path: polygon(0 100%, 0 58.5%, 1.65% 45.6%, 6.5% 33.3%, 14.3% 22.1%, 24.8% 12.4%, 37.5% 4.7%, 50% 0, 62.5% 4.7%, 75.2% 12.4%, 85.7% 22.1%, 93.5% 33.3%, 98.35% 45.6%, 100% 58.5%, 100% 100%);
+  background: radial-gradient(ellipse 70% 45% at 50% 38%, rgba(255, 190, 120, .5), transparent 70%), linear-gradient(90deg, transparent 49%, rgba(0, 0, 0, .35) 49% 51%, transparent 51%), linear-gradient(170deg, #8c2236, #2a0a12 55%, #571627); }
+.coach.vn .vn-face img { position: absolute; left: 50%; top: 4px; width: 250%; max-width: none; transform: translateX(-58%); pointer-events: none; }
+.coach.vn[data-face="mad"] .vn-face span { animation: nemmad 1.6s ease-in-out infinite; }
+@keyframes nemmad { 50% { filter: brightness(1.5) saturate(1.4); } }
 @media (max-height: 640px) {
-  .coach.nem .cbody { grid-template-columns: 118px minmax(0, 1fr); gap: 10px; padding-top: 8px; }
-  .nem-por { width: 118px; height: 142px; }
-  .nem-por img { width: 118px; height: 142px; }
-  .nem-por::before { transform: scale(.686); transform-origin: 0 0; left: 5px; top: 4px; }
-  .nem-por::after { transform: scale(.686); transform-origin: 0 0; left: 7px; top: 6px; }
-  .coach.nem h3 { font-size: 18px; margin-bottom: 4px; }
-  .coach.nem .nem-say p { font-size: 13.5px; line-height: 1.6; margin-bottom: 6px; }
+  .coach.vn .cbody { padding: 11px 26px 2px 22px; gap: 14px; }
+  .coach.vn .vn-lines p { font-size: 15.5px; line-height: 1.68; }
+  .coach.vn .cf { padding: 6px 12px 9px 14px; }
+  .coach.vn .vn-face { width: 80px; height: 97px; margin-top: -48px; }
+  .coach.vn.face:not(.min):not(.noimg) .vn-box { padding-left: 102px; }
 }
-@media (max-width: 560px) {
-  .coach.nem .cbody { grid-template-columns: 84px minmax(0, 1fr); gap: 10px; padding-left: 8px; }
-  .nem-por { width: 84px; height: 101px; }
-  .nem-por img { width: 84px; height: 101px; }
-  .nem-por::before { transform: scale(.488); transform-origin: 0 0; left: 3px; top: 3px; }
-  .nem-por::after { transform: scale(.488); transform-origin: 0 0; left: 5px; top: 4px; }
-  .coach.nem .ck .who small { display: none; }
+@media (max-width: 600px) {
+  .coach.vn .ck .who small, .coach.vn .ck .cnum { display: none; }
+  .coach.vn .ck .who { padding: 3px 10px 4px 8px; }
+  .coach.vn .cbody { padding: 10px 24px 2px 12px; gap: 10px; }
+  .coach.vn .vn-lines p { font-size: 15px; line-height: 1.62; }
+  .coach.vn .vn-face { left: 10px; width: 62px; height: 75px; margin-top: -38px; }
+  .coach.vn.face:not(.min):not(.noimg) .vn-box { padding-left: 80px; }
+  /* two rows on a phone: where she is in the chapter and the small buttons, then the way out and the way on */
+  .coach.vn .cf { display: grid; grid-template-columns: auto 1fr auto auto; gap: 7px 8px; padding: 6px 10px 10px; }
+  .coach.vn .cf .grow { display: none; }
+  .coach.vn .vn-dots { grid-area: 1 / 1; margin-left: 2px; }
+  .coach.vn #co-back { grid-area: 1 / 3; }
+  .coach.vn #co-skip { grid-area: 1 / 4; }
+  .coach.vn #co-off { grid-area: 2 / 1 / 3 / 3; justify-self: start; }
+  .coach.vn #co-ok { grid-area: 2 / 3 / 3 / 5; min-width: 0; }
+  .coach.vn .ck h3 { font-size: 13.5px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .board::after, .splash::before, .thinking, .spin, .nem-por img, .nem-por::after { animation: none !important; }
+  .board::after, .splash::before, .thinking, .spin, .coach.vn .vn-box, .coach.vn .vn-fig, .coach.vn .vn-fig img, .coach.vn.done .vn-lines::after, .coach.vn .vn-face span { animation: none !important; }
+  .coach.vn .vn-fig img { transition: none !important; }
   .rmark, .rmark .ic { transition: none !important; }
 }
+
+body.vn-room[data-view="table"] { padding-bottom: var(--vn-room, 0px); }
+body.vn-room .modal:not(.hidden) { padding-bottom: calc(var(--vn-room, 0px) + 30px); }
+
+/* ---------- online room: come in, then take a chair ---------- */
+.rstat { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0; padding: 9px 14px; border-radius: 8px; font-size: 13.5px; border: 1px solid #5a4d36; background: rgba(0, 0, 0, .32); }
+.rstat .ic { width: 18px; height: 18px; }
+.rstat.wait { border-color: rgba(255, 180, 94, .55); background: rgba(255, 170, 80, .1); }
+.rstat.go { border-color: rgba(127, 207, 149, .6); background: rgba(127, 207, 149, .1); }
+.rstat.go b { color: var(--brass-hi); }
+.rstat.ok { border-color: rgba(201, 155, 75, .5); }
+.rstat.bad { border-color: rgba(239, 122, 104, .7); background: rgba(239, 122, 104, .1); }
+.spin.sm { display: inline-block; width: 16px; height: 16px; margin: 0; vertical-align: -3px; }
+.sseat { align-items: center; }
+.sseat [data-sit] { flex: none; }
+.sseat.empty [data-sit].primary { animation: hintpulse 1.6s ease-in-out infinite; }
+.sseat.away { opacity: .62; border-left-style: dashed; }
+.rhere { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(201, 155, 75, .25); }
+.rhere .rh { display: inline-flex; gap: 5px; align-items: center; padding: 2px 9px 2px 4px; border-radius: 999px; background: rgba(0, 0, 0, .3); border-left: 3px solid var(--pc); font-size: 12.5px; }
+.acct .btn[data-acct="dev"] { white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .sseat.empty [data-sit].primary { animation: none; } }
 
 </style>
 </head>
@@ -7704,115 +7773,115 @@ const HOWTO = [
 // Her voice follows the canon: she calls herself "เรา" and the player "เจ้า" or "ลูกรัก", gentle and playful,
 // fond of cooking, rock music and a good question, wary of anyone who believes her without checking.
 // Each step is shown once, the moment its rule first matters. say = what she tells you, in order:
-// the rule, why it works this way, how to approach it. face = which portrait goes with the words.
+// the rule, why it works this way, how to approach it. face = her portrait for the chapter, faces = one per line.
 const NEM_FACES = ['smile', 'explain', 'ask', 'think', 'smirk', 'guilty', 'shush', 'surprise', 'panic', 'mad'];
 const NEM_FACE_ALT = { smile: 'ยิ้ม', explain: 'กำลังอธิบาย', ask: 'ชี้นิ้วตั้งคำถาม', think: 'หลับตาครุ่นคิด', smirk: 'ยิ้มมุมปาก', guilty: 'ยิ้มแหย', shush: 'จุ๊ปากบอกความลับ', surprise: 'ประหลาดใจ', panic: 'ตื่นเต้นลนลาน', mad: 'ร่างแห่งความพิโรธ' };
-const TUTORIAL_DICE = { id: 'dice', face: 'smile', title: 'ลำดับการเล่น', say: [
+const TUTORIAL_DICE = { id: 'dice', face: 'smile', faces: ['smile', 'explain', 'smile'], title: 'ลำดับการเล่น', say: [
   'ยินดีที่ได้พบนะลูกรัก เราคือเนเมสไซอาร์ เกมแรกนี้เราจะนั่งข้างเจ้าไปจนจบ ทุกครั้งที่กติกาใหม่โผล่มา เราจะเล่าให้ฟังว่ามันคืออะไร ทำไมจึงเป็นเช่นนั้น และเจ้าควรคิดอย่างไร',
   'เริ่มจากลูกเต๋า ทุกรัฐทอย D6 คนละลูก แต้มสูงสุดได้เปิดรอบแรก ที่เหลือนั่งเรียงตามแต้ม ใครแต้มเท่ากันก็ทอยใหม่เฉพาะกลุ่มนั้น',
   'ลำดับที่นั่งนี้ใช้ไปตลอดเกม ส่วนรอบถัด ๆ ไป ผู้เปิดรอบคือรัฐที่คะแนนสุทธิต่ำสุด เราชอบกฎข้อนี้ รัฐที่ตามหลังจะได้เลือกก่อนเสมอ กดทอยลูกเต๋าแล้วดูซิว่าเจ้าได้นั่งลำดับไหน'] };
 const TUTORIAL = [
-  { id: 'welcome', on: 'start', face: 'explain', title: 'ยินดีต้อนรับสู่สหพันธรัฐ', say: [
+  { id: 'welcome', on: 'start', face: 'explain', faces: ['explain', 'think', 'smirk'], title: 'ยินดีต้อนรับสู่สหพันธรัฐ', say: [
     'เจ้าปกครองรัฐหนึ่งบนโต๊ะสามรัฐ อีกสองรัฐเป็น AI เกมยาว 16 รอบ ทุกรอบสภาจะนับคะแนนให้รัฐที่เก่งตามมาตรวัดของระบอบที่ครองอยู่ คะแนนนี้เรียกว่าความชอบธรรม หักตราบาปออกแล้วเหลือเท่าไร นั่นคือคะแนนสุทธิของเจ้า',
     'ระบอบเปลี่ยนได้ตลอดเกม รัฐที่เก่งเรื่องเดียวจะได้คะแนนเฉพาะช่วงที่ระบอบเข้าข้าง โลกไม่เคยหยุดนิ่ง ผู้ที่ปรับตัวเป็นจึงอยู่รอด',
     'ทางเลือกที่ AI แนะนำจะมีกรอบสีทอง จะเดินตามหรือลองทางของเจ้าเองก็ได้ ทุกอย่างที่เราเล่า เจ้าตรวจได้บนโต๊ะเสมอ เราอยากให้เจ้าเชื่อเพราะได้นับด้วยตัวเอง'] },
-  { id: 'board', on: 'start', focus: '#board', face: 'ask', title: 'กระดานกลาง', say: [
+  { id: 'board', on: 'start', focus: '#board', face: 'ask', faces: ['ask', 'think', 'explain'], title: 'กระดานกลาง', say: [
     'ลองมองกระดานนี้ดูสิลูกรัก แถวบนคือรางรอบ 16 ช่อง เฟืองทองเหลืองบอกว่าตอนนี้รอบที่เท่าไร ใต้รางมีการ์ดระบอบที่ครองอยู่ รางกระแสห้าสาย และกองการ์ดของยุค แถวล่างคือตลาดโครงการกับรางคะแนนสุทธิของทุกรัฐ',
     'เจ้าว่าทุกรัฐกำลังแย่งอะไรกันอยู่ล่ะ คำตอบอยู่บนกระดานนี้ทั้งหมด ระบอบบอกว่าสภาให้ค่ากับอะไร กระแสบอกว่าระบอบกำลังจะเปลี่ยนไปทางไหน',
     'คำที่ขีดเส้นประไว้ ชี้ค้างแล้วความหมายจะขึ้นมา การ์ดทุกใบก็ชี้ดูรายละเอียดเต็มได้เหมือนกัน'] },
-  { id: 'regime', on: 'start', focus: '#b-reg', face: 'explain', title: 'อ่านการ์ดระบอบ', say: [
+  { id: 'regime', on: 'start', focus: '#b-reg', face: 'explain', faces: ['explain', 'think', 'explain'], title: 'อ่านการ์ดระบอบ', say: [
     'การ์ดระบอบบอกสามเรื่อง มาตรวัดคือสิ่งที่สภาใช้จัดอันดับ นโยบายคือผลพิเศษที่ใช้กับทุกรัฐ ฐานอำนาจคือสายที่ค้ำระบอบไว้ ใครถือสัญลักษณ์ของสายนั้นมากที่สุด คนนั้นเป็นฝ่ายรับเมื่อมีใครก่อรัฐประหาร',
     'ระบอบที่ครองอยู่ทำให้บางเส้นทางคุ้มกว่าทางอื่นชั่วคราว จังหวะแบบนี้มาแล้วก็ไป จงฉวยไว้ตอนที่มันยังอยู่',
     'ตัวเลข + บนรางคะแนนบอกว่าแต่ละรัฐจะได้กี่แต้มถ้าสภานับตอนนี้ ใช้มันวัดดูว่าแอคชันไหนดันอันดับของเจ้าขึ้นได้จริง'] },
-  { id: 'mine', on: 'start', focus: '#me', face: 'smile', title: 'รัฐของเจ้า', say: [
+  { id: 'mine', on: 'start', focus: '#me', face: 'smile', faces: ['smile', 'explain', 'shush'], title: 'รัฐของเจ้า', say: [
     'กระดานล่างนี้คือรัฐของเจ้า เริ่มเกมเจ้ามีโครงการ 2 ใบ แรงงาน 2 คน เกรฟ 6 และกองทัพ 10 ใบ การ์ดที่เสียบอยู่ใต้โครงการคือสิ่งปลูกสร้าง ช่องเส้นประคือช่องว่างที่ยังเสียบเพิ่มได้',
     'คิดเสียว่าโครงการคือเตา แรงงานคือไฟ เตาที่ไม่มีไฟก็เป็นแค่เหล็กเย็นตั้งทิ้งไว้ ถ้าโครงการมีมากกว่าแรงงาน ก็จะมีโครงการที่จอดนิ่งอยู่เฉย ๆ',
     'รัฐคู่แข่งนั่งอยู่แถวบน การ์ดวิจัยของเขาเปิดให้เห็นตลอด แวะดูบ่อย ๆ นะ มันบอกว่าเขากำลังไปสายไหน'] },
-  { id: 'workers', on: 'ask:workers', face: 'explain', title: 'ขั้นผลิต: วางแรงงาน', say: [
+  { id: 'workers', on: 'ask:workers', face: 'explain', faces: ['explain', 'smirk', 'explain'], title: 'ขั้นผลิต: วางแรงงาน', say: [
     'ได้เวลาจุดเตาแล้ว คลิกช่องคนบนการ์ดเพื่อวางหรือถอนแรงงาน โครงการจะผลิตเมื่อแรงงานลงครบทุกช่อง โครงการที่ใช้วัตถุดิบนำเข้าต้องจ่ายวัตถุดิบก่อนจึงผลิตได้ ผลผลิตวางค้างบนการ์ดได้ไม่เกิน 6 หน่วย',
     'ของที่ค้างบนการ์ดก็เหมือนอาหารที่วางไว้บนโต๊ะ เพื่อนบ้านมาซื้อได้และเงินเข้ากระเป๋าเจ้า แต่คนหิวก็มาปล้นได้เหมือนกัน',
     'รอบแรกวางให้ครบทุกโครงการ ภายหลังเมื่อโครงการมีมากกว่าแรงงาน ให้เลือกใบที่ของยังไม่เต็มและขายได้ราคา'] },
-  { id: 'turn', on: 'ask:turn', focus: '#hand', face: 'think', title: 'ขั้นบริหาร: มือของเจ้า', say: [
+  { id: 'turn', on: 'ask:turn', focus: '#hand', face: 'think', faces: ['explain', 'think', 'smile'], title: 'ขั้นบริหาร: มือของเจ้า', say: [
     'ทุกเทิร์นเจ้าเล่นการ์ดแอคชันจากมือ 1 ใบ จะผ่านเฉย ๆ ไม่ได้ การค้ากับการทหารมีสองโหมดให้เลือก ก่อนลงการ์ด เจ้ากดสิ่งปลูกสร้างที่พร้อมใช้ได้ด้วย ขั้นบริหารจบเมื่อทุกรัฐเล่นการทูตแล้ว',
     'ลองคิดตามเรานะ การทูตคืนการ์ดที่เล่นไปแล้วกลับขึ้นมือ ใครถ่วงการทูตไว้ได้นานก็ได้เทิร์นมากกว่า ทว่าถ้าเจ้าเป็นรัฐสุดท้ายที่เล่นการทูต ขั้นบริหารจะปิดลงทันที',
     'เกมเปิดส่วนมากเริ่มจากสร้างโครงการหรือวิจัย เก็บการทูตไว้เป็นใบสุดท้าย จะได้ใช้อีกสามใบให้คุ้มเสียก่อน'] },
-  { id: 'build', on: 'ask:build', face: 'smile', title: 'สร้างโครงการ', say: [
+  { id: 'build', on: 'ask:build', face: 'smile', faces: ['explain', 'smile', 'explain'], title: 'สร้างโครงการ', say: [
     'เลือกโครงการจากตลาด แล้วจ่ายสินค้ากับเกรฟตามที่พิมพ์ไว้ สินค้าต้องมีครบ ตั้งแต่โครงการใบที่ 5 ขึ้นไปจะบวกค่าขยายดินแดน ใบไหนซื้อไม่ได้ ชี้ดูแล้วจะเห็นว่ายังขาดอะไร',
     'โครงการใหม่ผลิตให้ทุกรอบไปจนจบเกม และพาสัญลักษณ์อุดมการณ์เข้ามาในรัฐ ซึ่งนับตอนรัฐประหารและตอนเลือกระบอบ ในคัมภีร์ของเรา การเริ่มโครงการใหม่เป็นเรื่องที่ควรเฉลิมฉลอง บนโต๊ะนี้ก็เช่นกัน',
     'ดูให้ครบสามอย่าง ผลผลิตเข้ากับแผนไหม แรงงานพอทำงานไหม และจำนวนทหารบนการ์ด เพราะนั่นคือขนาดการรบเมื่อมีใครบุกมาที่นี่'] },
-  { id: 'commerce', on: 'ask:commerce', face: 'smirk', title: 'ค้าขาย', say: [
+  { id: 'commerce', on: 'ask:commerce', face: 'smirk', faces: ['explain', 'smile', 'smirk'], title: 'ค้าขาย', say: [
     'ขายให้ตลาดกลางได้ไม่จำกัด จะซื้อก็ซื้อจากรัฐอื่นตามราคาบนการ์ดของเขา หรือซื้อจากตลาดกลางก็ได้ การซื้อจำกัดด้วยความจุการซื้อ เริ่มที่ 2 หน่วยแล้วบวกตามจำนวนเกวียน ของที่ซื้อมาเข้าคลัง',
     'ในยุคแรก ซื้อจากเพื่อนบ้านถูกกว่าตลาดกลาง แถมเงินยังไปถึงมือเขาด้วย เกมนี้จึงค่อย ๆ ดึงทุกรัฐมาร่วมโต๊ะเดียวกัน เหมือนงานเลี้ยงที่ทุกคนแบ่งอาหารกันกิน',
     'เคล็ดลับเล็ก ๆ จากเรา ถ้าเจ้าจ่ายให้รัฐเดียวรวมกันถึงเกณฑ์การค้ามูลค่าสูง ทั้งเจ้าและเขาจะได้จั่วโบนัส เมื่อเกือบถึงเกณฑ์ ลองรวมการซื้อไว้ที่รัฐเดียวดูสิ'] },
-  { id: 'research', on: 'ask:researchPick', face: 'ask', title: 'วิจัย', say: [
+  { id: 'research', on: 'ask:researchPick', face: 'ask', faces: ['explain', 'smile', 'ask'], title: 'วิจัย', say: [
     'จั่วการ์ดวิจัย 3 ใบ เลือก 1 ใบแล้วจ่ายต้นทุน หรือไม่เลือกเลยแล้วรับ 2 เกรฟ สิ่งปลูกสร้างเสียบใต้โครงการ วัฒนธรรมกับนวัตกรรมวางหน้ารัฐเป็นผลถาวร',
     'การวิจัยทำให้รัฐของเจ้ามีตัวตนของตัวเอง และการ์ดวัฒนธรรมขยับกระแสได้ทันทีที่วางลง',
     'ถามตัวเองก่อนว่าระบอบตอนนี้นับการ์ดวัฒนธรรมหรือนวัตกรรมไหม ถ้านับ การวิจัยคือแต้มตรง ๆ ถ้าไม่นับ ให้เลือกใบที่เสริมเตาผลิตของเจ้า'] },
-  { id: 'attach', on: 'ask:attach', face: 'guilty', title: 'เสียบสิ่งปลูกสร้าง', say: [
+  { id: 'attach', on: 'ask:attach', face: 'guilty', faces: ['guilty', 'panic', 'explain'], title: 'เสียบสิ่งปลูกสร้าง', say: [
     'ข้อนี้จุกจิกสักหน่อย เราขอโทษไว้ก่อนเลยนะ เลือกโครงการที่จะเสียบ สิ่งปลูกสร้างกดใช้ได้รอบละครั้ง ส่วนมากจ่ายจากของที่ค้างบนโครงการที่มันเสียบอยู่ ถ้าช่องเต็มแล้ว การสร้างทับจะทำให้ใบเดิมออกจากเกม',
     'เสียบผิดใบเมื่อไร ก็กดใช้ไม่ได้ เพราะต้นทุนต้องมาจากโครงการนั้น',
     'ดูต้นทุนการกดก่อน แล้วเสียบกับโครงการที่ผลิตของชนิดนั้น'] },
-  { id: 'command', on: 'ask:command', face: 'mad', title: 'บัญชาการทัพ', say: [
+  { id: 'command', on: 'ask:command', face: 'mad', faces: ['explain', 'mad', 'think'], title: 'บัญชาการทัพ', say: [
     'จ่ายอาหาร 1 เป็นเสบียง แล้วเลือกเป้า บุกเบิกดินแดนคือรบกับกองเสื้อคลุมน้ำเงิน โจมตีคือรบกับรัฐอื่นที่โครงการหนึ่ง รัฐประหารคือรบเพื่อเปลี่ยนระบอบ',
     'เราเคยนำทัพมาแล้ว จึงรู้ดีว่าสงครามมีราคา บุกแล้วแพ้ เจ้าจะรับตราบาป 1 ซึ่งหักคะแนนตอนจบเกม ตราบาปทุกดวง เรามองเห็นนะลูกรัก',
     'ระบบแสดงโอกาสชนะจากข้อมูลที่ทุกคนเห็น ถ้าต่ำกว่าราวครึ่งหนึ่งก็คิดใหม่เถอะ ส่วนการบุกเบิก ถ้าชนะ เจ้าจะได้ของรางวัลและสิทธิ์ผนวกดินแดนด้วยราคาลด'] },
-  { id: 'reform', on: 'ask:milPick', face: 'explain', title: 'เลือกการ์ดทหาร', say: [
+  { id: 'reform', on: 'ask:milPick', face: 'explain', faces: ['explain', 'think', 'explain'], title: 'เลือกการ์ดทหาร', say: [
     'เลือกการ์ดทหาร 1 ใบจากที่จั่วมา ใบนั้นลงกองพัก ถ้ามาจากการปฏิรูปกองทัพ ขั้นต่อไปเจ้าจะได้ทิ้งการ์ดทหารของเจ้าออกจากเกม 1 ใบ',
     'กองทัพเริ่มต้นมีใบอ่อนอยู่หลายใบ การคัดทิ้งทำให้ค่าเฉลี่ยของกองสูงขึ้น และทุกครั้งที่รบ เจ้าเปิดการ์ดสุ่มจากกองนี้',
     'ทิ้งพลหอกพลัง 1 ก่อน ใบล้มเหลวทางยุทธวิธีทิ้งไม่ได้ การ์ดใหม่อยู่ในกองพักจนกว่าเจ้าจะเล่นการทูต'] },
-  { id: 'milRemove', on: 'ask:milRemove', face: 'smirk', title: 'คัดการ์ดทหารทิ้ง', say: [
+  { id: 'milRemove', on: 'ask:milRemove', face: 'smirk', faces: ['explain', 'smirk', 'explain'], title: 'คัดการ์ดทหารทิ้ง', say: [
     'การ์ดที่ทิ้งจะออกจากเกมไปเลย ไม่กลับมาอีก จะทิ้งหรือไม่ทิ้งก็ได้',
     'กองที่บางและแรงเปิดเจอใบดีบ่อยกว่า ทว่าระบอบขุนศึกนับจำนวนการ์ดในกองทัพ',
     'ถ้าระบอบนับจำนวนการ์ดทหาร อย่าเพิ่งทิ้ง ถ้าไม่นับ ทิ้งใบที่พลังต่ำสุดได้เลย'] },
-  { id: 'current', on: 'ask:current', focus: '#b-cur', face: 'ask', title: 'การทูต: ขยับกระแส', say: [
+  { id: 'current', on: 'ask:current', focus: '#b-cur', face: 'ask', faces: ['explain', 'smirk', 'ask'], title: 'การทูต: ขยับกระแส', say: [
     'เลือกสายที่จะดัน +1 หรือดึง −1 กระแสสายใดถึงจุดเปลี่ยนตอนสภา ระบอบของสายนั้นขึ้นครองทันที และสภานับคะแนนใต้ระบอบใหม่อีกหนึ่งครั้ง',
     'นี่คือเครื่องมือดัดระบอบ ทุกรัฐขยับได้เหมือนกัน การเมืองบนโต๊ะนี้จึงเป็นเรื่องอ่านใจกันว่าใครอยากพาระบอบไปทางไหน เรื่องอ่านใจนี่เราถนัดนักล่ะ',
     'ดันสายที่ระบอบของมันให้ค่ากับจุดแข็งของเจ้า หรือดึงสายที่กำลังจะพาระบอบที่เข้าข้างคู่แข่งขึ้นครอง'] },
-  { id: 'battle', on: 'battle', face: 'surprise', title: 'การรบ', say: [
+  { id: 'battle', on: 'battle', face: 'surprise', faces: ['surprise', 'think', 'explain'], title: 'การรบ', say: [
     'การรบคือเพลงร็อกที่ดังที่สุดบนโต๊ะนี้ ผู้บุกเปิดการ์ดก่อน แล้วสลับกันทีละใบจนครบขนาดการรบ คำสำคัญบนการ์ดปรับพลังระหว่างเปิด รวมพลังแล้วเทียบกัน ถ้าเสมอ ฝ่ายรับชนะ',
     'ทุกคนรู้ว่าในกองของตัวเองมีการ์ดอะไรบ้าง ส่วนลำดับนั้นไม่มีใครรู้ การปฏิรูปจึงเป็นการปรับความน่าจะเป็น',
     'ชี้คำสำคัญบนการ์ดเพื่อดูความหมาย การ์ดที่เปิดแล้วลงกองพัก กองทหารจะบางลงเรื่อย ๆ จนกว่าเจ้าจะเล่นการทูต'] },
-  { id: 'annex', on: 'ask:annex', face: 'smile', title: 'ผนวกดินแดน', say: [
+  { id: 'annex', on: 'ask:annex', face: 'smile', faces: ['smile', 'explain', 'explain'], title: 'ผนวกดินแดน', say: [
     'บุกเบิกชนะแล้ว จ่ายต้นทุนของโครงการนั้นโดยลดสินค้าได้ 2 หน่วย การ์ดใบนั้นจะเป็นโครงการของเจ้า ถ้าไม่ผนวก การ์ดจะกลับไปอยู่ใต้กองโครงการ',
     'นี่คือทางได้โครงการที่ถูกกว่าตลาด แลกกับความเสี่ยงของการรบที่เจ้าเพิ่งผ่านมา',
     'ผนวกเมื่อมีแรงงานพอทำงาน หรือเมื่อระบอบนับจำนวนโครงการ'] },
-  { id: 'council', on: 'phase:council', focus: '#scores', face: 'explain', title: 'ประชุมสภา', say: [
+  { id: 'council', on: 'phase:council', focus: '#scores', face: 'explain', faces: ['explain', 'smile', 'ask'], title: 'ประชุมสภา', say: [
     'การ์ดคืนมือ ทุกรัฐรับ 2 เกรฟ สภาจัดอันดับตามมาตรวัด อันดับต้น ๆ ได้แต้มต่ออันดับ รัฐที่นำอยู่คนเดียวเสีย 1 แต้มเป็นภาระผู้นำ จากนั้นตรวจกระแส จ้างแรงงาน และตั้งสิ่งปลูกสร้างกลับ',
     'ภาระผู้นำ กับกฎที่ให้รัฐที่ตามหลังได้เปิดรอบก่อน คือแรงต้านไม่ให้รัฐที่นำวิ่งหนีไปคนเดียว เราเห็นใจผู้ที่ล้มแล้วลุกขึ้นใหม่เสมอ สภานี้ก็คิดแบบเดียวกัน',
     'อันดับสองที่มั่นคงทุกรอบมักชนะอันดับหนึ่งที่ได้มาครั้งเดียว อย่าทุ่มทุกอย่างให้มาตรวัดเดียว ชี้ที่คะแนนของรัฐใดก็ได้ แล้วจะเห็นว่าคะแนนมาจากไหนและได้ในรอบใด'] },
-  { id: 'hire', on: 'ask:hire', face: 'smile', title: 'จ้างแรงงาน', say: [
+  { id: 'hire', on: 'ask:hire', face: 'smile', faces: ['explain', 'smile', 'explain'], title: 'จ้างแรงงาน', say: [
     'ทุกสภาจ้างแรงงานได้ 1 คน จ่ายเป็นอาหาร คนที่ 3 ราคา 2 แล้วแพงขึ้นคนละ 1',
     'แรงงานคือคอขวดของการผลิต และบางระบอบนับจำนวนแรงงานเป็นคะแนน คนที่ทำงานให้เจ้าต้องได้กินอิ่ม เรื่องนี้เราถือมาก',
     'จ้างเมื่อมีโครงการรอแรงงานอยู่ ถ้าแรงงานล้นโครงการ อาหารเอาไปทำอย่างอื่นจะคุ้มกว่า'] },
-  { id: 'flip', on: 'fx:flip', focus: '#b-cur', face: 'surprise', title: 'กระแสพลิกระบอบ', say: [
+  { id: 'flip', on: 'fx:flip', focus: '#b-cur', face: 'surprise', faces: ['surprise', 'explain', 'think'], title: 'กระแสพลิกระบอบ', say: [
     'ดูนั่นสิ กระแสสายหนึ่งถึงจุดเปลี่ยนแล้ว ระบอบของสายนั้นขึ้นครอง สภานับคะแนนใต้ระบอบใหม่ทันที แล้วกระแสสายนั้นกลับเป็น 0',
     'การนับซ้ำทันทีทำให้การดันกระแสได้ผลตอบแทนเลย ไม่ต้องรอถึงรอบหน้า',
     'ก่อนดันสายใดจนถึงจุดเปลี่ยน ดูก่อนว่าใครได้อันดับต้นใต้ระบอบนั้น'] },
-  { id: 'era', on: 'era', face: 'think', title: 'เปลี่ยนยุค', say: [
+  { id: 'era', on: 'era', face: 'think', faces: ['surprise', 'explain', 'think'], title: 'เปลี่ยนยุค', say: [
     'ยุคใหม่มาถึงแล้ว ตลาดโครงการ กองวิจัย และกองปฏิรูปเปลี่ยนเป็นของยุคใหม่ กระแสทุกสายกลับเป็น 0 รัฐที่ถือสัญลักษณ์ฐานอำนาจของระบอบเดิมมากที่สุดได้เลือกระบอบใหม่ และแต้มต่ออันดับสูงขึ้น',
     'ยุคหลังให้แต้มมากขึ้น รัฐที่ตามอยู่จึงยังไล่ทัน ถ้าวางรัฐไว้รับระบอบยุคหลังได้ดี',
     'พอถึงยุค III ระบอบจะเปลี่ยนเป็นชุดสมัยใหม่ ดูมาตรวัดชุดใหม่ไว้ล่วงหน้า แล้ววางแผนสำหรับสองยุคสุดท้าย'] },
-  { id: 'regimeChoice', on: 'ask:regimeChoice', face: 'smirk', title: 'เลือกระบอบ', say: [
+  { id: 'regimeChoice', on: 'ask:regimeChoice', face: 'smirk', faces: ['smirk', 'explain', 'ask'], title: 'เลือกระบอบ', say: [
     'อำนาจเลือกอยู่ในมือเจ้าแล้ว ระบบแสดงค่ามาตรวัดตอนนี้ของทุกรัฐ และแต้มที่แต่ละรัฐจะได้ใต้แต่ละระบอบ',
     'ผู้เลือกระบอบได้เปรียบจริง ทว่าทุกรัฐยังดัดกลับได้ด้วยกระแสและรัฐประหาร',
     'เลือกระบอบที่เจ้าได้อันดับต้นและคู่แข่งที่นำอยู่ได้น้อย ถ้านโยบายของมันช่วยแผนของเจ้าด้วยก็ยิ่งดี'] },
-  { id: 'scout', on: 'ask:scoutDeck', face: 'shush', title: 'สอดแนม', say: [
+  { id: 'scout', on: 'ask:scoutDeck', face: 'shush', faces: ['shush', 'explain', 'smirk'], title: 'สอดแนม', say: [
     'จุ๊ ๆ เรื่องนี้รู้กันแค่เรากับเจ้า เลือกดูการ์ดบนสุดของกองตัวเองหรือของอีกฝ่าย แล้วส่งใบหนึ่งไปไว้ใต้กองได้',
     'การสอดแนมเปลี่ยนการ์ดที่จะเปิดใบถัดไป เจ้าจึงคุมผลการรบได้บางส่วน',
     'ถ้าอีกฝ่ายยังต้องเปิดอีกหลายใบ ดูกองของเขาแล้วส่งใบแรงลงใต้กอง'] },
-  { id: 'era2', on: 'round:5', face: 'explain', title: 'ยุค II: ปฏิรูป', say: [
+  { id: 'era2', on: 'round:5', face: 'explain', faces: ['explain', 'think', 'explain'], title: 'ยุค II: ปฏิรูป', say: [
     'โครงการยุค II มีช่องสิ่งปลูกสร้างมากขึ้น แต้มต่ออันดับเป็น 3/2/1/0 ตลาดกลางขายให้ 4 รับซื้อ 1',
     'ตลาดกลางรับซื้อถูกลง การขายให้รัฐอื่นจึงสำคัญขึ้น',
     'ช่วงนี้รัฐที่มีเตาผลิตกับสิ่งปลูกสร้างพร้อมจะเร่งเครื่องได้ ถ้าเจ้ายังมีโครงการน้อย ให้เพิ่มเสียก่อนที่ค่าขยายดินแดนจะแพง'] },
-  { id: 'era3', on: 'round:9', face: 'think', title: 'ยุค III: กริดมานา', say: [
+  { id: 'era3', on: 'round:9', face: 'think', faces: ['think', 'explain', 'ask'], title: 'ยุค III: กริดมานา', say: [
     'ระบอบเปลี่ยนเป็นชุดสมัยใหม่ ราคาขายบนโครงการยุคนี้ลดเหลือ 2 เกณฑ์การค้ามูลค่าสูงลดเหลือ 6 แต้มต่ออันดับเป็น 4/2/1/0',
     'การค้ามูลค่าสูงทำได้ง่ายขึ้นมาก โบนัสจึงไหลเวียนบ่อยขึ้น',
     'อ่านมาตรวัดชุดสมัยใหม่ให้ดี เช่น ชาตินิยมนับโครงการ มานาเสรีนับสิ่งปลูกสร้าง แล้วถามตัวเองว่ารัฐของเจ้าพร้อมรับระบอบไหน'] },
-  { id: 'era4', on: 'round:13', face: 'panic', title: 'ยุค IV: เฟื่องฟู', say: [
+  { id: 'era4', on: 'round:13', face: 'panic', faces: ['panic', 'explain', 'smile'], title: 'ยุค IV: เฟื่องฟู', say: [
     'สี่รอบสุดท้ายแล้วลูกรัก แต้มต่ออันดับสูงสุดของเกมคือ 5/3/1/0 สี่รอบนี้ตัดสินทุกอย่าง เรานี่แหละตื่นเต้นแทนเจ้าจนนั่งไม่ติดแล้ว',
     'แต้มยุคท้ายมากพอให้รัฐที่ตามอยู่แซงขึ้นมาได้',
     'ทรัพยากรที่เหลือตอนจบไม่มีค่าอะไร ใช้ได้แค่ตัดสินตอนเสมอ ใช้ให้หมดกับสิ่งที่ดันอันดับในสภา'] },
-  { id: 'end', on: 'end', face: 'smile', title: 'จบเกม', say: [
+  { id: 'end', on: 'end', face: 'smile', faces: ['smile', 'explain', 'smile'], title: 'จบเกม', say: [
     'สภารอบที่ 16 ปิดเกม รัฐที่คะแนนสุทธิสูงสุดชนะ',
     'หน้าสรุปจะบอกว่าเจ้าปกครองรัฐแบบไหน จากแอคชันที่เลือกมาตลอดเกม จงจดจำและเล่าขานเรื่องราวของรัฐเจ้าต่อไปนะ',
     'ต่อจากนี้ลองโหมดปกติกับ AI สามรัฐ หรือชวนเพื่อนมาเล่นออนไลน์ หน้าวิธีเล่นในเมนูรวมกติกาทั้งหมดไว้ให้ทบทวน ราตรีสวัสดิ์ลูกรัก ขอให้สายเลือดของเจ้าสืบสานไปนานชั่วกัลป์'] },
@@ -7917,7 +7986,10 @@ function flagSVG(seed, base) {
 }
 
 // =====================================================================
-// ACCOUNT: saving a game needs a Google sign-in, except on the developer's own devices.
+// ACCOUNTS: who is playing in this tab. Every account keeps its own leader profile, saved games and hall of
+// fame ticket (u.<id>.*); a guest plays under a fresh identity in every tab. Signing in or out changes this
+// tab only, so two people, or one person testing, can sit at one computer in two tabs as two players.
+// Saving a game needs a Google sign-in, except on the developer's own devices.
 // Google Sign-In (an ID token, no extra scopes) only proves who is playing. The page keeps a hash of the
 // account id and the first name in this browser; it never sends the email or the token anywhere.
 // A developer device is unlocked once with the developer code: the page keeps a token derived from the code,
@@ -7939,29 +8011,68 @@ async function sha256hex(s) {
   return Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, '0')).join('');
 }
 async function checkDevToken(tok) { try { return !!tok && /^[0-9a-f]{64}$/.test(tok) && await sha256hex(tok) === DEV_HASH; } catch (e) { return false; } }
-async function unlockDev(code) {
-  const tok = await sha256hex('kirana-dev-device|' + String(code || '').trim().toUpperCase());
-  if (!await checkDevToken(tok)) return false;
-  devToken = tok; store.set('devToken', tok); devOk = true; setAcct(currentAcct());
-  if (hofOnline()) hofSignIn({ dev: tok });
-  return true;
-}
-function forgetDev() { devToken = ''; devOk = false; store.del('devToken'); setAcct(currentAcct()); }
-// which account this browser plays under right now: a Google sign-in wins, then the developer device
+
+// ---------- this tab: the account it plays as ('' = guest) and the guest identity it uses while signed out ----------
+const sess = (() => { let s = null; try { s = JSON.parse(sessionStorage.getItem(NS + 'sess') || 'null'); } catch (e) { s = null; } return s && typeof s === 'object' ? s : {}; })();
+function saveSess() { try { sessionStorage.setItem(NS + 'sess', JSON.stringify(sess)); } catch (e) { /* storage blocked: the tab still works, it forgets on reload */ } }
+// Google accounts that have signed in on this browser: a hashed id, a first name and a picture address
+const accts = () => { const r = store.get('accts', {}); return r && typeof r === 'object' ? r : {}; };
+const cleanGoogle = g => g && g.kind === 'google' && /^[0-9a-f]{16}$/.test(g.id) ? { kind: 'google', id: g.id, name: String(g.name || 'ผู้เล่น').slice(0, 40), pic: typeof g.pic === 'string' && /^https:\/\/[a-z0-9.-]+\.googleusercontent\.com\/[\w\-./=?&%]+$/.test(g.pic) ? g.pic : '' } : null;
+// older pages kept one Google account under 'acct' and one hall of fame ticket for the browser
+(function migrateAccounts() {
+  const old = cleanGoogle(store.get('acct', null));
+  if (old) { const reg = accts(); reg[old.id] = old; store.set('accts', reg); if (store.get('lastAcct', null) == null) store.set('lastAcct', old.id); }
+  store.del('acct');
+  if (store.get('lastAcct', null) == null) store.set('lastAcct', devToken ? 'dev' : '');
+  const t = store.get('hofSession', null);
+  if (t && typeof t.acct === 'string' && /^([0-9a-f]{16}|dev)$/.test(t.acct)) store.set('u.' + t.acct + '.hofSession', t);
+  store.del('hofSession');
+})();
+if (typeof sess.gid !== 'string' || !/^[a-z0-9]{8,16}$/.test(sess.gid)) sess.gid = uid(10);
+// a new tab starts as whoever signed in last on this browser; signing out in a tab makes the next new tab a guest
+if (typeof sess.acct !== 'string') sess.acct = String(store.get('lastAcct', '') || '');
+saveSess();
+const testSeam = () => !!window.__fedTestAcct && (location.protocol === 'file:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname));
+// which account this tab plays under right now
 function currentAcct() {
-  const g = store.get('acct', null);
-  if (g && g.kind === 'google' && /^[0-9a-f]{16}$/.test(g.id)) return { kind: 'google', id: g.id, name: String(g.name || 'ผู้เล่น').slice(0, 40), pic: typeof g.pic === 'string' && /^https:\/\/[a-z0-9.-]+\.googleusercontent\.com\/[\w\-./=?&%]+$/.test(g.pic) ? g.pic : '' };
-  if (devOk) return { kind: 'dev', id: 'dev', name: 'เครื่องผู้พัฒนา' };
+  const want = sess.acct;
+  if (want === 'dev') return devOk ? { kind: 'dev', id: 'dev', name: 'เครื่องผู้พัฒนา' } : null;
+  if (want) return cleanGoogle(accts()[want]);
   // automated tests run the page from disk or localhost and sign in through this seam; the hosted site never matches it
-  if (window.__fedTestAcct && (location.protocol === 'file:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname))) return { kind: 'test', id: 'test', name: 'ทดสอบ' };
-  return null;
+  return testSeam() ? { kind: 'test', id: 'test', name: 'ทดสอบ' } : null;
 }
 function setAcct(a) {
-  const before = acct && acct.id;
+  const before = acct ? acct.id : '';
   acct = a;
   // saves made before sign-in existed move to the first account that signs in on this browser
   if (acct) for (const k of ['save.solo', 'save.online']) { const old = store.get(k, null); if (old && !store.get(acctKey(k), null)) { store.set(acctKey(k), old); store.del(k); } }
-  if ((acct && acct.id) !== before) { renderAcctChips(); renderResume(); if (typeof presenceNow === 'function') presenceNow(); }
+  if ((acct ? acct.id : '') !== before) {
+    loadProfile();      // the leader, the state and the flag belong to the account
+    renderAcctChips(); renderResume();
+    if (typeof presenceNow === 'function') presenceNow();
+    onAcctChange();
+  }
+}
+function useAcct(id) { sess.acct = id; saveSess(); store.set('lastAcct', id); setAcct(currentAcct()); }
+async function unlockDev(code) {
+  const tok = await sha256hex('kirana-dev-device|' + String(code || '').trim().toUpperCase());
+  if (!await checkDevToken(tok)) return false;
+  devToken = tok; store.set('devToken', tok); devOk = true; useAcct('dev');
+  if (hofOnline()) hofSignIn({ dev: tok });
+  return true;
+}
+// a device that is already unlocked signs in as the developer with one click
+function devSignIn() {
+  if (!devOk) return;
+  useAcct('dev');
+  notify(`${ICON('gear')} เข้าระบบผู้พัฒนาในแท็บนี้แล้ว`, 2500);
+  if (hofOnline() && !hofTicket()) hofSignIn({ dev: devToken });
+}
+function forgetDev() {
+  devToken = ''; devOk = false; store.del('devToken');
+  if (sess.acct === 'dev') { sess.acct = ''; saveSess(); }
+  if (store.get('lastAcct', '') === 'dev') store.set('lastAcct', '');
+  setAcct(currentAcct());
 }
 // ---------- Google Identity Services ----------
 let gisState = 'idle', gisWait = null;
@@ -7994,34 +8105,42 @@ async function onGoogleCredential(r) {
   const p = jwtPayload(r && r.credential);
   if (!p || p.aud !== GOOGLE_CLIENT || !/^(https:\/\/)?accounts\.google\.com$/.test(p.iss || '') || !(p.exp * 1000 > Date.now()) || !p.sub) { notify(`${ICON('x')} ลงชื่อเข้าใช้ไม่สำเร็จ ลองใหม่อีกครั้ง`, 4000); return; }
   const id = (await sha256hex('kirana-acct|' + p.sub)).slice(0, 16);
-  const g = { kind: 'google', id, name: String(p.given_name || p.name || 'ผู้เล่น').slice(0, 40), pic: typeof p.picture === 'string' ? p.picture : '' };
-  store.set('acct', g);
-  setAcct(currentAcct());
-  notify(`${ICON('star')} ลงชื่อเข้าใช้แล้ว เกมของ ${esc(acct.name)} จะถูกบันทึก`, 3500);
+  const g = cleanGoogle({ kind: 'google', id, name: String(p.given_name || p.name || 'ผู้เล่น'), pic: typeof p.picture === 'string' ? p.picture : '' });
+  const reg = accts(); reg[id] = g; store.set('accts', reg);
+  useAcct(id);
+  notify(`${ICON('star')} ลงชื่อเข้าใช้แล้ว เกมของ ${esc(acct.name)} จะถูกบันทึกแยกจากผู้เล่นคนอื่น`, 3500);
   // the hall of fame script checks this sign-in with Google once and answers with its own ticket
   if (hofOnline()) await hofSignIn({ google: r.credential });
   acctWaiters.splice(0).forEach(f => f());
 }
+// signing out changes this tab only; other tabs keep playing as they are
 function signOut() {
-  store.del('acct');
-  try { if (window.google && google.accounts) google.accounts.id.disableAutoSelect(); } catch (e) { /* not loaded */ }
+  const was = acct;
+  sess.acct = ''; saveSess(); store.set('lastAcct', '');
+  if (was && was.kind === 'google') { try { if (window.google && google.accounts) google.accounts.id.disableAutoSelect(); } catch (e) { /* not loaded */ } }
   setAcct(currentAcct());
+  notify(`${ICON('star')} ออกจากระบบแล้ว แท็บนี้เล่นเป็นผู้เยี่ยมชม เกมที่บันทึกไว้ยังอยู่กับบัญชีเดิม`, 3500);
 }
 const acctWaiters = [];
-// ---------- the account chip: menu header, setup pages, end screen ----------
+// ---------- the account chip: menu header, lobby, end screen ----------
+const OUT_BTN = '<button class="btn sm ghost" data-acct="out" data-tip="ออกจากระบบเฉพาะแท็บนี้ แท็บอื่นยังเล่นต่อได้ตามเดิม">ออกจากระบบ</button>';
 function acctChipHtml() {
-  if (acct && acct.kind === 'google') return `<div class="acct on">${acct.pic ? `<img src="${esc(acct.pic)}" alt="" referrerpolicy="no-referrer">` : ICON('star')}<span><b>${esc(acct.name)}</b><small>ลงชื่อเข้าใช้ Google · บันทึกเกมได้</small></span><button class="btn sm ghost" data-acct="out">ออกจากระบบ</button></div>`;
-  if (acct && acct.kind === 'dev') return `<div class="acct dev">${ICON('gear')}<span><b>เครื่องผู้พัฒนา</b><small>บันทึกเกมได้โดยไม่ต้องลงชื่อเข้าใช้</small></span></div>`;
-  if (acct) return `<div class="acct dev">${ICON('gear')}<span><b>${esc(acct.name)}</b><small>บันทึกเกมได้</small></span></div>`;
-  if (googleUsable()) return `<div class="acct off"><span><b>ยังไม่ได้ลงชื่อเข้าใช้</b><small>เล่นได้ แต่เกมจะไม่ถูกบันทึก</small></span><div class="gbtn" data-gbtn="1"></div></div>`;
+  if (acct && acct.kind === 'google') return `<div class="acct on">${acct.pic ? `<img src="${esc(acct.pic)}" alt="" referrerpolicy="no-referrer">` : ICON('star')}<span><b>${esc(acct.name)}</b><small>ลงชื่อเข้าใช้ Google · โปรไฟล์และเกมที่บันทึกเป็นของบัญชีนี้</small></span>${OUT_BTN}</div>`;
+  if (acct && acct.kind === 'dev') return `<div class="acct dev">${ICON('gear')}<span><b>เครื่องผู้พัฒนา</b><small>บัญชีผู้พัฒนา · บันทึกเกมได้</small></span>${OUT_BTN}</div>`;
+  if (acct) return `<div class="acct dev">${ICON('gear')}<span><b>${esc(acct.name)}</b><small>บันทึกเกมได้</small></span>${OUT_BTN}</div>`;
+  const guestTip = 'แต่ละแท็บที่ไม่ได้ลงชื่อเข้าใช้นับเป็นผู้เล่นคนละคน เกมของผู้เยี่ยมชมไม่ถูกบันทึก';
+  const devBtn = devOk ? `<button class="btn sm" data-acct="dev">${ICON('gear')} เข้าระบบผู้พัฒนา</button>` : '';
+  if (googleUsable()) return `<div class="acct off" data-tip="${esc(guestTip)}"><span><b>ผู้เยี่ยมชม</b><small>เล่นได้ แต่เกมจะไม่ถูกบันทึก</small></span><div class="gbtn" data-gbtn="1"></div>${devBtn}</div>`;
+  if (devBtn) return `<div class="acct off" data-tip="${esc(guestTip)}"><span><b>ผู้เยี่ยมชม</b><small>เครื่องนี้เป็นเครื่องผู้พัฒนา กดเพื่อเข้าระบบในแท็บนี้</small></span>${devBtn}</div>`;
   const why = !GOOGLE_CLIENT ? 'ผู้ดูแลเกมยังไม่ได้ตั้งค่าการลงชื่อเข้าใช้ Google' : 'ลงชื่อเข้าใช้ Google ได้เมื่อเปิดเกมจากหน้าเว็บของเกม';
-  return `<div class="acct off"><span><b>บันทึกเกมปิดอยู่</b><small>${esc(why)}</small></span></div>`;
+  return `<div class="acct off" data-tip="${esc(guestTip)}"><span><b>ผู้เยี่ยมชม · บันทึกเกมปิดอยู่</b><small>${esc(why)}</small></span></div>`;
 }
 function renderAcctChips() {
   document.querySelectorAll('[data-acct-slot]').forEach(el => { el.innerHTML = acctChipHtml(); wireAcct(el); });
 }
 function wireAcct(el) {
   const out = el.querySelector('[data-acct="out"]'); if (out) out.onclick = signOut;
+  const dv = el.querySelector('[data-acct="dev"]'); if (dv) dv.onclick = devSignIn;
   const gb = el.querySelector('[data-gbtn]');
   if (gb) loadGis().then(st => {
     if (st !== 'ready' || !gb.isConnected) { if (st === 'failed' && gb.isConnected) gb.innerHTML = '<span class="tiny bad">โหลดระบบลงชื่อเข้าใช้ไม่ได้</span>'; return; }
@@ -8031,40 +8150,52 @@ function wireAcct(el) {
 const acctSlot = cls => `<div class="acct-slot ${cls || ''}" data-acct-slot="1">${acctChipHtml()}</div>`;
 // developer code entry, from the settings dialog
 function devRowHtml() {
-  return devOk ? `<label>เครื่องผู้พัฒนา</label><span><span class="tiny good">ปลดล็อกแล้ว</span> <button class="btn sm ghost" id="dev-forget">ลืมเครื่องนี้</button></span>`
+  return devOk ? `<label>เครื่องผู้พัฒนา</label><span><span class="tiny good">ปลดล็อกแล้ว</span>${acct && acct.kind === 'dev' ? '' : ' <button class="btn sm" id="dev-in">เข้าระบบผู้พัฒนาในแท็บนี้</button>'} <button class="btn sm ghost" id="dev-forget">ลืมเครื่องนี้</button></span>`
     : `<label for="dev-code">รหัสผู้พัฒนา</label><span><input id="dev-code" type="password" autocomplete="off" spellcheck="false" placeholder="KRN-…" size="22"> <button class="btn sm" id="dev-go">ปลดล็อก</button> <span class="tiny" id="dev-msg"></span></span>`;
 }
 function wireDevRow(box, redraw) {
-  const go = box.querySelector('#dev-go'), fg = box.querySelector('#dev-forget');
+  const go = box.querySelector('#dev-go'), fg = box.querySelector('#dev-forget'), di = box.querySelector('#dev-in');
   if (go) {
     const inp = box.querySelector('#dev-code');
     const run = async () => { const ok = await unlockDev(inp.value); inp.value = ''; if (ok) redraw(); else { const m = box.querySelector('#dev-msg'); m.className = 'tiny bad'; m.textContent = 'รหัสไม่ถูกต้อง'; } };
     go.onclick = run; inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) run(); });
   }
+  if (di) di.onclick = () => { devSignIn(); redraw(); };
   if (fg) fg.onclick = () => { forgetDev(); redraw(); };
 }
-// boot: restore the account before the first screen renders, then confirm the developer token
+// boot: restore this tab's account before the first screen renders, then confirm the developer token
 acct = currentAcct();
 checkDevToken(devToken).then(ok => {
   devOk = ok; if (!ok && devToken) { devToken = ''; store.del('devToken'); }
   setAcct(currentAcct());
-  if (devOk && hofOnline() && !hofTicket()) hofSignIn({ dev: devToken });
+  renderAcctChips();
+  if (acct && acct.kind === 'dev' && hofOnline() && !hofTicket()) hofSignIn({ dev: devToken });
 });
 
 // =====================================================================
-// PROFILE: leader name, state, flag. Identity is a random device id kept in this browser.
-// A static page cannot read the visitor's IP, and publishing IPs would expose players,
-// so the device id does the remembering instead.
+// PROFILE: leader name, state, flag. Each signed-in account keeps its own (u.<id>.profile); guests share
+// the one this browser had before accounts existed. A static page cannot read the visitor's IP, and
+// publishing IPs would expose players, so accounts and random ids do the remembering instead.
 // =====================================================================
-let profile = store.get('profile', null);
+let profile = null;
+const profKey = () => acct ? acctKey('profile') : 'profile';
 function ensureProfile() {
   if (!profile) profile = { id: uid(10), leader: '', state: null, flag: null, color: COLORS[0], created: Date.now() };
   if (!profile.id) profile.id = uid(10);
   if (!profile.flag) profile.flag = { seed: hashStr(profile.id) };
   return profile;
 }
-ensureProfile();
-const saveProfile = () => store.set('profile', profile);
+// switch to the profile of whoever plays in this tab; the first account to sign in on a browser keeps the
+// leader that browser already had, so nobody loses their state and flag when accounts arrive
+function loadProfile() {
+  let p = store.get(profKey(), null);
+  if (!p && acct && !store.get('profileClaimed', false)) { p = store.get('profile', null); store.set('profileClaimed', true); }
+  profile = p && typeof p === 'object' ? Object.assign({}, p) : null;
+  ensureProfile();
+  if (acct && !store.get(profKey(), null)) store.set(profKey(), profile);
+}
+loadProfile();
+const saveProfile = () => store.set(profKey(), profile);
 const profileReady = () => !!(profile && profile.leader);
 const shortId = id => String(id || '').slice(0, 4).toUpperCase() + '-' + String(id || '').slice(4, 8).toUpperCase();
 // the state name this profile plays under: the saved one, or a fresh Althalani name every game
@@ -8144,7 +8275,7 @@ function showWelcome(next, editing) {
       <label>ธงรัฐ</label><span class="row"><span id="w-flag"></span><button class="btn sm" id="w-draw">${ICON('brush')} วาดธง</button><button class="btn sm" id="w-rflag">${ICON('dice')} สุ่มลาย</button></span>
       <label>สีประจำรัฐ</label><span class="row" id="w-colors">${COLORS.concat(['#5fc28a', '#e88a4f']).map(c => `<button class="swatch${c === draft.color ? ' on' : ''}" data-c="${c}" style="--sw:${c}" aria-label="สี ${c}"></button>`).join('')}</span>
     </div>
-    <div class="idbox small"><b>รหัสเครื่องนี้</b> <code>${esc(shortId(profile.id))}</code><span class="muted"> เกมจำท่านผ่านรหัสสุ่มที่เก็บในเบราว์เซอร์นี้ ไม่ใช้ IP เพราะหน้าเว็บแบบ GitHub Pages อ่าน IP ไม่ได้ และการเก็บ IP ไว้ในที่สาธารณะจะเปิดเผยตัวผู้เล่น</span></div>
+    <div class="idbox small">${acct ? `<b>รหัสผู้เล่น</b> <code>${esc(shortId(profile.id))}</code><span class="muted"> โปรไฟล์นี้เป็นของบัญชี ${esc(acct.name)} ผู้เล่นคนอื่นที่ใช้เครื่องนี้มีโปรไฟล์และเกมที่บันทึกแยกของตัวเอง</span>` : '<b>ผู้เยี่ยมชม</b><span class="muted"> โปรไฟล์นี้ใช้ร่วมกันทุกแท็บที่ยังไม่ได้ลงชื่อเข้าใช้ในเบราว์เซอร์นี้ ลงชื่อเข้าใช้เพื่อมีโปรไฟล์และเกมที่บันทึกเป็นของตัวเอง</span>'}</div>
     <div class="mfoot"><span class="err small grow" id="w-err"></span>${editing ? '<button class="btn" id="w-cancel">ยกเลิก</button>' : ''}<button class="btn primary" id="w-ok">${editing ? 'บันทึก' : 'เข้าสู่สหพันธรัฐ'}</button></div></div>`);
   const q = s => box.querySelector(s);
   const drawFlag = () => { q('#w-flag').innerHTML = flagHtml({ flag: draft.flag, color: draft.color }, 'lg'); };
@@ -8916,7 +9047,7 @@ function showMenu() {
         <button class="mbtn" id="m-online"${onlineOk ? '' : ' disabled'}><i class="mic">${ICON('chat')}</i><span><b>เล่นออนไลน์กับเพื่อน</b><small>${onlineOk ? 'สร้างห้องหรือเข้าห้อง แชทได้ระหว่างเกม' : 'ใช้ได้เมื่อเปิดเกมจากหน้า GitHub Pages (หน้านี้ต่อเครือข่ายภายนอกไม่ได้)'}</small></span></button>
         <button class="mbtn" id="m-how"><i class="mic">${ICON('scroll')}</i><span><b>วิธีเล่น</b><small>กติกาทั้งหมดแบ่งเป็นหัวข้อ พร้อมคำศัพท์</small></span></button>
         <button class="mbtn" id="m-hof"><i class="mic">${ICON('star')}</i><span><b>หอเกียรติยศ และลานความคิดเห็น</b><small>ผู้ชนะ 10 อันดับแรก พร้อมวิเคราะห์ว่าเล่นเป็นรัฐสายใด</small></span></button>
-        <div class="menu-row"><button class="btn ghost" id="m-lab">${ICON('gear')} ห้องผู้ออกแบบ: จำลอง AI หลายเกม</button><button class="btn ghost" id="m-set">${ICON('gear')} ตั้งค่า</button></div>
+        <div class="menu-row">${devView() ? `<button class="btn ghost" id="m-lab">${ICON('gear')} ห้องผู้ออกแบบ: จำลอง AI หลายเกม</button>` : ''}<button class="btn ghost" id="m-set">${ICON('gear')} ตั้งค่า</button></div>
       </nav>
     </div></div>`;
   const q = s => app.querySelector(s);
@@ -8928,7 +9059,7 @@ function showMenu() {
   q('#m-online').onclick = () => needProfile(showLobby);
   q('#m-how').onclick = () => showHowTo(false);
   q('#m-hof').onclick = showHallOfFame;
-  q('#m-lab').onclick = showLab;
+  if (q('#m-lab')) q('#m-lab').onclick = showLab;
   q('#m-set').onclick = showMenuSettings;
   if (!profileReady()) setTimeout(() => showWelcome(() => showMenu()), 250);
 }
@@ -8942,6 +9073,13 @@ function renderResume() {
   if (el.querySelector('#m-rejoin')) el.querySelector('#m-rejoin').onclick = () => needProfile(() => rejoinOnline(so));
 }
 function needProfile(fn) { if (profileReady()) fn(); else showWelcome(ok => { if (ok) fn(); else showMenu(); }); }
+// the player in this tab changed (signed in, signed out, developer device confirmed): the menu redraws with
+// that player's leader, flag and saved games, and asks a new account to name its leader first
+function onAcctChange() {
+  const root = app.firstElementChild;
+  if (root && root.classList.contains('menu')) showMenu();
+  else if (root && root.classList.contains('lobby')) renderLobbyParts();
+}
 function showMenuSettings() {
   const box = dialog2(`<h2>${ICON('gear')} ตั้งค่า</h2><div class="kv">
     <label for="ms-sound">เสียง</label><span><input type="checkbox" id="ms-sound"${settings.sound ? ' checked' : ''}></span>
@@ -8982,7 +9120,7 @@ function showSoloSetup() {
       <div class="kv">
         <label for="s-n">จำนวนรัฐ</label><span><select id="s-n"><option value="3"${T.n === 3 ? ' selected' : ''}>3 รัฐ</option><option value="4"${T.n === 4 ? ' selected' : ''}>4 รัฐ</option></select></span>
         <label for="s-level">ความยาก AI</label><span><select id="s-level">${levelOpts(T.level)}</select> <span class="tiny muted" id="s-level-note">${esc(LEVEL_NOTE[T.level] || '')}</span></span>
-        <label for="s-rules">ชุดกฎ</label><span><select id="s-rules">${rulesetOpts(T.rules)}</select></span>
+        ${devView() ? `<label for="s-rules">ชุดกฎ</label><span><select id="s-rules">${rulesetOpts(T.rules)}</select> <span class="tiny muted">หลังบ้าน · เห็นเฉพาะผู้พัฒนา</span></span>` : ''}
         <label for="s-seed">ซีด (เว้นว่าง = สุ่ม)</label><span><input id="s-seed" value="${esc(T.seed)}" placeholder="เช่น 2024" size="12"></span>
         <label for="s-speed">ความเร็ว AI</label><span><select id="s-speed">${[[0, 'ทันที'], [200, 'เร็ว'], [450, 'ปกติ'], [900, 'ช้า']].map(([v, l]) => `<option value="${v}"${settings.speed === v ? ' selected' : ''}>${l}</option>`).join('')}</select></span>
         <label for="s-bat">แสดงการรบ</label><span><select id="s-bat"><option value="mine">เฉพาะที่คุณเกี่ยวข้อง</option><option value="all">ทุกการรบ</option><option value="none">ไม่แสดง ดูในบันทึก</option></select></span>
@@ -8993,7 +9131,7 @@ function showSoloSetup() {
   const keep = () => store.set('solo', T);
   q('#p-back').onclick = showMenu;
   q('#s-n').onchange = e => { T.n = +e.target.value; keep(); showSoloSetup(); };
-  q('#s-rules').onchange = e => { T.rules = e.target.value; keep(); };
+  if (q('#s-rules')) q('#s-rules').onchange = e => { T.rules = e.target.value; keep(); };
   q('#s-level').onchange = e => { T.level = e.target.value; keep(); q('#s-level-note').textContent = LEVEL_NOTE[T.level] || ''; };
   q('#s-seed').oninput = e => { T.seed = e.target.value.trim(); keep(); };
   q('#s-speed').onchange = e => { settings.speed = +e.target.value; saveSettings(); };
@@ -9021,7 +9159,7 @@ function launchSolo(watch) {
     }
   }
   const dice = diceOrder(draft.length, K.rng(seed ^ 0xd1ce));
-  const cfg = { mode: watch ? 'watch' : 'solo', rules: T.rules, seed, seats: orderSeats(draft, dice), dice };
+  const cfg = { mode: watch ? 'watch' : 'solo', rules: rulesFor(T.rules), seed, seats: orderSeats(draft, dice), dice };
   showDiceRoll(draft, dice, { auto: watch }).then(() => { if (canSave() && !watch) store.del(acctKey('save.solo')); startGame(cfg); });
 }
 
@@ -9029,13 +9167,13 @@ function launchSolo(watch) {
 function howToHtml() {
   const groups = {};
   for (const [t, d, g] of GLOSSARY) (groups[g] = groups[g] || []).push([t, d]);
-  return `<div class="howto"><nav class="toc">${HOWTO.map(s => `<a href="#h-${s.id}">${esc(s.h)}</a>`).join('')}<a href="#h-terms">คำศัพท์</a><a href="#h-notes">ข้อที่หน้านี้ตีความเอง</a></nav>
+  return `<div class="howto"><nav class="toc">${HOWTO.map(s => `<a href="#h-${s.id}">${esc(s.h)}</a>`).join('')}<a href="#h-terms">คำศัพท์</a>${devView() ? '<a href="#h-notes">ข้อที่หน้านี้ตีความเอง</a>' : ''}</nav>
     ${HOWTO.map(s => `<section id="h-${s.id}"><h2>${esc(s.h)}</h2>${s.p.map(p => `<p>${gloss(p)}</p>`).join('')}</section>`).join('')}
     <section id="h-icons"><h2>สัญลักษณ์บนโต๊ะ</h2><div class="row small" style="gap:6px 16px">${rb('mat', '')} วัสดุ ${rb('fuel', '')} เชื้อเพลิง ${rb('food', '')} อาหาร ${rb('grav', '')} เกรฟ
       <span>${ICON('worker')} แรงงาน</span><span>${ICON('house')} ช่องสิ่งปลูกสร้าง</span><span>${ICON('shield')} ทหารบนโครงการ</span><span>${ICON('wagon')} ความจุการซื้อ</span><span>${ICON('star')} ผู้เล่นคนแรก</span></div></section>
     <section id="h-terms"><h2>คำศัพท์</h2>${Object.entries(groups).map(([g, list]) => `<h3>${esc(g)}</h3><dl class="gl">${list.map(([t, d]) => `<dt>${esc(t)}</dt><dd>${esc(d)}</dd>`).join('')}</dl>`).join('')}</section>
-    <section id="h-notes"><h2>ข้อที่หน้านี้ตีความเอง</h2><ol class="small">${INTERP.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
-      <h3>ฉบับ 0.3 ต่างจากฉบับ 0.2</h3><ol class="small">${V03.map(x => `<li>${esc(x)}</li>`).join('')}</ol></section></div>`;
+    ${devView() ? `<section id="h-notes" class="backstage"><h2>ข้อที่หน้านี้ตีความเอง <span class="tiny muted">หลังบ้าน · เห็นเฉพาะผู้พัฒนา</span></h2><ol class="small">${INTERP.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+      <h3>ฉบับ 0.3 ต่างจากฉบับ 0.2</h3><ol class="small">${V03.map(x => `<li>${esc(x)}</li>`).join('')}</ol></section>` : ''}</div>`;
 }
 const INTERP = ['การ์ดแอคชันที่เล่นแล้วทุกใบคืนขึ้นมือตอนประชุมสภา', 'เงินกู้จำนองสัมปทาน คืนเท่ายอดที่ยืมบวก 2 ตอนสภาถัดไป', 'ส่วนลดสินค้าตอนผนวกดินแดนและส่วนลดจากโบนัส ระบบเลือกลดชนิดที่ขาดมากที่สุดให้',
   'ชนะบุกเบิกดินแดนที่ผลิตเกรฟ รับของรางวัลเป็นเกรฟ', 'นโยบายระบอบขุนศึกให้ความชอบธรรม 1 กับผู้บุกที่ชนะทุกแบบ รวมบุกเบิกและรัฐประหาร', 'นโยบายชาตินิยมให้พลัง +2 กับฝ่ายรับทุกการรบ รวมกองเสื้อคลุมน้ำเงิน',
@@ -9119,6 +9257,7 @@ const cmtHtml = c => `<div class="cmt"><div class="ch"><b>${esc(fullLeader(c))}<
 // ---------- designer room: many AI games, compared against the rulebook's playtest targets ----------
 let batchStop = false;
 function showLab() {
+  if (!devView()) return showMenu();
   const T = soloState;
   app.innerHTML = `<div class="page"><div class="page-h"><button class="btn sm" id="p-back">${ICON('menu')} เมนู</button><h1>ห้องผู้ออกแบบ</h1></div>
     <div class="box"><h2>จำลองหลายเกม</h2><p class="small muted">AI เล่นกันเองหลายเกมแล้วเทียบกับตัวชี้วัดเพลย์เทสต์ในภาคผนวก ช ตัวเลขสะท้อนวิธีเล่นของ AI ชุดนี้ ใช้ดูทิศทางของสมดุล ตัวเลขจริงต้องมาจากโต๊ะเล่นคน</p>
@@ -9203,6 +9342,11 @@ const RULESETS = {
   '0.3t5': { label: 'ฉบับ 0.3 จุดเปลี่ยนกระแส 5 (4 คน) / 4 (3 คน)', data: () => window.KDATA03, rules: { tip4: 5, tip3: 4 } },
   '0.2': { label: 'ฉบับ 0.2', data: () => window.KDATA02 || window.KDATA, rules: {} },
 };
+// players always play the default rules; the other versions, the notes on how this page reads the rulebook and the
+// designer room are the developer's backstage and show only to the developer account
+const DEFAULT_RULES = '0.3';
+const devView = () => !!(acct && acct.kind === 'dev');
+const rulesFor = r => devView() && RULESETS[r] && RULESETS[r].data() ? r : DEFAULT_RULES;
 const rulesetOpts = cur => Object.entries(RULESETS).filter(([k, r]) => r.data()).map(([k, r]) => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(r.label)}</option>`).join('');
 const TAKEOVER = { takeover: true };
 
@@ -9224,6 +9368,7 @@ function startGame(cfg, o) {
   o = o || {};
   token++; const tok = token;
   paused = false; pending = null; closeModal(); closeDialog2(); hideTip();
+  document.body.classList.remove('vn-room');   // the tutorial's extra room at the bottom of the page
   const replay = o.replay ? new Map(o.replay.map(([k, v]) => [+k, v])) : null;
   S = { cfg, mode: cfg.mode, me: pubId(), seq: 0, log: new Map(), replay, replayMax: replay ? Math.max(0, ...replay.keys()) : 0, replaying: !!(replay && replay.size),
     takeover: Object.assign({}, o.takeover || {}), buffer: new Map(), waiting: null, net: o.net || null, room: o.room || null, yieldN: 0,
@@ -9644,7 +9789,7 @@ function showGameSettings() {
     <label for="gs-scene">ภาพฉากหลัง</label><span><input type="checkbox" id="gs-scene"${settings.scene ? ' checked' : ''}> <span class="tiny muted">แผนที่คีรันนาใต้โต๊ะ</span></span>
     ${hintsOn() ? `<label for="gs-auto">วางแรงงานอัตโนมัติ</label><span><input type="checkbox" id="gs-auto"${settings.autoWorkers ? ' checked' : ''}> <span class="tiny muted">ใช้การวางที่ AI แนะนำทุกรอบ (เฉพาะโหมดสอนเล่น)</span></span>` : ''}
     ${S && S.mode !== 'online' ? `<label>หยุดชั่วคราว</label><span><button class="btn sm" id="gs-pause">${paused ? 'เล่นต่อ' : 'หยุด AI ชั่วคราว'}</button></span>` : ''}
-    </div><div class="tiny muted" style="margin-top:8px">ชุดกฎ ${esc(G && G.ui.rules || '')} · ซีด ${G ? G.seed : '-'}</div><div class="mfoot"><button class="btn primary" id="gs-ok">ปิด</button></div>`);
+    </div>${devView() ? `<div class="tiny muted" style="margin-top:8px">หลังบ้าน · ชุดกฎ ${esc(G && G.ui.rules || '')} · ซีด ${G ? G.seed : '-'}</div>` : ''}<div class="mfoot"><button class="btn primary" id="gs-ok">ปิด</button></div>`);
   box.querySelector('#gs-bat').value = settings.battles;
   box.querySelector('#gs-speed').onchange = e => { settings.speed = +e.target.value; saveSettings(); };
   box.querySelector('#gs-bat').onchange = e => { settings.battles = e.target.value; saveSettings(); };
@@ -10546,61 +10691,210 @@ async function tutorialHook(key) {
   }
 }
 let coachOpen = null;
-let coachPos = null;   // where the player dragged the card; later steps open there too
-// the explanation card: always inside the viewport, follows scroll and resize, scrolls its own text,
-// and can be dragged by its header. The dimmed ring marks the part of the table being explained.
+let coachPos = null;   // where the player dragged the box; later chapters open there too
+// Nemessiah speaks the way a visual novel does: a dialogue box docked at the bottom of the screen, one line
+// at a time, typed out, her face changing with what she says. Click the box, Enter or Space: finish the line,
+// then the next one; the last line closes the chapter. Escape or ข้ามบทนี้ closes it at once.
+// She takes the stage in one of three ways, the first that leaves the part of the table she explains in view:
+// standing behind the box (it hides her knees, where the picture was cut), leaning in over its edge (head and
+// shoulders), or from a lancet window inside the box (no room above it, or the part she explains too wide to
+// stand beside, as on a phone).
+// The dimmed ring marks the part being explained; the page scrolls it into the clear above the box.
+const VN_KNEE = 0.1;    // share of her height hidden behind the box when she stands
+const VN_BUST = 0.36;   // share of her height above the box when she leans in: hood to shoulders
+const VN_MIN_H = 200;   // shorter than this she does not stand
+const vnSeg = typeof Intl !== 'undefined' && Intl.Segmenter ? new Intl.Segmenter('th', { granularity: 'grapheme' }) : null;
+const vnTyping = () => !!vnSeg && settings.fx && !settings.autoplay && !reduceMotion() && !(S && S.replaying);
+const vnArea = (a, b) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
 function coach(st) {
   if (window.__coachLog) window.__coachLog.push(st.id);
+  // a part of the table still sliding into place (the hand rises from the bottom edge) is placed once it lands
+  const el = st.focus && document.querySelector(st.focus);
+  const moving = el && el.getAnimations ? el.getAnimations().filter(a => a.playState === 'running') : [];
+  const landed = moving.length ? Promise.race([Promise.all(moving.map(a => a.finished.catch(() => null))), sleep(800)]) : null;
+  return landed ? landed.then(() => vnOpen(st)) : vnOpen(st);
+}
+function vnOpen(st) {
   return new Promise(resolve => {
     if (coachOpen) coachOpen.close();
     const veil = document.createElement('div'); veil.className = 'coachveil';
     const ring = document.createElement('div'); ring.className = 'coachring';
-    const card = document.createElement('div'); card.className = 'coach nem'; card.setAttribute('role', 'dialog'); card.setAttribute('aria-label', 'เนเมสไซอาร์: ' + st.title);
+    const card = document.createElement('div'); card.className = 'coach nem vn'; card.setAttribute('role', 'dialog'); card.setAttribute('aria-label', 'เนเมสไซอาร์: ' + st.title);
+    card.dataset.step = st.id;
     const total = TUTORIAL.length, n = S && S.tutorial ? S.tutorial.seen.size : 0;
-    const face = NEM_FACES.includes(st.face) ? st.face : 'explain', src = nemSrc(face), seen = new Set();
-    // she speaks in paragraphs: the rule, why it works this way, how to approach it
     // a word joiner keeps her favourite words whole when Thai lines wrap (ลูกรัก must never break in two)
     const keep = t => String(t).replace(/ลูกรัก/g, 'ลูก\u2060รัก').replace(/บางส่วน/g, 'บาง\u2060ส่วน');
-    const say = (st.say || [st.rule, st.why, st.how].filter(Boolean)).map(keep);
-    card.innerHTML = `<div class="ck" title="ลากตรงนี้เพื่อย้ายกล่องคำอธิบาย"><span class="grip">${ICON('grip')}</span><span class="who"><i class="nem-av"><img src="${src}" alt="" draggable="false"></i><b>เนเมสไซอาร์</b><small>ศาสดาสีชาด · ผู้สอนเล่น</small></span><span class="grow"></span>${n ? `<span class="cnum">บทที่ ${n}/${total}</span>` : ''}<button class="cmin" id="co-min" title="ย่อหรือขยายกล่อง" aria-label="ย่อหรือขยายกล่อง">${ICON('minus')}</button></div>
-      <div class="cbody"><figure class="nem-por" data-face="${face}"><img src="${src}" alt="เนเมสไซอาร์${NEM_FACE_ALT[face] ? ' ' + NEM_FACE_ALT[face] : ''}" draggable="false"></figure>
-      <div class="nem-say"><h3>${esc(st.title)}</h3>${say.map(p => `<p>${gloss(p, seen)}</p>`).join('')}</div></div>
-      <div class="cf">${S && S.tutorial ? '<button class="btn sm ghost" id="co-off">ปิดคำอธิบายที่เหลือ</button>' : ''}<span class="grow"></span><button class="btn primary" id="co-ok">เข้าใจแล้ว</button></div>`;
+    const lines = (st.say || [st.rule, st.why, st.how].filter(Boolean)).map(keep);
+    const last = lines.length - 1;
+    const faceAt = i => { const f = (st.faces && st.faces[i]) || st.face; return NEM_FACES.includes(f) ? f : 'explain'; };
+    const f0 = faceAt(0), seen = new Set(), pic = `src="${nemSrc(f0)}" alt="" draggable="false"`;
+    // every line sits in the same grid cell, so the box is as tall as the longest line from the start and never jumps
+    card.innerHTML = `<div class="vn-sprite" aria-hidden="true"><div class="vn-fig"><img class="on" ${pic}><img class="off" ${pic}></div></div>
+      <div class="vn-box"><figure class="vn-face" aria-hidden="true"><span><img ${pic}></span></figure>
+      <div class="ck" title="ลากตรงนี้เพื่อย้ายกล่องคำอธิบาย"><span class="grip">${ICON('grip')}</span><span class="who"><i class="nem-av"><img ${pic}></i><b>เนเมสไซอาร์</b><small>ศาสดาสีชาด</small></span><span class="grow"></span><h3>${esc(st.title)}</h3>${n ? `<span class="cnum">บทที่ ${n}/${total}</span>` : ''}<button class="cmin" id="co-min" title="ย่อหรือขยายกล่อง" aria-label="ย่อหรือขยายกล่อง">${ICON('minus')}</button></div>
+      <div class="cbody"><div class="vn-lines">${lines.map((p, i) => `<p data-i="${i}">${gloss(p, seen)}</p>`).join('')}</div><div class="vn-sr" aria-live="polite"></div></div>
+      <div class="cf">${S && S.tutorial ? '<button class="btn sm ghost" id="co-off">ปิดคำอธิบายที่เหลือ</button>' : ''}<span class="vn-dots" aria-hidden="true">${lines.map(() => '<i></i>').join('')}</span><span class="grow"></span>
+      <button class="btn sm ghost" id="co-back" title="ย้อนไปประโยคก่อนหน้า">ย้อน</button><button class="btn sm ghost" id="co-skip" title="ข้ามไปเล่นต่อ (Esc)">ข้ามบทนี้</button><button class="btn primary" id="co-ok"></button></div>
+      </div>`;
     document.body.appendChild(veil); document.body.appendChild(ring); document.body.appendChild(card);
-    // without the portraits (an old copy of the page, a blocked folder) the card keeps its text and drops the picture
-    card.querySelectorAll('img').forEach(im => im.addEventListener('error', () => card.classList.add('noimg'), { once: true }));
+    // without the portraits (an old copy of the page, a blocked folder) the box keeps its text and drops the pictures
+    card.querySelectorAll('img').forEach(im => im.addEventListener('error', () => { card.classList.add('noimg'); layout(); }, { once: true }));
+    const sprite = card.querySelector('.vn-sprite');
+    let alive = true;   // a layout queued for the next frame finds the box already closed
+    const ps = [...card.querySelectorAll('.vn-lines p')], dots = [...card.querySelectorAll('.vn-dots i')];
+    const sr = card.querySelector('.vn-sr'), okB = card.querySelector('#co-ok'), backB = card.querySelector('#co-back'), skipB = card.querySelector('#co-skip');
+    // what she talks about: the part of the table in the ring, or else the decision window open on screen;
+    // both are kept clear of the box and of her figure
     const target = st.focus && document.querySelector(st.focus);
-    const fixedTarget = target && getComputedStyle(target).position === 'fixed';
-    if (target && !fixedTarget) {
-      const r0 = target.getBoundingClientRect();
-      if (r0.top < 0 || r0.bottom > window.innerHeight) target.scrollIntoView({ block: r0.height > window.innerHeight ? 'start' : 'center' });
-    }
+    const subject = target || [...document.querySelectorAll('#modal2:not(.hidden) .mbox, #modal:not(.hidden):not(.peek) .mbox')].find(e => e.getClientRects().length) || null;
+    const fixedSubject = !!subject && getComputedStyle(subject).position === 'fixed';
+
+    // ---- her face: two stacked pictures cross-fade when the expression changes ----
+    let faceNow = null;
+    const setFace = f => {
+      if (f === faceNow) return;
+      const first = faceNow === null; faceNow = f;
+      card.dataset.face = f;
+      card.querySelectorAll('.vn-face img, .nem-av img').forEach(im => { im.src = nemSrc(f); });
+      const [a, b] = sprite.querySelectorAll('img'), cur = a.classList.contains('on') ? a : b, nxt = cur === a ? b : a;
+      if (first) { cur.src = nemSrc(f); return; }
+      nxt.src = nemSrc(f); nxt.classList.replace('off', 'on'); cur.classList.replace('on', 'off');
+      sprite.classList.remove('beat'); void sprite.offsetWidth; sprite.classList.add('beat');
+    };
+
+    // ---- the lines: typed out grapheme by grapheme, so Thai vowels and tone marks never appear alone ----
+    let li = 0, typing = null, reached = -1;
+    const graphemes = p => {
+      if (p.vnG) return p.vnG;
+      const out = [];
+      const walk = node => [...node.childNodes].forEach(c => {
+        if (c.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          for (const { segment } of vnSeg.segment(c.data)) { const sp = document.createElement('span'); sp.className = 'tw'; sp.textContent = segment; frag.appendChild(sp); out.push(sp); }
+          c.replaceWith(frag);
+        } else if (c.nodeType === 1) walk(c);
+      });
+      walk(p);
+      return (p.vnG = out);
+    };
+    const doneTyping = () => {
+      if (!typing) return;
+      cancelAnimationFrame(typing.raf); typing.p.classList.remove('typing'); typing = null;
+      card.classList.add('done');
+    };
+    const show = i => {
+      doneTyping();
+      li = i;
+      ps.forEach((p, k) => p.classList.toggle('vn-now', k === i));
+      dots.forEach((d, k) => { d.classList.toggle('on', k < i); d.classList.toggle('vn-now', k === i); });
+      setFace(faceAt(i));
+      backB.disabled = i === 0;
+      skipB.hidden = i === last;
+      okB.innerHTML = i === last ? 'เข้าใจแล้ว' : `ถัดไป<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      okB.title = i === last ? 'ปิดกล่องแล้วเล่นต่อ' : 'ประโยคถัดไป (Enter)';
+      sr.textContent = ps[i].textContent;
+      card.classList.remove('done');
+      // a line she has already said comes back whole; a new one is typed at a steady pace,
+      // with a breath at every space, where Thai puts its commas and full stops
+      if (i <= reached || !vnTyping()) { reached = Math.max(reached, i); card.classList.add('done'); return; }
+      reached = i;
+      const p = ps[i], g = graphemes(p), at = [];
+      let t = 0; for (const sp of g) { at.push(t); t += sp.textContent === ' ' ? 120 : 16; }
+      g.forEach(sp => sp.classList.remove('on'));
+      p.classList.add('typing');
+      const t0 = performance.now(); let k = 0;
+      const step = now => {
+        if (!typing) return;
+        const dt = now - t0;
+        while (k < g.length && at[k] <= dt) g[k++].classList.add('on');
+        if (k < g.length) typing.raf = requestAnimationFrame(step); else doneTyping();
+      };
+      typing = { p, raf: requestAnimationFrame(step) };
+    };
+    const next = () => {
+      if (typing) { doneTyping(); return; }
+      if (li < last) { sfx('tick'); show(li + 1); }
+      else { sfx('tick'); close(); }
+    };
+    const back = () => { if (li > 0) show(li - 1); };
+
+    // ---- where the box goes, and where she stands ----
     const M = 10;
     const clampPos = (x, y) => {
       const vw = window.innerWidth, vh = window.innerHeight, cw = card.offsetWidth, ch = card.offsetHeight;
       return { x: Math.max(M, Math.min(vw - cw - M, x)), y: Math.max(M, Math.min(vh - ch - M, y)) };
     };
-    const put = (x, y) => { const p = clampPos(x, y); card.style.left = p.x + 'px'; card.style.top = p.y + 'px'; };
-    // the ring follows its target; the card goes where the player left it, or next to the target
-    const place = () => {
-      const vw = window.innerWidth, vh = window.innerHeight;
-      const tr = target ? target.getBoundingClientRect() : null;
-      const visible = !!(tr && tr.width && tr.height && tr.bottom > 0 && tr.top < vh && tr.right > 0 && tr.left < vw);
-      ring.style.display = visible ? '' : 'none';
-      if (visible) { ring.style.left = (tr.left - 5) + 'px'; ring.style.top = (tr.top - 5) + 'px'; ring.style.width = (tr.width + 10) + 'px'; ring.style.height = (tr.height + 10) + 'px'; }
-      veil.classList.toggle('clear', visible);
-      if (coachPos) { put(coachPos.x, coachPos.y); return; }
-      const cw = card.offsetWidth, ch = card.offsetHeight;
-      let x = (vw - cw) / 2, y = (vh - ch) / 2;
-      if (visible) {
-        if (tr.bottom + 14 + ch <= vh - M) { y = tr.bottom + 14; x = tr.left + tr.width / 2 - cw / 2; }
-        else if (tr.top - 14 - ch >= M) { y = tr.top - 14 - ch; x = tr.left + tr.width / 2 - cw / 2; }
-        else if (tr.right + 16 + cw <= vw - M) { x = tr.right + 16; y = tr.top; }
-        else if (tr.left - 16 - cw >= M) { x = tr.left - 16 - cw; y = tr.top; }
-      }
-      put(x, y);
+    const put = (x, y) => { const p = clampPos(x, y); card.style.left = p.x + 'px'; card.style.top = p.y + 'px'; return p; };
+    const onScreen = el => {
+      const vw = window.innerWidth, vh = window.innerHeight, tr = el ? el.getBoundingClientRect() : null;
+      return tr && tr.width && tr.height && tr.bottom > 0 && tr.top < vh && tr.right > 0 && tr.left < vw ? tr : null;
     };
-    // drag by the header (mouse, pen or touch)
+    const ringTo = tr => {
+      ring.style.display = tr ? '' : 'none';
+      if (tr) { ring.style.left = (tr.left - 5) + 'px'; ring.style.top = (tr.top - 5) + 'px'; ring.style.width = (tr.width + 10) + 'px'; ring.style.height = (tr.height + 10) + 'px'; }
+      veil.classList.toggle('clear', !!tr);
+    };
+    // where her figure is on screen: standing she spans about 16% to 93% of the picture's width, leaning in
+    // only her hood and shoulders show, about 34% to 90%
+    const figRect = (mode, p, cw, h, right) => {
+      const w = h * 640 / 902, sx = right ? p.x + cw - 18 - w : p.x + 18;
+      return mode === 'stand' ? { left: sx + w * 0.16, right: sx + w * 0.93, top: p.y - h * (1 - VN_KNEE), bottom: p.y }
+        : { left: sx + w * 0.34, right: sx + w * 0.9, top: p.y - h * VN_BUST, bottom: p.y };
+    };
+    // decides the dock, how she takes the stage and on which side; runs on open, resize, drag end and minimise
+    let figNow = null;   // her figure on screen: the pointer over it makes her fade, to see the table behind
+    const layout = () => {
+      if (!alive) return;
+      const vw = window.innerWidth, vh = window.innerHeight, tr = onScreen(subject);
+      ringTo(onScreen(target));
+      let p;
+      if (coachPos) p = put(coachPos.x, coachPos.y);
+      else {
+        // the bottom of the screen; the top only when that leaves the part she explains wholly clear
+        // (the hand of cards is pinned to the bottom edge) and the bottom would not
+        const cw = card.offsetWidth, ch = card.offsetHeight, x = (vw - cw) / 2;
+        const low = { left: x, right: x + cw, top: vh - M - ch, bottom: vh - M }, high = { left: x, right: x + cw, top: M, bottom: M + ch };
+        p = put(x, tr && vnArea(tr, high) === 0 && vnArea(tr, low) > 0 ? high.top : low.top);
+      }
+      // her size: about two thirds of the screen's height, never wider than six tenths of a narrow screen
+      const cw = card.offsetWidth, room = p.y - M, pref = Math.min(Math.max(240, vh * 0.64), 600, vw * 0.85);
+      let mode = 'face', h = 0, right = false;
+      if (!card.classList.contains('min') && !card.classList.contains('noimg')) {
+        for (const [m, hh, least] of [['stand', Math.min(pref, room / (1 - VN_KNEE)), VN_MIN_H], ['bust', Math.min(pref, 460, room / VN_BUST), 300]]) {
+          if (hh < least) continue;
+          // the side that hides less of the part she explains; neither may hide more than a twentieth of it
+          const l = tr ? vnArea(tr, figRect(m, p, cw, hh, false)) : 0, r = tr ? vnArea(tr, figRect(m, p, cw, hh, true)) : 0;
+          if (!tr || Math.min(l, r) <= 0.05 * tr.width * tr.height) { mode = m; h = Math.round(hh); right = r < l; break; }
+        }
+      }
+      card.classList.toggle('face', mode === 'face'); card.classList.toggle('bust', mode === 'bust'); card.classList.toggle('right', right);
+      if (h) { card.style.setProperty('--sh', h + 'px'); card.style.setProperty('--sv', Math.round(h * (mode === 'stand' ? 1 - VN_KNEE : VN_BUST)) + 'px'); }
+      // the face window may change the height of the box: keep it inside the screen
+      p = coachPos ? put(coachPos.x, coachPos.y) : put(p.x, p.y < vh / 2 ? M : vh - M - card.offsetHeight);
+      figNow = mode === 'face' ? null : figRect(mode, p, cw, h, right);
+      card.classList.remove('vn-ghost');
+    };
+    // the part she explains moves into the clear: above the box, or below it when the box sits high.
+    // While she speaks the page gets room at the bottom, so even the last panel can rise above the box.
+    const fit = () => {
+      if (!subject || fixedSubject) return;
+      // where the box will be: where the player left it, or docked at the bottom
+      const vh = window.innerHeight, ch = card.offsetHeight, r = coachPos ? card.getBoundingClientRect() : { top: vh - M - ch, bottom: vh - M }, tr = subject.getBoundingClientRect();
+      const bar = document.body.dataset.view === 'table' && document.querySelector('header.top');
+      const top = (bar ? Math.max(0, bar.getBoundingClientRect().bottom) : 0) + 8;
+      const above = r.top - 10 - top, below = vh - 8 - (r.bottom + 10);
+      const go = (block, mt, mb) => {
+        subject.style.scrollMarginTop = mt + 'px'; subject.style.scrollMarginBottom = mb + 'px';
+        subject.scrollIntoView({ block });
+        subject.style.scrollMarginTop = subject.style.scrollMarginBottom = '';
+      };
+      if (tr.height <= above && (above >= below || tr.height > below)) go('nearest', top, vh - r.top + 10);
+      else if (tr.height <= below) go('nearest', r.bottom + 10, 8);
+      else if (tr.top < top || tr.top > vh * 0.4) go('start', top, 0);   // too tall for the clear: its top edge, under the top bar
+    };
+    const follow = () => { if (alive) ringTo(onScreen(target)); };
+
+    // ---- drag by the header (mouse, pen or touch) ----
     const head = card.querySelector('.ck');
     head.addEventListener('pointerdown', e => {
       if (e.button > 0 || e.target.closest('button')) return;
@@ -10608,33 +10902,52 @@ function coach(st) {
       const r = card.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top;
       try { head.setPointerCapture(e.pointerId); } catch (err) { /* older browsers */ }
       card.classList.add('dragging');
-      const mv = ev => { coachPos = { x: ev.clientX - dx, y: ev.clientY - dy }; put(coachPos.x, coachPos.y); };
-      const up = () => { card.classList.remove('dragging'); head.removeEventListener('pointermove', mv); head.removeEventListener('pointerup', up); head.removeEventListener('pointercancel', up); if (coachPos) coachPos = clampPos(coachPos.x, coachPos.y); };
+      const mv = ev => { coachPos = { x: ev.clientX - dx, y: ev.clientY - dy }; put(coachPos.x, coachPos.y); figNow = null; };
+      const up = () => { card.classList.remove('dragging'); head.removeEventListener('pointermove', mv); head.removeEventListener('pointerup', up); head.removeEventListener('pointercancel', up); if (coachPos) { coachPos = clampPos(coachPos.x, coachPos.y); layout(); } };
       head.addEventListener('pointermove', mv); head.addEventListener('pointerup', up); head.addEventListener('pointercancel', up);
     });
-    head.addEventListener('dblclick', e => { if (e.target.closest('button')) return; coachPos = null; place(); });
+    head.addEventListener('dblclick', e => { if (e.target.closest('button')) return; coachPos = null; layout(); });
+    // the text itself is the button, as in a visual novel; glossary words keep their own tap
+    card.querySelector('.cbody').addEventListener('click', e => { if (e.target.closest('.g, button, a')) return; if (window.getSelection && String(window.getSelection())) return; next(); });
     const onKey = e => {
       if (e.isComposing) return;
-      if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); close(); }
+      const onBtn = e.target && e.target.closest && e.target.closest('button, input, select, textarea, a');
+      if (e.key === 'Escape') { e.preventDefault(); close(); }
+      else if ((e.key === 'Enter' || e.key === ' ') && !onBtn) { e.preventDefault(); next(); }
       else if (e.key.startsWith('Arrow') && e.altKey) {
         e.preventDefault();
         const r = card.getBoundingClientRect(), d = e.shiftKey ? 60 : 20;
         coachPos = { x: r.left + (e.key === 'ArrowLeft' ? -d : e.key === 'ArrowRight' ? d : 0), y: r.top + (e.key === 'ArrowUp' ? -d : e.key === 'ArrowDown' ? d : 0) };
-        put(coachPos.x, coachPos.y);
+        put(coachPos.x, coachPos.y); layout();
       }
+      else if (card.contains(e.target) && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { e.preventDefault(); if (e.key === 'ArrowRight') next(); else back(); }
     };
-    const onMove = () => requestAnimationFrame(place);
-    window.addEventListener('resize', onMove); window.addEventListener('scroll', onMove, true); document.addEventListener('keydown', onKey);
+    const onResize = () => requestAnimationFrame(layout), onScroll = () => requestAnimationFrame(follow);
+    const onPointer = e => { const f = figNow; card.classList.toggle('vn-ghost', !!f && e.clientX >= f.left && e.clientX <= f.right && e.clientY >= f.top && e.clientY <= f.bottom); };
+    const onLand = e => { if (e.target === target) requestAnimationFrame(follow); };   // the hand rises on hover: the ring follows
+    window.addEventListener('resize', onResize); window.addEventListener('scroll', onScroll, true); document.addEventListener('keydown', onKey); document.addEventListener('pointermove', onPointer, { passive: true });
+    if (target) target.addEventListener('transitionend', onLand);
     const close = () => {
-      window.removeEventListener('resize', onMove); window.removeEventListener('scroll', onMove, true); document.removeEventListener('keydown', onKey);
-      veil.remove(); ring.remove(); card.remove(); coachOpen = null; resolve();
+      alive = false;
+      if (typing) cancelAnimationFrame(typing.raf);
+      typing = null;
+      window.removeEventListener('resize', onResize); window.removeEventListener('scroll', onScroll, true); document.removeEventListener('keydown', onKey); document.removeEventListener('pointermove', onPointer);
+      if (target) target.removeEventListener('transitionend', onLand);
+      veil.remove(); ring.remove(); card.remove(); coachOpen = null;
+      if (st.id === 'end' || !(S && S.tutorial && S.tutorial.on)) document.body.classList.remove('vn-room');
+      resolve();
     };
     coachOpen = { close };
-    card.querySelector('#co-ok').onclick = () => { sfx('tick'); close(); };
-    card.querySelector('#co-min').onclick = () => { card.classList.toggle('min'); place(); };
+    okB.onclick = next;
+    backB.onclick = () => { back(); okB.focus({ preventScroll: true }); };   // Enter keeps moving forward, as in a visual novel
+    skipB.onclick = () => { sfx('tick'); close(); };
+    card.querySelector('#co-min').onclick = () => { card.classList.toggle('min'); layout(); };
     const off = card.querySelector('#co-off'); if (off) off.onclick = () => { if (S && S.tutorial) S.tutorial.on = false; close(); };
-    place(); requestAnimationFrame(place);
-    card.querySelector('#co-ok').focus({ preventScroll: true });
+    show(0);
+    layout();
+    document.body.style.setProperty('--vn-room', Math.ceil(card.offsetHeight + 3 * M) + 'px'); document.body.classList.add('vn-room');
+    fit(); layout(); requestAnimationFrame(layout);
+    okB.focus({ preventScroll: true });
     if (settings.autoplay && !window.__coachManual) setTimeout(close, 0);
   });
 }
@@ -10835,16 +11148,17 @@ async function hofCall(body, ms) {
     return await r.json();
   } finally { if (timer) clearTimeout(timer); }
 }
-// the ticket the script issued to this account; a day of margin so a game never ends on an expired one
+// the ticket the script issued to this account (each account keeps its own); a day of margin so a game
+// never ends on an expired one
 function hofTicket() {
-  const s = store.get('hofSession', null);
+  const s = acct ? store.get(acctKey('hofSession'), null) : null;
   return s && acct && s.acct === acct.id && typeof s.t === 'string' && s.exp > Date.now() + 864e5 ? s : null;
 }
 async function hofSignIn(cred) {
   if (!hofOnline()) return null;
   try {
     const j = await hofCall(Object.assign({ action: 'session' }, cred));
-    if (j && j.ok && typeof j.session === 'string') { store.set('hofSession', { t: j.session, acct: j.acct, exp: +j.exp || 0 }); return j; }
+    if (j && j.ok && typeof j.session === 'string' && /^([0-9a-f]{16}|dev)$/.test(String(j.acct))) { store.set('u.' + j.acct + '.hofSession', { t: j.session, acct: j.acct, exp: +j.exp || 0 }); return j; }
   } catch (e) { /* offline or not set up: the record waits in this browser */ }
   return null;
 }
@@ -10856,7 +11170,7 @@ async function hofSubmit(rec) {
   if (!s) return { need: 'auth' };
   try {
     const j = await hofCall({ action: 'hof', session: s.t, rec });
-    if (j && j.err === 'session') store.del('hofSession');
+    if (j && j.err === 'session') store.del(acctKey('hofSession'));
     return j || { err: 'empty' };
   } catch (e) { return { err: 'net' }; }
 }
@@ -10899,7 +11213,17 @@ async function hofAutoNote(el, rec, gh) {
 const NET_APP = 'kirana-federation-v1';
 const localNet = () => /[?&]net=local\b/.test(location.search);
 function netAvailable() { return localNet() || (!!window.Trystero && !inViewer); }
-const pubId = () => hashStr(profile.id).toString(36);
+// the identity other players see: a signed-in account plays under its profile id on any tab or device;
+// a guest gets a new identity in every tab, so two tabs of one browser are two players unless both sign in
+// to the same account
+const pubId = () => hashStr(acct ? profile.id : 'guest|' + sess.gid).toString(36);
+// Nostr relays that carry the handshake. All eight answered within about two seconds from Thailand on
+// 8 Nov 2026; the first three are also used by the previous version of the page, so an old copy still
+// meets a new one. config.js can replace the list (relays) and add TURN servers (turn) without a rebuild.
+const NET_CFG = window.FED_CONFIG || {};
+const RELAYS_DEFAULT = ['relay.novospes.com', 'testr.nymble.world', 'relay-dev.gulugulu.moe', 'nos.lol', 'nostr.red5d.dev', 'relay.routstr.com', 'relay.piazza.today', 'nostrcity-club.fly.dev'];
+const relayUrls = () => (Array.isArray(NET_CFG.relays) && NET_CFG.relays.length ? NET_CFG.relays : RELAYS_DEFAULT)
+  .map(u => String(u).trim().replace(/^(wss:\/\/)?/i, 'wss://')).filter(u => /^wss:\/\/[a-z0-9.-]+(:\d{2,5})?(\/[\w\-./]*)?$/i.test(u)).slice(0, 16);
 function openRoom(id, h) {
   if (localNet()) {
     const self = uid(8), bc = new BroadcastChannel('fed-' + NET_APP + '-' + id), peers = new Map();
@@ -10915,8 +11239,9 @@ function openRoom(id, h) {
     window.addEventListener('pagehide', bye);
     return { self, send: (d, to) => post({ k: 'msg', from: self, to: to || null, d: JSON.parse(JSON.stringify(d)) }), leave: () => { bye(); bc.close(); window.removeEventListener('pagehide', bye); }, peers: () => [...peers.keys()] };
   }
-  // optional TURN relay for strict networks: <meta name="fed-turn" content='[{"urls":"turn:host:3478","username":"u","credential":"p"}]'>
-  const cfg = { appId: NET_APP };
+  // optional TURN relay for strict networks: turn in config.js, or <meta name="fed-turn" content='[{"urls":"turn:host:3478","username":"u","credential":"p"}]'>
+  const cfg = { appId: NET_APP, relayConfig: { urls: relayUrls() } };
+  if (Array.isArray(NET_CFG.turn) && NET_CFG.turn.length) cfg.turnConfig = NET_CFG.turn.filter(t => t && typeof t === 'object' && t.urls).slice(0, 4);
   try { const m = document.querySelector('meta[name="fed-turn"]'); if (m && m.content) cfg.turnConfig = JSON.parse(m.content); } catch (e) { /* ignore a malformed tag */ }
   const room = window.Trystero.joinRoom(cfg, id);
   const act = room.makeAction('m');
@@ -11070,7 +11395,7 @@ function showLobby() {
       <div class="box"><h2>ผู้เล่นออนไลน์</h2><div id="l-peers" class="plist"></div></div>
       <div class="box"><h2>ห้องที่เปิดรับผู้เล่น</h2><div id="l-rooms" class="rlist"></div>
         <div class="row" style="margin-top:12px"><button class="btn primary" id="l-create">${ICON('crown')} สร้างห้องใหม่</button><span class="grow"></span><input id="l-code" maxlength="8" placeholder="รหัสห้อง" style="width:110px;text-transform:uppercase"><button class="btn" id="l-join">เข้าห้อง</button></div>
-        <p class="tiny muted">ส่งรหัสห้องหรือลิงก์ให้เพื่อน ที่นั่งที่ไม่มีคนนั่งตอนเริ่มเกม AI จะเล่นแทน ถ้ามีคนหลุดกลางเกม AI จะรับช่วงจนเขากลับมา</p></div>
+        <p class="tiny muted">ส่งรหัสห้องหรือลิงก์ให้เพื่อน เข้าห้องแล้วกดนั่งเก้าอี้ว่างหนึ่งตัว ที่นั่งที่ไม่มีคนนั่งตอนเริ่มเกม AI จะเล่นแทน ถ้ามีคนหลุดกลางเกม AI จะรับช่วงจนเขากลับมา สองแท็บในเครื่องเดียวกันเป็นผู้เล่นคนละคนเมื่อไม่ได้ใช้บัญชีเดียวกัน</p></div>
       <div class="box"><h2>แชทล็อบบี้</h2><div id="l-chat" class="chatlog"></div><form id="l-chatf" class="chatform"><input id="l-chatin" maxlength="300" autocomplete="off" placeholder="ทักทายผู้เล่นคนอื่น"><button class="btn sm primary">ส่ง</button></form></div>
     </div></div>`;
   const q = s => app.querySelector(s);
@@ -11096,7 +11421,7 @@ function renderLobbyParts() {
   }
   const ro = document.getElementById('l-rooms');
   if (ro) {
-    setHTML(ro, [...L.rooms.values()].map(r => `<div class="ri"><b>${esc(r.code)}</b><span>${esc(r.host)}</span><span class="tiny muted">${r.humans}/${r.n} ที่นั่ง · ${esc((RULESETS[r.rules] || {}).label || r.rules)}</span><span class="grow"></span><button class="btn sm primary" data-room="${esc(r.code)}">เข้าร่วม</button></div>`).join('') || '<p class="tiny muted">ยังไม่มีห้องเปิด สร้างห้องเองได้เลย</p>');
+    setHTML(ro, [...L.rooms.values()].map(r => `<div class="ri"><b>${esc(r.code)}</b><span>${esc(r.host)}</span><span class="tiny muted">${r.humans}/${r.n} ที่นั่ง${devView() ? ' · ' + esc((RULESETS[r.rules] || {}).label || r.rules) : ''}</span><span class="grow"></span><button class="btn sm primary" data-room="${esc(r.code)}">เข้าร่วม</button></div>`).join('') || '<p class="tiny muted">ยังไม่มีห้องเปิด สร้างห้องเองได้เลย</p>');
     ro.querySelectorAll('[data-room]').forEach(b => b.onclick = () => openGameRoom(b.dataset.room, false));
   }
   const ch = document.getElementById('l-chat');
@@ -11106,51 +11431,118 @@ const chatLine = c => `<div class="cl"><b style="color:${esc(c.color)}">${esc(c.
 function newRoomCode() { const a = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s = ''; const b = new Uint8Array(6); crypto.getRandomValues(b); for (const x of b) s += a[x % a.length]; return s; }
 
 // =====================================================================
-// GAME ROOM: seats before the game, then the lockstep channel during it
+// GAME ROOM: come in first, then take an empty chair. The host keeps the seat list and sends it to everyone;
+// a guest who has not heard back yet says hello again every few seconds, and a request to sit is repeated
+// until the seat list shows the chair taken. One account sits once: a second tab of the same account takes
+// over from the first, except the host's own account, which cannot join its own room twice.
 // =====================================================================
-const R = { code: null, net: null, host: false, hostId: null, seats: [], n: 4, rules: '0.3', level: 'normal', styles: ['balanced', 'warlord', 'merchant', 'builder'], owners: new Map(), started: false, cfg: null, chat: [], ctl: [], seenAns: new Set(), lastSeen: new Map(), hashes: {}, spectators: new Set(), takeTimer: null };
+const R = { code: null, net: null, host: false, hostId: null, seats: [], here: new Map(), n: 4, rules: '0.3', level: 'normal', styles: ['balanced', 'warlord', 'merchant', 'builder'], owners: new Map(), started: false, cfg: null, chat: [], ctl: [], seenAns: new Set(), lastSeen: new Map(), hashes: {}, spectators: new Set(), takeTimer: null,
+  gotRoster: false, tries: 0, t0: 0, pend: null, loop: null, rosterKey: '', away: [], rejoin: false };
+const SEAT_GRACE = 20000;      // a seated player who drops out keeps the chair this long before it is freed
 const roomAd = () => ({ t: 'room', code: R.code, host: profile.leader, rules: R.rules, n: R.n, humans: R.seats.filter(Boolean).length });
 function roomSend(m, to) { if (R.net) R.net.send(m, to); }
 function closeGameRoom() {
   if (R.host && !R.started && R.code) lobbySend({ t: 'unroom', code: R.code });
   if (R.net) { try { roomSend({ t: 'bye' }); R.net.leave(); } catch (e) { /* gone */ } }
-  clearInterval(R.takeTimer);
-  Object.assign(R, { code: null, net: null, host: false, hostId: null, seats: [], started: false, cfg: null, chat: [], ctl: [], seenAns: new Set(), owners: new Map(), lastSeen: new Map(), hashes: {}, spectators: new Set() });
+  clearInterval(R.takeTimer); clearInterval(R.loop);
+  Object.assign(R, { code: null, net: null, host: false, hostId: null, seats: [], here: new Map(), started: false, cfg: null, chat: [], ctl: [], seenAns: new Set(), owners: new Map(), lastSeen: new Map(), hashes: {}, spectators: new Set(),
+    gotRoster: false, tries: 0, t0: 0, pend: null, loop: null, rosterKey: '', away: [], rejoin: false });
 }
+const helloMsg = o => ({ t: 'hello', p: pubProfile(true), want: o && o.rejoin ? 'rejoin' : (R.started ? 'watch' : 'join') });
 function openGameRoom(code, host, o) {
   o = o || {};
   closeGameRoom();
-  R.code = code; R.host = host; R.hostId = host ? pubId() : null; R.wantSync = !host;
-  if (host) { R.seats = [pubProfile(true)]; R.n = soloState.n || 4; R.rules = soloState.rules || '0.3'; R.level = soloState.level || 'normal'; }
+  R.code = code; R.host = host; R.hostId = host ? pubId() : null; R.wantSync = !host; R.t0 = Date.now(); R.rejoin = !!o.rejoin;
+  if (host) {
+    R.n = soloState.n || 4; R.rules = rulesFor(soloState.rules); R.level = soloState.level || 'normal';
+    const me = pubProfile(true);
+    R.seats = new Array(R.n).fill(null); R.seats[0] = me;      // the host sits down at the first chair
+    R.here.set(me.id, me); R.gotRoster = true;
+  }
   try {
     R.net = openRoom('g-' + code, {
-      join: pid => { roomSend({ t: 'hello', p: pubProfile(true), want: o.rejoin ? 'rejoin' : (R.started ? 'watch' : 'seat') }, pid); if (R.host && !R.started) roomSend(rosterMsg(), pid); },
+      join: pid => { roomSend(helloMsg(o), pid); if (R.host && !R.started) roomSend(rosterMsg(), pid); renderRoomSoon(); },
       leave: pid => roomLeave(pid),
       msg: (d, pid) => roomMsg(d, pid),
     });
   } catch (e) { console.error(e); alert('เชื่อมต่อห้องไม่ได้'); return; }
-  roomSend({ t: 'hello', p: pubProfile(true), want: o.rejoin ? 'rejoin' : 'seat' });
+  roomSend(helloMsg(o));
   history.replaceState(null, '', location.pathname + location.search + '#room=' + code);
   lobbySetStatus('ห้อง ' + code);
   if (host) lobbySend(roomAd());
+  // one beat every two and a half seconds: say hello again until the host answers, repeat a request to sit,
+  // free the chairs of players who left, and remind everyone of the seat list
+  R.loop = setInterval(roomBeat, 2500);
   if (!o.rejoin) renderRoom();
 }
-const rosterMsg = () => ({ t: 'roster', seats: R.seats, n: R.n, rules: R.rules, level: R.level, styles: R.styles, host: R.hostId });
+function roomBeat() {
+  if (!R.code || R.started) return;
+  const now = Date.now();
+  if (!R.host && !R.gotRoster) { R.tries++; roomSend(helloMsg({ rejoin: R.rejoin })); renderRoom(); }
+  if (R.pend) {
+    if (R.pend.n >= 6) { R.pend = null; notify(`${ICON('x')} ขอนั่งไม่สำเร็จ ผู้สร้างห้องไม่ตอบ ลองกดนั่งอีกครั้ง`, 3500); renderRoom(); }
+    else { R.pend.n++; roomSend({ t: 'sit', seat: R.pend.seat }); }
+  }
+  if (R.host) {
+    const live = new Set(R.owners.values()); live.add(R.hostId);
+    let changed = false;
+    R.seats.forEach((s, i) => { if (s && !live.has(s.id) && now - (R.lastSeen.get(s.id) || now) > SEAT_GRACE) { R.seats[i] = null; changed = true; } });
+    for (const id of [...R.here.keys()]) if (!live.has(id) && now - (R.lastSeen.get(id) || now) > SEAT_GRACE) { R.here.delete(id); changed = true; }
+    if (changed) { renderRoom(); lobbySend(roomAd()); }
+    if (now - (R.lastRoster || 0) > 5000 || changed) roomSend(rosterMsg());
+  }
+}
+function rosterMsg() {
+  R.lastRoster = Date.now();
+  const live = new Set(R.owners.values()); live.add(R.hostId);
+  const seated = new Set(R.seats.filter(Boolean).map(s => s.id));
+  return { t: 'roster', seats: R.seats, here: [...R.here.values()].filter(p => !seated.has(p.id) && live.has(p.id)), away: R.seats.filter(s => s && !live.has(s.id)).map(s => s.id), n: R.n, rules: R.rules, level: R.level, styles: R.styles, host: R.hostId };
+}
+const amSeated = () => R.seats.some(s => s && s.id === pubId());
 function roomLeave(pid) {
   const owner = R.owners.get(pid); R.owners.delete(pid); R.spectators.delete(pid);
   if (owner) R.lastSeen.set(owner, Date.now());
   if (!R.started) {
-    if (R.host && owner) { const i = R.seats.findIndex(s => s && s.id === owner); if (i > 0) { R.seats[i] = null; compactSeats(); roomSend(rosterMsg()); lobbySend(roomAd()); } }
-    if (!R.host && owner && owner === R.hostId) { R.chat.push({ id: uid(6), leader: 'ระบบ', color: '#d6a94b', text: 'ผู้สร้างห้องออกไปแล้ว ห้องนี้ปิด', at: Date.now() }); }
+    if (!R.host && owner && owner === R.hostId) { R.chat.push({ id: uid(6), leader: 'ระบบ', color: '#d6a94b', text: 'ผู้สร้างห้องออกไปแล้ว ห้องนี้ปิด', at: Date.now() }); R.hostGone = true; }
+    if (R.host && owner) roomSend(rosterMsg());
     renderRoom();
   } else queueRender();
 }
-function compactSeats() { const h = R.seats.filter(Boolean); R.seats = h.concat(new Array(Math.max(0, R.n - h.length)).fill(null)).slice(0, R.n); }
+// the host applies a request to sit or stand from anyone, itself included
+function seatFor(id, seat) {
+  const p = R.here.get(id); if (!p) return 'gone';
+  if (!(seat >= 0 && seat < R.n)) return 'bad';
+  const at = R.seats[seat];
+  if (at && at.id !== id) return 'taken';
+  R.seats = R.seats.map(s => s && s.id === id ? null : s);
+  R.seats[seat] = p; fixColors();
+  roomSend(rosterMsg()); lobbySend(roomAd()); renderRoom();
+  return 'ok';
+}
+function standFor(id) {
+  if (!R.seats.some(s => s && s.id === id)) return;
+  R.seats = R.seats.map(s => s && s.id === id ? null : s);
+  roomSend(rosterMsg()); lobbySend(roomAd()); renderRoom();
+}
+// this tab asks for a chair; the host answers with the seat list (or with a no if the chair is taken)
+function askSeat(seat) {
+  if (R.host) { const r = seatFor(R.hostId, seat); if (r === 'taken') notify('ที่นั่งนี้มีคนนั่งแล้ว', 2500); return; }
+  R.pend = { seat, n: 0 }; roomSend({ t: 'sit', seat }); renderRoom();
+}
+function askStand() {
+  R.pend = null;
+  if (R.host) { standFor(R.hostId); return; }
+  roomSend({ t: 'stand' });
+  R.seats = R.seats.map(s => s && s.id === pubId() ? null : s); renderRoom();
+}
 function roomMsg(d, pid) {
   if (!d || typeof d !== 'object') return;
   switch (d.t) {
     case 'hello': {
       const p = cleanProfile(d.p); if (!p) return;
+      if (R.host && !R.started && p.id === R.hostId) { roomSend({ t: 'dupe', host: true }, pid); return; }
+      // the same account in a newer tab or after a reload: the newer connection keeps the chair
+      for (const [k, v] of R.owners) if (v === p.id && k !== pid) { R.owners.delete(k); if (R.host && !R.started) roomSend({ t: 'dupe' }, k); }
       R.owners.set(pid, p.id); R.lastSeen.delete(p.id);
       if (R.started) {
         // someone (re)joins a running game: any peer may send the record, the joiner keeps the first one
@@ -11158,28 +11550,60 @@ function roomMsg(d, pid) {
         queueRender(); return;
       }
       if (R.host) {
-        if (!R.seats.some(s => s && s.id === p.id)) { const i = R.seats.findIndex((s, k) => k < R.n && !s); if (i >= 0 || R.seats.length < R.n) { if (i >= 0) R.seats[i] = p; else R.seats.push(p); } else R.spectators.add(pid); }
-        compactSeats(); fixColors(); roomSend(rosterMsg()); lobbySend(roomAd());
+        R.here.set(p.id, p);
+        R.seats = R.seats.map(s => s && s.id === p.id ? p : s);   // a renamed leader shows the new name
+        fixColors(); roomSend(rosterMsg());
       }
       renderRoom(); return;
+    }
+    case 'sit': {
+      if (!R.host || R.started) return;
+      const id = R.owners.get(pid), seat = int(d.seat);
+      if (!id || seat == null) return;
+      if (R.seats[seat] && R.seats[seat].id === id) { roomSend(rosterMsg(), pid); return; }
+      const r = seatFor(id, seat);
+      if (r !== 'ok') roomSend({ t: 'sitno', seat, why: r }, pid);
+      return;
+    }
+    case 'stand': { if (R.host && !R.started) { const id = R.owners.get(pid); if (id) standFor(id); } return; }
+    case 'sitno': {
+      if (R.host || !R.pend || int(d.seat) !== R.pend.seat) return;
+      R.pend = null; notify(d.why === 'taken' ? 'ที่นั่งนี้มีคนนั่งแล้ว เลือกที่อื่นได้เลย' : 'ขอนั่งไม่สำเร็จ ลองอีกครั้ง', 3000); renderRoom(); return;
+    }
+    case 'dupe': {
+      if (R.host || R.started) return;
+      const host = !!d.host;
+      closeGameRoom(); history.replaceState(null, '', location.pathname + location.search);
+      showLobby();
+      dialog2(`<h2>${ICON('x')} ${host ? 'บัญชีนี้เป็นผู้สร้างห้องนี้อยู่แล้ว' : 'บัญชีนี้เข้าห้องจากอีกหน้าต่างแล้ว'}</h2>
+        <p class="small">${host ? 'ห้องนี้เปิดอยู่ในอีกแท็บด้วยบัญชีเดียวกับแท็บนี้ ผู้เล่นหนึ่งคนนั่งได้ที่เดียว ถ้าจะลองเล่นสองคนบนเครื่องเดียว ให้ออกจากระบบในแท็บนี้ แท็บนี้จะเป็นผู้เยี่ยมชมคนใหม่ แล้วเข้าห้องอีกครั้ง' : 'บัญชีเดียวกันเปิดห้องนี้จากหน้าต่างหรือเครื่องอื่น ที่นั่งย้ายไปอยู่กับหน้าต่างล่าสุด แท็บนี้จึงออกจากห้อง'}</p>
+        <div class="mfoot"><button class="btn primary" id="dp-ok">เข้าใจแล้ว</button></div>`).querySelector('#dp-ok').onclick = closeDialog2;
+      return;
     }
     case 'roster': {
       if (R.host || R.started) return;
       R.hostId = str(d.host, 16); R.n = int(d.n) === 3 ? 3 : 4; R.rules = RULESETS[d.rules] ? d.rules : '0.3'; R.level = AI.LEVELS[d.level] ? d.level : 'normal';
       R.seats = (Array.isArray(d.seats) ? d.seats : []).slice(0, 4).map(cleanProfile);
+      while (R.seats.length < R.n) R.seats.push(null);
+      R.here = new Map((Array.isArray(d.here) ? d.here : []).slice(0, 12).map(cleanProfile).filter(Boolean).map(p => [p.id, p]));
+      R.away = (Array.isArray(d.away) ? d.away : []).slice(0, 4).map(x => str(x, 16));
       R.styles = (Array.isArray(d.styles) ? d.styles : []).slice(0, 4).map(s => STYLE_KEYS.includes(s) ? s : 'balanced');
-      renderRoom(); return;
+      const first = !R.gotRoster; R.gotRoster = true; R.hostGone = false;
+      if (R.pend && R.seats[R.pend.seat] && R.seats[R.pend.seat].id === pubId()) R.pend = null;
+      const key = JSON.stringify([R.seats, [...R.here.keys()], R.away, R.n, R.rules, R.level, R.styles, R.pend && R.pend.seat]);
+      if (first || key !== R.rosterKey) { R.rosterKey = key; renderRoom(); }
+      return;
     }
     case 'start': {
       if (R.started || R.host) return;
       const cfg = cleanCfg(d.cfg); if (!cfg) return;
-      R.started = true; R.cfg = cfg; R.wantSync = false;
+      R.started = true; R.cfg = cfg; R.wantSync = false; clearInterval(R.loop);
       beginOnlineGame(cfg); return;
     }
     case 'sync': {
       if (!R.wantSync) return;
       const cfg = cleanCfg(d.cfg); if (!cfg || !Array.isArray(d.log)) return;
-      R.wantSync = false; R.started = true; R.cfg = cfg;
+      R.wantSync = false; R.started = true; R.cfg = cfg; clearInterval(R.loop);
       const log = d.log.filter(x => Array.isArray(x) && int(x[0]) != null).map(([k, e]) => [k, cleanAns(e)]).filter(x => x[1]);
       const take = {}; if (d.take && typeof d.take === 'object') for (const k of Object.keys(d.take)) { const t = d.take[k]; if (/^\d$/.test(k) && t && int(t.from) != null) take[k] = { from: t.from, to: int(t.to) }; }
       startGame(cfg, { replay: log, takeover: take, net: gameNet(), room: R.code });
@@ -11211,35 +11635,71 @@ function cleanCfg(c) {
   const dice = c.dice && Array.isArray(c.dice.order) && Array.isArray(c.dice.rolls) ? { order: c.dice.order.map(int).filter(x => x != null && x < 4), rolls: c.dice.rolls.slice(0, 12).map(r => ({ who: (r.who || []).map(int).filter(x => x != null), vals: (r.vals || []).map(int).filter(x => x != null) })) } : null;
   return { mode: 'online', rules: c.rules, seed: c.seed >>> 0, seats, dice };
 }
+// a change from the network redraws at most every quarter second
+let roomT = null;
+function renderRoomSoon() { clearTimeout(roomT); roomT = setTimeout(renderRoom, 250); }
+function roomStatusHtml() {
+  const peers = R.net && R.net.peers ? R.net.peers().length : 0;
+  if (R.hostGone) return `<p class="rstat bad">${ICON('x')} ผู้สร้างห้องออกไปแล้ว ห้องนี้ปิด กลับไปล็อบบี้เพื่อเข้าห้องอื่น</p>`;
+  if (!R.host && !R.gotRoster) {
+    const sec = Math.round((Date.now() - R.t0) / 1000);
+    return `<p class="rstat wait"><span class="spin sm"></span> กำลังติดต่อผู้สร้างห้อง · ส่งคำทักไปแล้ว ${R.tries + 1} ครั้ง · ${sec} วินาที · เชื่อมกับผู้เล่นในห้องแล้ว ${peers} คน
+      ${R.tries >= 3 ? `<button class="btn sm" id="r-retry">เชื่อมต่อใหม่</button><span class="tiny muted"> ถ้านานเกินหนึ่งนาที ให้ตรวจรหัสห้อง หรือให้ผู้สร้างห้องเปิดหน้าห้องค้างไว้</span>` : ''}</p>`;
+  }
+  if (R.pend) return `<p class="rstat wait"><span class="spin sm"></span> กำลังขอนั่งที่นั่ง ${R.pend.seat + 1} รอผู้สร้างห้องยืนยัน</p>`;
+  if (!amSeated()) return `<p class="rstat go">${ICON('crown')} เข้าห้องแล้ว กดปุ่ม <b>นั่งที่นี่</b> บนเก้าอี้ว่างเพื่อเข้าร่วมเกม ถ้าไม่นั่ง ท่านจะได้ดูเกมอย่างเดียว</p>`;
+  return `<p class="rstat ok">${ICON('star')} ท่านนั่งแล้ว${R.host ? ' กดเริ่มเกมเมื่อเพื่อนนั่งครบ' : ' รอผู้สร้างห้องเริ่มเกม'} · เชื่อมกับผู้เล่นในห้อง ${peers} คน</p>`;
+}
 function renderRoom() {
-  if (R.started || !R.code) return;
+  if (R.started || !R.code || R.rejoin) return;   // a returning player sees the rejoin screen until the game record arrives
   const prevIn = document.getElementById('r-chatin'), keepTxt = prevIn ? prevIn.value : '', keepFocus = prevIn && document.activeElement === prevIn;
   setTimeout(() => { const ni = document.getElementById('r-chatin'); if (ni && keepTxt && !ni.value) ni.value = keepTxt; if (ni && keepFocus) ni.focus(); }, 0);
   const lu = new URL(location.href); lu.searchParams.delete('ns'); lu.hash = 'room=' + R.code;
   const link = lu.toString();
+  const me = pubId(), mine = amSeated(), canAct = R.gotRoster && !R.hostGone;
   const seats = [];
   for (let i = 0; i < R.n; i++) {
     const s = R.seats[i];
-    seats.push(s ? `<div class="sseat${s.id === pubId() ? ' me' : ''}" style="--pc:${esc(s.color)}">${flagHtml(s, 'lg')}<div><b>${esc(s.state || 'ชื่อสุ่มอัลธาลานี')}</b><div class="tiny muted">${esc(fullLeader(s))}${s.id === R.hostId ? ' · ผู้สร้างห้อง' : ''}${s.id === pubId() ? ' · คุณ' : ''}</div></div></div>`
-      : `<div class="sseat empty"><span class="flag lg ghostflag">${ICON('cloak')}</span><div class="grow"><b>ที่นั่งว่าง</b><div class="tiny muted">ถ้าเริ่มเกมตอนนี้ AI เล่นแทน</div>${R.host ? `<select data-style="${i}">${STYLE_KEYS.map(k => `<option value="${k}"${R.styles[i] === k ? ' selected' : ''}>${esc(AI.STYLES[k].name)}</option>`).join('')}</select>` : ''}</div></div>`);
+    if (s) {
+      const isMe = s.id === me, away = R.away.includes(s.id);
+      seats.push(`<div class="sseat${isMe ? ' me' : ''}${away ? ' away' : ''}" style="--pc:${esc(s.color)}">${flagHtml(s, 'lg')}<div class="grow"><b>${esc(s.state || 'ชื่อสุ่มอัลธาลานี')}</b><div class="tiny muted">${esc(fullLeader(s))}${s.id === R.hostId ? ' · ผู้สร้างห้อง' : ''}${isMe ? ' · คุณ' : ''}${away ? ' · หลุดการเชื่อมต่อ รอกลับมา' : ''}</div></div>${isMe && canAct ? '<button class="btn sm ghost" id="r-stand">ลุกจากที่นั่ง</button>' : ''}</div>`);
+    } else {
+      const pend = R.pend && R.pend.seat === i;
+      seats.push(`<div class="sseat empty"><span class="flag lg ghostflag">${ICON('cloak')}</span><div class="grow"><b>ที่นั่ง ${i + 1} ว่าง</b><div class="tiny muted">ถ้าเริ่มเกมตอนนี้ AI เล่นแทน</div>${R.host ? `<select data-style="${i}" aria-label="สไตล์ AI ที่นั่ง ${i + 1}">${STYLE_KEYS.map(k => `<option value="${k}"${R.styles[i] === k ? ' selected' : ''}>${esc(AI.STYLES[k].name)}</option>`).join('')}</select>` : ''}</div>
+        ${canAct ? `<button class="btn sm ${mine ? '' : 'primary'}" data-sit="${i}"${pend ? ' disabled' : ''}>${pend ? 'กำลังขอนั่ง' : mine ? 'ย้ายมานั่งที่นี่' : 'นั่งที่นี่'}</button>` : ''}</div>`);
+    }
   }
+  const standing = [...R.here.values()].filter(p => !R.seats.some(s => s && s.id === p.id));
+  if (!R.host && R.gotRoster && !mine && !standing.some(p => p.id === me)) standing.push(pubProfile(false));
+  const hereHtml = standing.length ? `<div class="rhere"><span class="tiny muted">ยืนดูอยู่ในห้อง</span>${standing.map(p => `<span class="rh" style="--pc:${esc(p.color)}">${flagHtml(p, 'xs')} ${esc(fullLeader(p))}${p.id === me ? ' (คุณ)' : ''}</span>`).join('')}</div>` : '';
   app.innerHTML = `<div class="page room"><div class="page-h"><button class="btn sm" id="r-back">ออกจากห้อง</button><h1>ห้อง ${esc(R.code)}</h1><span class="grow"></span><button class="btn sm" id="r-copy">คัดลอกลิงก์ชวนเพื่อน</button></div>
-    <div class="lgrid two"><div class="box"><h2>ที่นั่ง</h2><div class="sseats">${seats.join('')}</div>
+    ${roomStatusHtml()}
+    <div class="lgrid two"><div class="box"><h2>ที่นั่ง</h2><div class="sseats">${seats.join('')}</div>${hereHtml}
       ${R.host ? `<div class="kv" style="margin-top:12px"><label for="r-n">จำนวนรัฐ</label><span><select id="r-n"><option value="3"${R.n === 3 ? ' selected' : ''}>3 รัฐ</option><option value="4"${R.n === 4 ? ' selected' : ''}>4 รัฐ</option></select></span>
-        <label for="r-rules">ชุดกฎ</label><span><select id="r-rules">${rulesetOpts(R.rules)}</select></span>
+        ${devView() ? `<label for="r-rules">ชุดกฎ</label><span><select id="r-rules">${rulesetOpts(R.rules)}</select> <span class="tiny muted">หลังบ้าน · เห็นเฉพาะผู้พัฒนา</span></span>` : ''}
         <label for="r-level">ความยาก AI</label><span><select id="r-level">${levelOpts(R.level)}</select> <span class="tiny muted">ใช้กับที่นั่งที่ AI เล่นแทน</span></span></div>
-        <div class="row" style="margin-top:14px"><button class="btn primary big" id="r-start">${ICON('dice')} ทอยลูกเต๋าและเริ่มเกม</button></div>`
-      : `<p class="small muted">${R.hostId ? 'รอผู้สร้างห้องเริ่มเกม' : 'กำลังติดต่อผู้สร้างห้อง'} · ชุดกฎ ${esc((RULESETS[R.rules] || {}).label || '')} · AI ระดับ${esc((AI.LEVELS[R.level] || AI.LEVELS.normal).name)}</p>`}
+        <div class="row" style="margin-top:14px"><button class="btn primary big" id="r-start">${ICON('dice')} ทอยลูกเต๋าและเริ่มเกม</button><span class="tiny muted">คนที่ยังยืนอยู่ได้ดูเกม ที่นั่งว่างเป็นของ AI</span></div>`
+      : `<p class="small muted">${R.gotRoster ? 'รอผู้สร้างห้องเริ่มเกม' : 'กำลังติดต่อผู้สร้างห้อง'}${devView() ? ' · ชุดกฎ ' + esc((RULESETS[R.rules] || {}).label || '') : ''} · AI ระดับ${esc((AI.LEVELS[R.level] || AI.LEVELS.normal).name)}</p>`}
       <p class="tiny muted">ลิงก์ห้อง: <code>${esc(link)}</code></p></div>
       <div class="box"><h2>แชทในห้อง</h2><div id="r-chat" class="chatlog">${R.chat.map(chatLine).join('') || '<p class="tiny muted">ทักทายเพื่อนร่วมโต๊ะได้ที่นี่</p>'}</div><form id="r-chatf" class="chatform"><input id="r-chatin" maxlength="300" autocomplete="off" placeholder="พิมพ์ข้อความ"><button class="btn sm primary">ส่ง</button></form></div></div></div>`;
   const q = s => app.querySelector(s);
   q('#r-back').onclick = () => { closeGameRoom(); history.replaceState(null, '', location.pathname + location.search); showLobby(); };
   q('#r-copy').onclick = async () => { try { await navigator.clipboard.writeText(link); q('#r-copy').textContent = 'คัดลอกแล้ว'; } catch (e) { exportText('ลิงก์ห้อง', 'room.txt', link); } };
   q('#r-chatf').onsubmit = e => { e.preventDefault(); const inp = q('#r-chatin'); const t = inp.value.trim(); if (t) { inp.value = ''; sendChat(t); renderRoom(); } };
+  app.querySelectorAll('[data-sit]').forEach(b => b.onclick = () => { sfx('tick'); askSeat(+b.dataset.sit); });
+  const st = q('#r-stand'); if (st) st.onclick = askStand;
+  const rt = q('#r-retry'); if (rt) rt.onclick = () => { const c = R.code; openGameRoom(c, false); };
   const ch = q('#r-chat'); ch.scrollTop = ch.scrollHeight;
   if (R.host) {
-    q('#r-n').onchange = e => { R.n = +e.target.value; compactSeats(); roomSend(rosterMsg()); lobbySend(roomAd()); renderRoom(); };
-    q('#r-rules').onchange = e => { R.rules = e.target.value; roomSend(rosterMsg()); renderRoom(); };
+    q('#r-n').onchange = e => {
+      R.n = +e.target.value;
+      // a chair that disappears sends its player to a free chair, or to stand
+      const gone = R.seats.slice(R.n).filter(Boolean); R.seats = R.seats.slice(0, R.n);
+      while (R.seats.length < R.n) R.seats.push(null);
+      for (const p of gone) { const i = R.seats.indexOf(null); if (i >= 0) R.seats[i] = p; }
+      roomSend(rosterMsg()); lobbySend(roomAd()); renderRoom();
+    };
+    if (q('#r-rules')) q('#r-rules').onchange = e => { R.rules = e.target.value; roomSend(rosterMsg()); renderRoom(); };
     q('#r-level').onchange = e => { R.level = e.target.value; roomSend(rosterMsg()); renderRoom(); };
     app.querySelectorAll('[data-style]').forEach(s => s.onchange = e => { R.styles[+e.target.dataset.style] = e.target.value; roomSend(rosterMsg()); });
     q('#r-start').onclick = hostStart;
@@ -11256,7 +11716,7 @@ function hostStart() {
   }
   const dice = diceOrder(draft.length, K.rng(seed ^ 0xd1ce));
   const cfg = { mode: 'online', rules: R.rules, seed, seats: orderSeats(draft, dice), dice };
-  R.started = true; R.cfg = cfg;
+  R.started = true; R.cfg = cfg; clearInterval(R.loop);
   lobbySend({ t: 'unroom', code: R.code });
   roomSend({ t: 'start', cfg });
   beginOnlineGame(cfg);
@@ -11360,7 +11820,7 @@ function stateHash() {
 }
 
 // =====================================================================
-window.UI = { menu: showMenu, state: () => G, session: () => S, answer, settings, startGame, profile: () => profile, hof: hofLocal, room: () => R, lobby: () => L, pending: () => pending };
+window.UI = { menu: showMenu, state: () => G, session: () => S, answer, settings, startGame, profile: () => profile, hof: hofLocal, room: () => R, lobby: () => L, pending: () => pending, myId: () => pubId(), account: () => acct };
 if (/room=/.test(location.hash) && netAvailable()) needProfile(showLobby); else showMenu();
 presenceBoot();
 

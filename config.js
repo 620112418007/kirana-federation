@@ -5,5 +5,5 @@
                  ว่างไว้ = ผู้ชนะต้องกดส่งเข้าหอเกียรติยศผ่าน GitHub เอง */
 window.FED_CONFIG = {
   googleClient: '286580144013-1nedsastjt4f84r2o8o7plekhmjcktsm.apps.googleusercontent.com',
-  hofEndpoint: '',
+  hofEndpoint: 'https://script.google.com/macros/s/AKfycbxzSVlfrSToxawT6Vlq2VVom_a5oPEqVoPlzh4-tD8Vz0JSRW-BRq_7Q8jfreeGkP02/exec',
 };

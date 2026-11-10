@@ -44,12 +44,14 @@ if (title.startsWith('[HOF]')) {
 if (title.startsWith('[COMMENT]')) {
   const text = str(d.text, 280).trim();
   if (!text || typeof d.id !== 'string' || !/^[a-z0-9]{1,16}$/.test(d.id)) done('ความคิดเห็นว่างหรือรหัสไม่ถูกต้อง');
-  const c = { id: d.id, leader: str(d.leader, 24) || 'ผู้เล่น', title: str(d.title, 32), state: str(d.state, 24), text, at: str(d.at, 16), by: str(d.by, 16), gh: str(author, 40) };
+  const c = { id: d.id, leader: str(d.leader, 24) || 'ผู้เล่น', title: str(d.title, 32), state: str(d.state, 24), text, at: str(d.at, 23), by: str(d.by, 16), gh: str(author, 40) };
+  // the star rating is optional: only a whole number from 1 to 5 is kept
+  if (Number.isInteger(d.stars) && d.stars >= 1 && d.stars <= 5) c.stars = d.stars;
   const file = 'data/comments.json';
   const list = read(file);
   if (list.some(x => x.id === c.id)) done('ความคิดเห็นนี้บันทึกไว้แล้ว');
   list.unshift(c);
   write(file, list.slice(0, 300));
-  done(`บันทึกความคิดเห็นของ ${(c.title ? c.title + ' ' : '') + c.leader} แล้ว`);
+  done(`บันทึกความคิดเห็นของ ${(c.title ? c.title + ' ' : '') + c.leader}${c.stars ? ` พร้อม ${c.stars} ดาว` : ''} แล้ว`);
 }
 done('ชื่อ issue ไม่ได้ขึ้นต้นด้วย [HOF] หรือ [COMMENT]');

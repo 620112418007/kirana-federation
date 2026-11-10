@@ -49,5 +49,65 @@
   "by": "6l123j",
   "gh": "620112418007",
   "lvl": "normal"
+ },
+ {
+  "v": 1,
+  "id": "1054egk",
+  "at": "2026-11-10",
+  "mode": "solo",
+  "rules": "0.43",
+  "n": 4,
+  "seed": 1880691737,
+  "leader": "สเตลลาร์ อัลดริช",
+  "title": "อาร์ชบิชอป",
+  "traits": [
+   "เด็ดขาด",
+   "เยือกเย็น",
+   "เคร่งศาสนา"
+  ],
+  "state": "อารามแห่งเนเซลเร็ค",
+  "latin": "",
+  "meaning": "",
+  "color": "#ef7070",
+  "flag": {
+   "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAgCAYAAABU1PscAAAD3UlEQVR4AdRXW0hUURRdjuOMZT7mNipRWWHRy55kJQkRfvQRPaCPHlIUQc+Pgl5WREXRQH89iYoogvroo4+ISDD60BhTjMhSSi0QQhtfjMo4Ot7p7uOc6Y5zxpkzd/wQZp2zz9777L3WfY+pFvBPVEDjbtKGCflbFWA94QQQcUKAP8ZFgO3KYuS+Lg7B5E3TeM+4Zz1xXiRhApQbS4OELSttvH5wTj+cH4ybMsxBfywGESeIcg0LSEpNZsRSFmaI6jOf510bXHur0b65ksGyJIvtYcEoQyTifJshAZln5yPnZRGvFTr7wcgSafedJqjdQ8H4QFUHiwUdAoOIEwShEFfcAjJPzENqcXZIMb5wlTrRvqWSL6XnWIjzonELSC3J5TVCZjriqtsX4ot1QcQJseZTXlwC6AlDm0fDVVo92hXzWpY4LywtwLIsi+8NnVU/VPf/65yCyTlWmOxWMiOCiBMiJkQJSAuwXSsQlmzfWhX08zM0/NcLtcPL/NzHFoHBCPFAicS/yExTzMInDN0b1mI760vECWxhcJA7A0nibkPf3Syg3FwOtc+HKaV57DlvcyyBcmsFs1MKMuCt7GA2S07QICVAcSwVtu1xNMCkWOD3DIPOgHlRJsuzFGQiZU4as18V2XFp3VRcedTC1okapASYbCnCvmrPEKZqR3qosRfZL9ai58JXlkeXDTO04fLDFtwvW4i3HztxZPt0zZOYn5QAtX9Y2DUpLRmu/Z+Qtn0Gi1vXKFB7BkHX+Uzt84E5A4PzcSGevmkLrIxPUgL6HotP/6QNObCuVjD8x4PuS9/g+9UPU5YFz68WoOLuSsby+I6ZKDpQg37tMvP7te8M5jU+SAkYrHcLO6Yfyoe3qhNdp7/AuTEX73flgY787ov1KDlWx+xt67NRuCgDx240wuNVhXXicUoJiNagfM8sHHQ04uTNn2GpG47W4dUHF1rbB8JiRhzSAtR+n7BfbdkClN1thuNoPizmpLAcW7oZG9cq+NHqCYsZcUgIGGnj2ukcMUaNm9bZmefcvWYM+vx4cG4BWrV/ZYTz+2aju9eHd84ulpPIQVoANfdWd9IUBiLLnXQp0X1AuP7kN3cnfI5LwNxrDRGJ6EVETEpgQEoAPdcJ1J+OLM0ikAh7lvilJ8o34otZACeubzaWiM/P1rB7gB6f+j16u6RQ0S/jsqMKIOKESNVJBCFS/Pap+UwInRU9KL+ixvhNPaaAsYgTAT1IRF6U/8EvytvYS41y9XuN2EIBRJwgW5i+EIhcJJy53SRbMmp+mIB4iEftMo4JQQFEnDCOvcalNBMwEYnzo/EPAAD//0DU0KUAAAAGSURBVAMAQs9r7DI5NpoAAAAASUVORK5CYII="
+  },
+  "score": 24,
+  "legit": 25,
+  "stigma": 1,
+  "grav": 4,
+  "research": {
+   "culture": 3,
+   "innovation": 4,
+   "building": 2
+  },
+  "military": 15,
+  "projects": 3,
+  "style": {
+   "label": "รัฐวิทยาการสายทหาร",
+   "desc": "วิจัยเป็นแกนมากกว่าโต๊ะทั่วไป 34% เสริมด้วยทหาร · ฐานอุดมการณ์หนักไปทางประชาชน (4 สัญลักษณ์)",
+   "key": "lab+war"
+  },
+  "margin": 10,
+  "opp": [
+   {
+    "state": "อันวาลดา",
+    "score": 14,
+    "ai": true
+   },
+   {
+    "state": "กัลลาน",
+    "score": 12,
+    "ai": true
+   },
+   {
+    "state": "ลูอินเวอร์ด",
+    "score": 6,
+    "ai": true
+   }
+  ],
+  "by": "l45jbm",
+  "gh": "620112418007",
+  "lvl": "normal"
  }
 ]

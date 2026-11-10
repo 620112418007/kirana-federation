@@ -52,6 +52,61 @@
  },
  {
   "v": 1,
+  "id": "4r0988",
+  "at": "2026-11-10",
+  "mode": "solo",
+  "rules": "0.43",
+  "n": 3,
+  "seed": 1808536755,
+  "leader": "หมอก",
+  "title": "",
+  "traits": [
+   "ตรงไปตรงมา",
+   "ขี้เกียจ",
+   "ดื้อรั้น"
+  ],
+  "state": "มูลิเคห์",
+  "latin": "",
+  "meaning": "",
+  "color": "#4fb3e8",
+  "flag": {
+   "img": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAgCAYAAABU1PscAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAMKADAAQAAAABAAAAIAAAAAC71/uOAAAB0UlEQVRYCdVYMVLDQAyMAzwgL0hPlSY8CBqeRAOPSQkNX8gLmKFlIGQPdkY4J1vSyfFwjeyLJe1q73SOu/fd5rCojNf7q8rsfFObh49q8mV19jgJh9XNl/bz2eaBQQMPEJ2mgEQ4lxpDwIlPVYAPwBY1tudTY3XMZQEPbN3uenuAw/ruE/ejY2o1rMD3jxeLt5flDwGiNjs/HZ2fTeIx9KjFWl/f+otYFJDRo4FkDO91S+FOCDC5OeivlPTz2IylqxIAkIwEGqGsAg0SYHJzMsPeyF6iJgJFjeAmYxFgMwvBuGYCdDCDEHtjyqXoJgAiHkAkPmbZ18ee6/8eauY4QDIPNMRCzMi4jDjRB4k9m5J+tHvDpuezmo3RFtFwIkfUKFVPOM2bCQgus1w2E8ASsnYmyRA+8G0doS7EpBHg9JU2sgTpH1IAbTQLPIAUNYL/N9wKWIHLvu45N7xqmAl42qUGwkze0V5NBDITZxSC6x92kMCU0puLIt6pJHBeqwSyEjBRzWYU6IRAtsQ14P05c7Eqe+MPgZZAfVDe+2jhCoEMKb2AtefNReRnFcuXOSSTfV1LnjXvKei//7Q4SCDjfb1VlbG9oRLQTtNWQFF/bW98A0v+FCeCSlkDAAAAAElFTkSuQmCC"
+  },
+  "score": 26,
+  "legit": 29,
+  "stigma": 3,
+  "grav": 72,
+  "research": {
+   "culture": 2,
+   "innovation": 5,
+   "building": 2
+  },
+  "military": 11,
+  "projects": 6,
+  "style": {
+   "label": "รัฐพาณิชย์",
+   "desc": "ค้าขายเป็นแกนมากกว่าโต๊ะทั่วไป 25% · ฐานอุดมการณ์หนักไปทางประเพณี (4 สัญลักษณ์)",
+   "key": "trade"
+  },
+  "margin": 0,
+  "opp": [
+   {
+    "state": "ซอสา",
+    "score": 26,
+    "ai": true
+   },
+   {
+    "state": "สตาห์ลา",
+    "score": 13,
+    "ai": true
+   }
+  ],
+  "by": "18ist3z",
+  "gh": "IsawaP27",
+  "lvl": "easy"
+ },
+ {
+  "v": 1,
   "id": "1054egk",
   "at": "2026-11-10",
   "mode": "solo",

@@ -1603,6 +1603,7 @@ body.vn-room .modal:not(.hidden) { padding-bottom: calc(var(--vn-room, 0px) + 30
     <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 2.5h12.5A1.5 1.5 0 0 1 19 4v15H6.5a1.5 1.5 0 0 0 0 3H19v-1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5 2.5h12.5A1.5 1.5 0 0 1 19 4v15H6.5A1.5 1.5 0 0 0 5 20.5z"/></symbol>
     <symbol id="i-scroll" viewBox="0 0 24 24"><path d="M6 3h12a2.5 2.5 0 0 1 0 5h-1v11a2.5 2.5 0 0 1-2.5 2.5H5A2.5 2.5 0 0 1 2.5 19v-1H14v1a1 1 0 0 0 2 0V5.5A2.5 2.5 0 0 0 13.5 3z"/><path d="M7 8.5h7M7 12h7M7 15.5h5" stroke="rgba(0,0,0,.35)" stroke-width="1.4"/></symbol>
     <symbol id="i-brush" viewBox="0 0 24 24"><path d="M20.5 2.5c.9.9-5.6 9-8 11.4l-2.4-2.4C12.5 9.1 19.6 1.6 20.5 2.5z"/><path d="M9.4 12.4l2.2 2.2c-.3 2.6-1.8 4.8-4.4 5.4-1.6.4-3.7.1-4.7-.5 1.7-.8 2.1-2.1 2.3-3.4.4-2.3 2.5-3.8 4.6-3.7z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><path d="M7 10.5V7.5a5 5 0 0 1 10 0v3h-2.2v-3a2.8 2.8 0 0 0-5.6 0v3z"/><rect x="4.5" y="10.5" width="15" height="11" rx="2"/><path d="M12 13.6a1.7 1.7 0 0 0-.9 3.15V19h1.8v-2.25A1.7 1.7 0 0 0 12 13.6z" fill="rgba(0,0,0,.45)"/></symbol>
     <symbol id="i-eye" viewBox="0 0 24 24"><path d="M12 5C6.5 5 2.7 9.4 1.5 12c1.2 2.6 5 7 10.5 7s9.3-4.4 10.5-7C21.3 9.4 17.5 5 12 5z"/><circle cx="12" cy="12" r="3.6" fill="rgba(0,0,0,.45)"/></symbol>
     <symbol id="i-x" viewBox="0 0 24 24"><path d="M5.6 3.9L12 10.3l6.4-6.4 1.7 1.7-6.4 6.4 6.4 6.4-1.7 1.7-6.4-6.4-6.4 6.4-1.7-1.7 6.4-6.4-6.4-6.4z"/></symbol>
     <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="5" r="1.8"/><circle cx="15" cy="5" r="1.8"/><circle cx="9" cy="12" r="1.8"/><circle cx="15" cy="12" r="1.8"/><circle cx="9" cy="19" r="1.8"/><circle cx="15" cy="19" r="1.8"/></symbol>
@@ -10558,7 +10559,7 @@ function startGame(cfg, o) {
   document.body.classList.remove('vn-room');   // the tutorial's extra room at the bottom of the page
   const replay = o.replay ? new Map(o.replay.map(([k, v]) => [+k, v])) : null;
   S = { cfg, mode: cfg.mode, me: pubId(), seq: 0, log: new Map(), replay, replayMax: replay ? Math.max(0, ...replay.keys()) : 0, replaying: !!(replay && replay.size),
-    takeover: Object.assign({}, o.takeover || {}), buffer: new Map(), waiting: new Map(), net: o.net || null, room: o.room || null, yieldN: 0,
+    takeover: Object.assign({}, o.takeover || {}), buffer: new Map(), waiting: new Map(), net: o.net || null, room: o.room || null, lock: o.lock || '', yieldN: 0,
     tutorial: cfg.mode === 'tutorial' ? { seen: new Set(), on: true } : null, hashes: {}, chat: [], unread: 0 };
   if (S.net && S.net.attach) S.net.attach(S);
   const rs = RULESETS[cfg.rules] || RULESETS[DEFAULT_RULES];
@@ -10581,9 +10582,10 @@ function startGame(cfg, o) {
     modal.querySelector('#err-menu').onclick = () => showMenu();
   });
 }
-function leaveGame() {
+function leaveGame(o) {
   statsGameQuit(false);
-  if (S && S.net && S.net.leave) S.net.leave();
+  // keepRoom: a finished online game goes back to its room (backToRoom), so the room's connection stays open
+  if (S && S.net && S.net.leave && !(o && o.keepRoom)) S.net.leave();
   token++; G = null; S = null; pending = null; askQueue.length = 0; paused = false;
   closeModal(); closeDialog2(); hideTip();
 }
@@ -10733,7 +10735,7 @@ function saveGame() {
   if (!S || !G || G.over || S.mode === 'tutorial' || S.mode === 'watch' || S.devReplay) return;
   S.cfg.playMs = statsPlayMs();   // time at the table so far, so a resumed game reports its whole length
   if (!canSave()) { if (!S.unsavedTold) { S.unsavedTold = true; notify(`${ICON('scroll')} เกมนี้ไม่ถูกบันทึก ลงชื่อเข้าใช้ Google ที่หน้าเมนูก่อนเริ่มเกม เพื่อให้กลับมาเล่นต่อได้`, 6000); } return; }
-  store.set(saveKey(), { v: 1, cfg: S.cfg, log: [...S.log.entries()], takeover: S.takeover, round: G.round, era: G.era, at: Date.now(), room: S.room });
+  store.set(saveKey(), { v: 1, cfg: S.cfg, log: [...S.log.entries()], takeover: S.takeover, round: G.round, era: G.era, at: Date.now(), room: S.room, lock: S.lock || '' });
 }
 function clearSave() { if (S && S.mode !== 'tutorial' && S.mode !== 'watch' && canSave()) store.del(saveKey()); }
 const savedGame = k => canSave() ? store.get(acctKey(k), null) : null;
@@ -10986,6 +10988,7 @@ function buildLayout() {
 </div>`;
   const q = s => app.querySelector(s);
   q('#t-menu').onclick = async () => {
+    if (G && G.over && S && S.mode === 'online') { backToRoom(); return; }   // a finished online game leads back to its room only
     if (!G || G.over) { leaveGame(); showMenu(); return; }
     const solo = S.mode === 'solo';
     const last = S.mode === 'online' && lastInRoom();
@@ -12423,7 +12426,9 @@ function showEnd() {
   }).join('');
   const myRank = h ? sc.findIndex(x => x.P === h) + 1 : 0;
   const mine = h ? playstyle(h) : null;
-  const gh = rec && repoInfo() ? hofIssueURL(rec) : null;
+  // an online game ends with one button that takes everyone back to its room, and no way to any other page (ruled 11 Nov)
+  const toRoom = S.mode === 'online';
+  const gh = rec && repoInfo() && !toRoom ? hofIssueURL(rec) : null;
   const m = gameMetrics(G);
   const regs = G.stats.regimes.map(r => `<li>รอบ ${r.round}: <b>${esc(r.name)}</b> <span class="muted small">${esc(r.how)}</span></li>`).join('');
   const box = openModal(`<div class="endbox"><h2>${ICON('crown')} ${esc(win.name)} ชนะ</h2>
@@ -12434,7 +12439,8 @@ function showEnd() {
       <ol class="small">${regs}</ol>
       <table class="tbl"><tr><th>ตัวชี้วัด</th><th class="num">ค่า</th><th>เป้า</th><th>สถานะ</th></tr>${metricRows(m, false)}</table>
       <div class="small muted">รัฐประหารสำเร็จ ${m.coupWins} ครั้ง · เกิดในยุค I ${m.coupsEraI} ครั้ง · เวลาที่ใช้ ${((G.stats.endTime - G.stats.startTime) / 60000).toFixed(1)} นาที · ซีด ${G.seed}</div></details>
-    <div class="mfoot"><button class="btn" id="e-log">ส่งออกบันทึก</button><button class="btn" id="e-close">ดูโต๊ะต่อ</button><button class="btn" id="e-hof">หอเกียรติยศ</button><button class="btn primary" id="e-menu">กลับเมนู</button></div></div>`, 'wide');
+    <div class="mfoot">${toRoom ? `<button class="btn primary big" id="e-room">${ICON('chat')} ${roomOpen() ? 'กลับห้อง ' + esc(R.code) : 'กลับล็อบบี้'}</button>`
+      : '<button class="btn" id="e-log">ส่งออกบันทึก</button><button class="btn" id="e-close">ดูโต๊ะต่อ</button><button class="btn" id="e-hof">หอเกียรติยศ</button><button class="btn primary" id="e-menu">กลับเมนู</button>'}</div></div>`, 'wide');
   sfx(h && win === h ? 'win' : 'era');
   if (h && win === h) burst(box.querySelector('.pl.first'), '<i class="spk gold"></i>', 14);
   // a win is saved quietly: no line tells the player it was kept (ruled 10 Nov). It goes on to the online hall of fame by
@@ -12446,6 +12452,7 @@ function showEnd() {
     const net = S.net;
     acctWaiters.push(() => { hofAdd(rec); if (net && net.shareRecord) net.shareRecord(rec); afterSave(); });
   }
+  if (toRoom) { box.querySelector('#e-room').onclick = backToRoom; return; }
   box.querySelector('#e-log').onclick = () => exportText('บันทึกเกม', `federation-log-seed${G.seed}.txt`, logText());
   box.querySelector('#e-close').onclick = closeModal;
   box.querySelector('#e-hof').onclick = () => { leaveGame(); showHallOfFame(); };
@@ -13001,7 +13008,7 @@ function lobbyMsg(d, pid) {
   if (d.t === 'pres') { const p = cleanProfile(d.p); if (p) { L.peers.set(pid, { p, s: str(d.s, 60), a: d.a === 'g' || d.a === 'd' ? d.a : '', seen: Date.now() }); renderLobbyParts(); renderOnlinePill(); } }
   else if (d.t === 'room') {
     const code = str(d.code, 8).toUpperCase(); if (!/^[A-Z0-9]{4,8}$/.test(code)) return;
-    L.rooms.set(code, { code, peer: pid, host: str(d.host, 24), rules: str(d.rules, 8), n: int(d.n) || 4, humans: int(d.humans) || 1, seen: Date.now() }); renderLobbyParts();
+    L.rooms.set(code, { code, peer: pid, host: str(d.host, 24), rules: str(d.rules, 8), n: int(d.n) || 4, humans: int(d.humans) || 1, lock: d.lock === true, seen: Date.now() }); renderLobbyParts();
   } else if (d.t === 'unroom') { L.rooms.delete(str(d.code, 8).toUpperCase()); renderLobbyParts(); }
   else if (d.t === 'roomgone') {
     // the last player of a running game left its room: the room is gone for everyone, so the rejoin button goes too.
@@ -13023,15 +13030,19 @@ function showLobby() {
     <div class="lgrid">
       <div class="box"><h2>ผู้เล่นออนไลน์</h2><div id="l-peers" class="plist"></div></div>
       <div class="box"><h2>ห้องที่เปิดรับผู้เล่น</h2><div id="l-rooms" class="rlist"></div>
-        <div class="row" style="margin-top:12px"><button class="btn primary" id="l-create">${ICON('crown')} สร้างห้องใหม่</button><span class="grow"></span><input id="l-code" maxlength="8" placeholder="รหัสห้อง" style="width:110px;text-transform:uppercase"><button class="btn" id="l-join">เข้าห้อง</button></div>
-        <p class="tiny muted">ส่งรหัสห้องหรือลิงก์ให้เพื่อน เข้าห้องแล้วกดนั่งเก้าอี้ว่างหนึ่งตัว ที่นั่งที่ไม่มีคนนั่งตอนเริ่มเกม AI จะเล่นแทน ถ้ามีคนหลุดกลางเกม AI จะรับช่วงจนเขากลับมา สองแท็บในเครื่องเดียวกันเป็นผู้เล่นคนละคนเมื่อไม่ได้ใช้บัญชีเดียวกัน</p></div>
+        <div class="row" style="margin-top:12px"><button class="btn primary" id="l-create">${ICON('crown')} สร้างห้องใหม่</button><input id="l-newpw" maxlength="24" autocomplete="off" placeholder="รหัสผ่านห้อง (ไม่บังคับ)" style="flex:1;min-width:140px" title="ตั้งรหัสผ่าน แล้วคนที่จะเข้าห้องต้องกรอกรหัสนี้"></div>
+        <div class="row" style="margin-top:8px"><input id="l-code" maxlength="8" placeholder="รหัสห้อง" style="flex:1;min-width:110px;text-transform:uppercase"><button class="btn" id="l-join">เข้าห้อง</button></div>
+        <p class="tiny muted">ส่งรหัสห้องหรือลิงก์ให้เพื่อน เข้าห้องแล้วกดนั่งเก้าอี้ว่างหนึ่งตัว ที่นั่งที่ไม่มีคนนั่งตอนเริ่มเกม AI จะเล่นแทน ถ้ามีคนหลุดกลางเกม AI จะรับช่วงจนเขากลับมา สองแท็บในเครื่องเดียวกันเป็นผู้เล่นคนละคนเมื่อไม่ได้ใช้บัญชีเดียวกัน ห้องที่มีรูปกุญแจตั้งรหัสผ่านไว้ ขอรหัสผ่านจากผู้สร้างห้องก่อนเข้า</p></div>
       <div class="box"><h2>แชทล็อบบี้</h2><div id="l-chat" class="chatlog"></div><form id="l-chatf" class="chatform"><input id="l-chatin" maxlength="300" autocomplete="off" placeholder="ทักทายผู้เล่นคนอื่น"><button class="btn sm primary">ส่ง</button></form></div>
     </div></div>`;
   const q = s => app.querySelector(s);
   renderAcctChips();
   q('#p-back').onclick = () => { showMenu(); };
-  q('#l-create').onclick = () => openGameRoom(newRoomCode(), true);
-  q('#l-join').onclick = () => { const c = q('#l-code').value.trim().toUpperCase(); if (/^[A-Z0-9]{4,8}$/.test(c)) openGameRoom(c, false); };
+  q('#l-create').onclick = async () => {
+    const code = newRoomCode(), pw = q('#l-newpw').value.trim().slice(0, 24);
+    openGameRoom(code, true, pw ? { lock: await roomLockOf(code, pw), pw } : {});
+  };
+  q('#l-join').onclick = () => { const c = q('#l-code').value.trim().toUpperCase(); if (/^[A-Z0-9]{4,8}$/.test(c)) joinRoom(c); };
   q('#l-code').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) q('#l-join').click(); });
   q('#l-chatf').onsubmit = e => {
     e.preventDefault(); const inp = q('#l-chatin'); const t = inp.value.trim(); if (!t) return;
@@ -13039,7 +13050,7 @@ function showLobby() {
     L.chat.push(c); lobbySend({ t: 'lchat', c }); inp.value = ''; renderLobbyParts();
   };
   renderLobbyParts();
-  if (hashRoom) openGameRoom(hashRoom.toUpperCase(), false);
+  if (hashRoom) { if (/[#&]lock=1\b/.test(location.hash)) askRoomPassword(hashRoom.toUpperCase()); else joinRoom(hashRoom.toUpperCase()); }
 }
 function renderLobbyParts() {
   const pe = document.getElementById('l-peers');
@@ -13050,8 +13061,8 @@ function renderLobbyParts() {
   }
   const ro = document.getElementById('l-rooms');
   if (ro) {
-    setHTML(ro, [...L.rooms.values()].map(r => `<div class="ri"><b>${esc(r.code)}</b><span>${esc(r.host)}</span><span class="tiny muted">${r.humans}/${r.n} ที่นั่ง${devView() ? ' · ' + esc((RULESETS[r.rules] || {}).label || r.rules) : modeTag(r.rules) ? ' · โหมด' + esc(modeTag(r.rules)) : ''}</span><span class="grow"></span><button class="btn sm primary" data-room="${esc(r.code)}">เข้าร่วม</button></div>`).join('') || '<p class="tiny muted">ยังไม่มีห้องเปิด สร้างห้องเองได้เลย</p>');
-    ro.querySelectorAll('[data-room]').forEach(b => b.onclick = () => openGameRoom(b.dataset.room, false));
+    setHTML(ro, [...L.rooms.values()].map(r => `<div class="ri"><b>${esc(r.code)}</b><span>${esc(r.host)}</span><span class="tiny muted">${r.lock ? `${ICON('lock')} ล็อก · ` : ''}${r.humans}/${r.n} ที่นั่ง${devView() ? ' · ' + esc((RULESETS[r.rules] || {}).label || r.rules) : modeTag(r.rules) ? ' · โหมด' + esc(modeTag(r.rules)) : ''}</span><span class="grow"></span><button class="btn sm primary" data-room="${esc(r.code)}">เข้าร่วม</button></div>`).join('') || '<p class="tiny muted">ยังไม่มีห้องเปิด สร้างห้องเองได้เลย</p>');
+    ro.querySelectorAll('[data-room]').forEach(b => b.onclick = () => joinRoom(b.dataset.room));
   }
   const ch = document.getElementById('l-chat');
   if (ch) { const atB = ch.scrollTop + ch.clientHeight >= ch.scrollHeight - 20; setHTML(ch, L.chat.map(chatLine).join('') || '<p class="tiny muted">ยังไม่มีข้อความ</p>'); if (atB) ch.scrollTop = ch.scrollHeight; }
@@ -13066,9 +13077,73 @@ function newRoomCode() { const a = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s = ''
 // over from the first, except the host's own account, which cannot join its own room twice.
 // =====================================================================
 const R = { code: null, net: null, host: false, hostId: null, seats: [], here: new Map(), n: 4, rules: DEFAULT_RULES, level: 'normal', styles: ['balanced', 'warlord', 'merchant', 'builder'], owners: new Map(), started: false, cfg: null, chat: [], ctl: [], seenAns: new Set(), lastSeen: new Map(), hashes: {}, spectators: new Set(), takeTimer: null,
-  gotRoster: false, tries: 0, t0: 0, pend: null, loop: null, rosterKey: '', away: [], rejoin: false };
+  gotRoster: false, tries: 0, t0: 0, pend: null, loop: null, rosterKey: '', away: [], rejoin: false, lock: '', pw: '', gen: 0, moving: 0 };
 const SEAT_GRACE = 20000;      // a seated player who drops out keeps the chair this long before it is freed
-const roomAd = () => ({ t: 'room', code: R.code, host: profile.leader, rules: R.rules, n: R.n, humans: R.seats.filter(Boolean).length });
+const roomAd = () => ({ t: 'room', code: R.code, host: profile.leader, rules: R.rules, n: R.n, humans: R.seats.filter(Boolean).length, lock: !!R.lock });
+// ---------- the room password (ruled 11 Nov: the host can lock the room so passers-by from the lobby cannot come in) ----------
+// A locked room lives on a channel named from its code and its password: a tab without the password never reaches it,
+// so it sees none of the seats or the chat and cannot send a move. Only the host keeps the password itself, to tell friends
+async function roomLockOf(code, pw) { pw = String(pw || '').trim(); return pw ? (await sha256hex('kirana-room|' + code + '|' + pw)).slice(0, 24) : ''; }
+const okLock = x => typeof x === 'string' && (x === '' || /^[0-9a-f]{24}$/.test(x));
+const roomChan = () => 'g-' + R.code + (R.lock ? '-' + R.lock : '');
+const roomHash = () => '#room=' + R.code + (R.lock ? '&lock=1' : '');
+// open the room's channel; events of an older channel of the same room (before a move) are dropped
+function roomLink(o) {
+  const gen = ++R.gen;
+  try {
+    R.net = openRoom(roomChan(), {
+      join: pid => { if (gen !== R.gen) return; roomSend(helloMsg(o), pid); if (R.host && !R.started) roomSend(rosterMsg(), pid); renderRoomSoon(); },
+      leave: pid => { if (gen === R.gen) roomLeave(pid); },
+      msg: (d, pid) => { if (gen === R.gen) roomMsg(d, pid); },
+    });
+    return true;
+  } catch (e) { console.error(e); alert('เชื่อมต่อห้องไม่ได้'); return false; }
+}
+// the host sets, changes or clears the password before a game: the players seated follow the room to its new channel,
+// anyone standing comes back in with the password
+async function roomSetPassword(pw) {
+  if (!R.host || R.started || !R.code) return;
+  pw = String(pw || '').trim().slice(0, 24);
+  const code = R.code, lock = await roomLockOf(code, pw);
+  if (R.code !== code) return;
+  R.pw = pw;
+  if (lock === R.lock) { renderRoom(); return; }
+  const seated = new Set(R.seats.filter(Boolean).map(s => s.id));
+  for (const [pid, id] of R.owners) if (seated.has(id) && id !== R.hostId) roomSend({ t: 'move', lock }, pid);
+  notify(`${ICON('lock')} ${lock ? 'ล็อกห้องแล้ว คนที่จะเข้าห้องต้องกรอกรหัสผ่าน' : 'ปลดรหัสผ่านแล้ว ใครก็เข้าห้องนี้ได้'}`, 3000);
+  setTimeout(() => { if (R.code === code && !R.started) roomMove(lock); }, 1500);
+}
+function roomMove(lock) {
+  if (!R.code) return;
+  const old = R.net, now = Date.now();
+  R.lock = lock; R.moving = now;
+  // a chair or a place in the room whose player does not come over is freed after the usual grace
+  for (const s of R.seats) if (s && s.id !== R.hostId) R.lastSeen.set(s.id, now);
+  for (const id of R.here.keys()) if (id !== R.hostId) R.lastSeen.set(id, now);
+  R.owners = new Map();
+  if (!R.host) { R.gotRoster = false; R.tries = 0; R.t0 = now; }
+  if (old) { try { old.leave(); } catch (e) { /* gone */ } }
+  if (!roomLink({})) return;
+  roomSend(helloMsg({}));
+  if (R.host) { roomSend(rosterMsg()); lobbySend(roomAd()); }
+  history.replaceState(null, '', location.pathname + location.search + roomHash());
+  renderRoom();
+}
+// a locked room asks for its password before the tab goes in
+function askRoomPassword(code, why) {
+  const box = dialog2(`<h2>${ICON('lock')} ห้อง ${esc(code)} ตั้งรหัสผ่านไว้</h2>
+    <p class="small">${esc(why || 'ขอรหัสผ่านจากผู้สร้างห้อง แล้วกรอกที่นี่')}</p>
+    <div class="row"><input id="pw-in" maxlength="24" autocomplete="off" placeholder="รหัสผ่านห้อง" style="flex:1"></div>
+    <div class="mfoot"><button class="btn" id="pw-no">ยกเลิก</button><button class="btn primary" id="pw-go">เข้าห้อง</button></div>`);
+  const inp = box.querySelector('#pw-in');
+  const go = async () => { const pw = inp.value.trim(); if (!pw) { inp.focus(); return; } const lock = await roomLockOf(code, pw); closeDialog2(); openGameRoom(code, false, { lock }); };
+  box.querySelector('#pw-go').onclick = go;
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) go(); });
+  box.querySelector('#pw-no').onclick = closeDialog2;
+  setTimeout(() => inp.focus(), 0);
+}
+// a room that the lobby knows to be locked asks for the password; any other code goes straight in
+function joinRoom(code) { const r = L.rooms.get(code); if (r && r.lock) askRoomPassword(code); else openGameRoom(code, false); }
 function roomSend(m, to) { if (R.net) R.net.send(m, to); }
 function closeGameRoom() {
   if (R.host && !R.started && R.code) lobbySend({ t: 'unroom', code: R.code });
@@ -13076,28 +13151,24 @@ function closeGameRoom() {
   if (R.net) { try { roomSend({ t: 'bye' }); R.net.leave(); } catch (e) { /* gone */ } }
   clearInterval(R.takeTimer); clearInterval(R.loop);
   Object.assign(R, { code: null, net: null, host: false, hostId: null, seats: [], here: new Map(), started: false, cfg: null, chat: [], ctl: [], seenAns: new Set(), owners: new Map(), lastSeen: new Map(), hashes: {}, spectators: new Set(),
-    gotRoster: false, tries: 0, t0: 0, pend: null, loop: null, rosterKey: '', away: [], rejoin: false });
+    gotRoster: false, tries: 0, t0: 0, pend: null, loop: null, rosterKey: '', away: [], rejoin: false, lock: '', pw: '', moving: 0 });
+  R.gen++;
 }
 const helloMsg = o => ({ t: 'hello', p: pubProfile(true), want: o && o.rejoin ? 'rejoin' : (R.started ? 'watch' : 'join') });
 function openGameRoom(code, host, o) {
   o = o || {};
   closeGameRoom();
   R.code = code; R.host = host; R.hostId = host ? pubId() : null; R.wantSync = !host; R.t0 = Date.now(); R.rejoin = !!o.rejoin;
+  R.lock = okLock(o.lock) ? o.lock : ''; R.pw = host && R.lock ? String(o.pw || '') : '';
   if (host) {
     R.n = soloState.n || 4; R.rules = rulesFor(soloState.rules); R.level = soloState.level || 'normal';
     const me = pubProfile(true);
     R.seats = new Array(R.n).fill(null); R.seats[0] = me;      // the host sits down at the first chair
     R.here.set(me.id, me); R.gotRoster = true;
   }
-  try {
-    R.net = openRoom('g-' + code, {
-      join: pid => { roomSend(helloMsg(o), pid); if (R.host && !R.started) roomSend(rosterMsg(), pid); renderRoomSoon(); },
-      leave: pid => roomLeave(pid),
-      msg: (d, pid) => roomMsg(d, pid),
-    });
-  } catch (e) { console.error(e); alert('เชื่อมต่อห้องไม่ได้'); return; }
+  if (!roomLink(o)) return;
   roomSend(helloMsg(o));
-  history.replaceState(null, '', location.pathname + location.search + '#room=' + code);
+  history.replaceState(null, '', location.pathname + location.search + roomHash());
   lobbySetStatus('ห้อง ' + code);
   if (host) lobbySend(roomAd());
   // one beat every two and a half seconds: say hello again until the host answers, repeat a request to sit,
@@ -13225,8 +13296,9 @@ function roomMsg(d, pid) {
       return;
     }
     case 'start': {
-      if (R.started || R.host) return;
+      if (R.host || (R.started && !(G && G.over && S && S.mode === 'online'))) return;
       const cfg = cleanCfg(d.cfg); if (!cfg) return;
+      if (R.started) { leaveGame({ keepRoom: true }); roomReset(); }
       R.started = true; R.cfg = cfg; R.wantSync = false; clearInterval(R.loop);
       beginOnlineGame(cfg); return;
     }
@@ -13236,7 +13308,7 @@ function roomMsg(d, pid) {
       R.wantSync = false; R.started = true; R.cfg = cfg; clearInterval(R.loop);
       const log = d.log.filter(x => Array.isArray(x) && int(x[0]) != null).map(([k, e]) => [k, cleanAns(e)]).filter(x => x[1]);
       const take = {}; if (d.take && typeof d.take === 'object') for (const k of Object.keys(d.take)) { const t = d.take[k]; if (/^\d$/.test(k) && t && int(t.from) != null) take[k] = { from: t.from, to: int(t.to) }; }
-      startGame(cfg, { replay: log, takeover: take, net: gameNet(), room: R.code });
+      startGame(cfg, { replay: log, takeover: take, net: gameNet(), room: R.code, lock: R.lock });
       setTimeout(reclaimMySeat, 400);
       return;
     }
@@ -13252,6 +13324,12 @@ function roomMsg(d, pid) {
     case 'chat': { const c = cleanChat(d.c); if (c && !R.chat.some(x => x.id === c.id)) { R.chat.push(c); R.chat = R.chat.slice(-200); if (S) { S.unread = (drawerTab === 'chat') ? 0 : (S.unread || 0) + 1; renderChat(); renderChatBadge(); } else renderRoom(); sfx('chat'); } return; }
     case 'hash': { const r = int(d.r); if (r != null && S && S.hashes[r] && typeof d.h === 'string' && d.h !== S.hashes[r] && !R.warned) { R.warned = true; toast(`${ICON('x')} สถานะเกมของเพื่อนไม่ตรงกับเครื่องนี้ (รอบ ${r}) ลองออกแล้วกลับเข้าห้องเพื่อซิงก์ใหม่`, null, 6000); } return; }
     case 'bye': roomLeave(pid); return;
+    case 'move': {
+      if (R.host || R.started || R.owners.get(pid) !== R.hostId || !okLock(d.lock)) return;
+      const lock = d.lock; R.moving = Date.now();
+      setTimeout(() => { if (R.code && !R.started) roomMove(lock); }, 200);
+      return;
+    }
     case 'hofs': if (Array.isArray(d.list)) { L.hof = hofMerge(L.hof, d.list.slice(0, 20)); store.set('hof', hofMerge(hofLocal(), L.hof)); } return;
   }
 }
@@ -13274,7 +13352,9 @@ function roomStatusHtml() {
   if (!R.host && !R.gotRoster) {
     const sec = Math.round((Date.now() - R.t0) / 1000);
     return `<p class="rstat wait"><span class="spin sm"></span> กำลังติดต่อผู้สร้างห้อง · ส่งคำทักไปแล้ว ${R.tries + 1} ครั้ง · ${sec} วินาที · เชื่อมกับผู้เล่นในห้องแล้ว ${peers} คน
-      ${R.tries >= 3 ? `<button class="btn sm" id="r-retry">เชื่อมต่อใหม่</button><span class="tiny muted"> ถ้านานเกินหนึ่งนาที ให้ตรวจรหัสห้อง หรือให้ผู้สร้างห้องเปิดหน้าห้องค้างไว้</span>` : ''}</p>`;
+      ${R.tries >= 3 ? `<button class="btn sm" id="r-retry">เชื่อมต่อใหม่</button><span class="tiny muted"> ถ้านานเกินหนึ่งนาที ให้ตรวจรหัสห้อง หรือให้ผู้สร้างห้องเปิดหน้าห้องค้างไว้</span>
+        <span class="rpwtry"><span class="tiny muted">${ICON('lock')} ${R.lock ? 'รหัสผ่านที่กรอกอาจไม่ถูก ลองกรอกใหม่' : 'ถ้าห้องนี้ตั้งรหัสผ่านไว้ ให้กรอกรหัสผ่านที่นี่'}</span>
+        <input id="r-pwtry" maxlength="24" autocomplete="off" placeholder="รหัสผ่านห้อง" size="12"><button class="btn sm" id="r-pwgo">เข้าด้วยรหัสนี้</button></span>` : ''}</p>`;
   }
   if (R.pend) return `<p class="rstat wait"><span class="spin sm"></span> กำลังขอนั่งที่นั่ง ${R.pend.seat + 1} รอผู้สร้างห้องยืนยัน</p>`;
   if (!amSeated()) return `<p class="rstat go">${ICON('crown')} เข้าห้องแล้ว กดปุ่ม <b>นั่งที่นี่</b> บนเก้าอี้ว่างเพื่อเข้าร่วมเกม ถ้าไม่นั่ง ท่านจะได้ดูเกมอย่างเดียว</p>`;
@@ -13282,9 +13362,12 @@ function roomStatusHtml() {
 }
 function renderRoom() {
   if (R.started || !R.code || R.rejoin) return;   // a returning player sees the rejoin screen until the game record arrives
-  const prevIn = document.getElementById('r-chatin'), keepTxt = prevIn ? prevIn.value : '', keepFocus = prevIn && document.activeElement === prevIn;
-  setTimeout(() => { const ni = document.getElementById('r-chatin'); if (ni && keepTxt && !ni.value) ni.value = keepTxt; if (ni && keepFocus) ni.focus(); }, 0);
-  const lu = new URL(location.href); lu.searchParams.delete('ns'); lu.hash = 'room=' + R.code;
+  for (const id of ['r-chatin', 'r-pw', 'r-pwtry']) {
+    const prevIn = document.getElementById(id); if (!prevIn) continue;
+    const keepTxt = prevIn.value, keepFocus = document.activeElement === prevIn, dirty = prevIn.dataset.dirty === '1';
+    setTimeout(() => { const ni = document.getElementById(id); if (!ni) return; if (dirty || (keepTxt && !ni.value)) { ni.value = keepTxt; ni.dataset.dirty = dirty ? '1' : ''; } if (keepFocus) ni.focus(); }, 0);
+  }
+  const lu = new URL(location.href); lu.searchParams.delete('ns'); lu.hash = roomHash().slice(1);
   const link = lu.toString();
   const me = pubId(), mine = amSeated(), canAct = R.gotRoster && !R.hostGone;
   const seats = [];
@@ -13302,12 +13385,14 @@ function renderRoom() {
   const standing = [...R.here.values()].filter(p => !R.seats.some(s => s && s.id === p.id));
   if (!R.host && R.gotRoster && !mine && !standing.some(p => p.id === me)) standing.push(pubProfile(false));
   const hereHtml = standing.length ? `<div class="rhere"><span class="tiny muted">ยืนดูอยู่ในห้อง</span>${standing.map(p => `<span class="rh" style="--pc:${esc(p.color)}">${flagHtml(p, 'xs')} ${esc(fullLeader(p))}${p.id === me ? ' (คุณ)' : ''}</span>`).join('')}</div>` : '';
-  app.innerHTML = `<div class="page room"><div class="page-h"><button class="btn sm" id="r-back">ออกจากห้อง</button><h1>ห้อง ${esc(R.code)}</h1><span class="grow"></span><button class="btn sm" id="r-copy">คัดลอกลิงก์ชวนเพื่อน</button></div>
+  app.innerHTML = `<div class="page room"><div class="page-h"><button class="btn sm" id="r-back">ออกจากห้อง</button><h1>ห้อง ${esc(R.code)}${R.lock ? ` <span class="rlock" title="ห้องนี้ตั้งรหัสผ่านไว้">${ICON('lock')} ล็อก</span>` : ''}</h1><span class="grow"></span><button class="btn sm" id="r-copy">คัดลอกลิงก์ชวนเพื่อน</button></div>
     ${roomStatusHtml()}
     <div class="lgrid two"><div class="box"><h2>ที่นั่ง</h2><div class="sseats">${seats.join('')}</div>${hereHtml}
       ${R.host ? `<div class="kv" style="margin-top:12px"><label for="r-n">จำนวนรัฐ</label><span><select id="r-n"><option value="3"${R.n === 3 ? ' selected' : ''}>3 รัฐ</option><option value="4"${R.n === 4 ? ' selected' : ''}>4 รัฐ</option></select></span>
         ${devView() ? `<label for="r-rules">ชุดกฎ</label><span><select id="r-rules">${rulesetOpts(R.rules)}</select> <span class="tiny muted">หลังบ้าน · เห็นเฉพาะผู้พัฒนา</span></span>`
           : `<label for="r-mode">โหมด</label><span><select id="r-mode">${modeOpts(rulesFor(R.rules))}</select> <span class="tiny muted">${esc((modeOf(rulesFor(R.rules)) || {}).note || '')}</span></span>`}
+        <label for="r-pw">รหัสผ่านห้อง</label><span><input id="r-pw" maxlength="24" autocomplete="off" value="${esc(R.pw)}" placeholder="เว้นว่าง = ใครก็เข้าได้" size="14"> <button class="btn sm" id="r-pwset">${R.lock ? 'เปลี่ยน' : 'ตั้งรหัสผ่าน'}</button>
+          <span class="tiny muted">${R.lock ? 'ห้องล็อกแล้ว คนที่จะเข้าห้องต้องกรอกรหัสนี้ ส่งรหัสให้เพื่อนแยกจากลิงก์ คนที่นั่งอยู่แล้วตามมาเอง' : 'ห้องเปิด ใครเห็นห้องในล็อบบี้ก็เข้าได้ ตั้งรหัสผ่านเพื่อกันคนที่ไม่ได้ชวน'}</span></span>
         <label for="r-level">ความยาก AI</label><span><select id="r-level">${levelOpts(R.level)}</select> <span class="tiny muted">ใช้กับที่นั่งที่ AI เล่นแทน${R.level === 'easy' || R.n !== 4 ? ' ถ้ามี AI ร่วมโต๊ะ ชัยชนะจะไม่ขึ้นหอเกียรติยศ เพราะ' + (R.level === 'easy' ? 'เป็น AI ระดับง่าย' : 'เป็นโต๊ะ 3 รัฐ') : ''}</span></span></div>
         <div class="row" style="margin-top:14px"><button class="btn primary big" id="r-start">${ICON('dice')} ทอยลูกเต๋าและเริ่มเกม</button><span class="tiny muted">คนที่ยังยืนอยู่ได้ดูเกม ที่นั่งว่างเป็นของ AI</span></div>`
       : `<p class="small muted">${R.gotRoster ? 'รอผู้สร้างห้องเริ่มเกม' : 'กำลังติดต่อผู้สร้างห้อง'}${devView() ? ' · ชุดกฎ ' + esc((RULESETS[R.rules] || {}).label || '') : ' · โหมด' + esc((modeOf(R.rules) || { name: (RULESETS[R.rules] || {}).label || '' }).name)} · AI ระดับ${esc((AI.LEVELS[R.level] || AI.LEVELS.normal).name)}</p>`}
@@ -13319,7 +13404,13 @@ function renderRoom() {
   q('#r-chatf').onsubmit = e => { e.preventDefault(); const inp = q('#r-chatin'); const t = inp.value.trim(); if (t) { inp.value = ''; sendChat(t); renderRoom(); } };
   app.querySelectorAll('[data-sit]').forEach(b => b.onclick = () => { sfx('tick'); askSeat(+b.dataset.sit); });
   const st = q('#r-stand'); if (st) st.onclick = askStand;
-  const rt = q('#r-retry'); if (rt) rt.onclick = () => { const c = R.code; openGameRoom(c, false); };
+  const rt = q('#r-retry'); if (rt) rt.onclick = () => { const c = R.code, lk = R.lock; openGameRoom(c, false, { lock: lk }); };
+  const pg = q('#r-pwgo');
+  if (pg) {
+    const tryPw = async () => { const pw = q('#r-pwtry').value.trim(); if (!pw) return; const c = R.code; openGameRoom(c, false, { lock: await roomLockOf(c, pw) }); };
+    pg.onclick = tryPw; q('#r-pwtry').oninput = e => { e.target.dataset.dirty = '1'; };
+    q('#r-pwtry').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) tryPw(); });
+  }
   const ch = q('#r-chat'); ch.scrollTop = ch.scrollHeight;
   if (R.host) {
     q('#r-n').onchange = e => {
@@ -13333,6 +13424,9 @@ function renderRoom() {
     if (q('#r-rules')) q('#r-rules').onchange = e => { R.rules = e.target.value; roomSend(rosterMsg()); lobbySend(roomAd()); renderRoom(); };
     if (q('#r-mode')) q('#r-mode').onchange = e => { R.rules = rulesFor(e.target.value); roomSend(rosterMsg()); lobbySend(roomAd()); renderRoom(); };
     q('#r-level').onchange = e => { R.level = e.target.value; roomSend(rosterMsg()); renderRoom(); };
+    q('#r-pw').oninput = e => { e.target.dataset.dirty = '1'; };
+    q('#r-pwset').onclick = () => roomSetPassword(q('#r-pw').value);
+    q('#r-pw').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) roomSetPassword(e.target.value); });
     app.querySelectorAll('[data-style]').forEach(s => s.onchange = e => { R.styles[+e.target.dataset.style] = e.target.value; roomSend(rosterMsg()); });
     q('#r-start').onclick = hostStart;
   }
@@ -13358,7 +13452,7 @@ function beginOnlineGame(cfg) {
   lobbySetStatus('กำลังเล่น ห้อง ' + R.code);
   const ordered = cfg.seats;
   const draft = cfg.dice && cfg.dice.order.length === ordered.length ? (() => { const d = new Array(ordered.length); cfg.dice.order.forEach((si, pos) => { d[si] = ordered[pos]; }); return d; })() : ordered;
-  const go = () => startGame({ mode: 'online', rules: cfg.rules, seed: cfg.seed, seats: ordered, dice: cfg.dice }, { net: gameNet(), room: R.code });
+  const go = () => startGame({ mode: 'online', rules: cfg.rules, seed: cfg.seed, seats: ordered, dice: cfg.dice }, { net: gameNet(), room: R.code, lock: R.lock });
   if (cfg.dice && !settings.autoplay) showDiceRoll(draft, cfg.dice, { auto: true }).then(go); else go();
 }
 function sendChat(text) {
@@ -13433,7 +13527,7 @@ function rejoinOnline(save) {
   if (!save || !save.room) return showLobby();
   lobbyConnect();
   R.wantSync = true;
-  openGameRoom(save.room, false, { rejoin: true });
+  openGameRoom(save.room, false, { rejoin: true, lock: okLock(save.lock) ? save.lock : '' });
   // this browser was in the game a moment ago (a reload, a crash): if nobody else is there, the game goes on here
   const alive = store.get(acctKey('online.alive'), null);
   const fresh = !!(alive && alive.room === save.room && Date.now() - alive.at < 90000);
@@ -13443,7 +13537,7 @@ function rejoinOnline(save) {
     const take = Object.assign({}, save.takeover || {});
     const after = Math.max(0, ...save.log.map(x => +x[0]));
     save.cfg.seats.forEach((s, i) => { if (s.human && s.owner !== pubId() && !take[i]) take[i] = { from: after + 1, to: null }; });
-    startGame(save.cfg, { replay: save.log, takeover: take, net: gameNet(), room: save.room });
+    startGame(save.cfg, { replay: save.log, takeover: take, net: gameNet(), room: save.room, lock: okLock(save.lock) ? save.lock : '' });
   };
   const gone = () => {
     if (!R.wantSync) return;
@@ -13457,6 +13551,24 @@ function rejoinOnline(save) {
   };
   const b = app.querySelector('#rj-solo'); if (b) b.onclick = local;
   setTimeout(fresh ? local : gone, fresh ? 8000 : 12000);
+}
+// ---------- after an online game everyone goes back to the same room (ruled 11 Nov): the end screen has that one button.
+// The chairs, the people in the room, the chat and the lock stay; the host can change the settings and start the next game.
+// A chair whose player has gone is freed by the room's beat after the usual grace
+function roomReset() {
+  clearInterval(R.takeTimer); clearInterval(R.aliveTimer); clearInterval(R.loop);
+  Object.assign(R, { started: false, cfg: null, seenAns: new Set(), hashes: {}, ctl: [], wantSync: false, rejoin: false, warned: false, pend: null, rosterKey: '' });
+}
+const roomOpen = () => !!(R.code && R.net);
+function backToRoom() {
+  if (!roomOpen()) { leaveGame(); showLobby(); return; }
+  leaveGame({ keepRoom: true });
+  roomReset();
+  R.loop = setInterval(roomBeat, 2500);
+  lobbySetStatus('ห้อง ' + R.code);
+  history.replaceState(null, '', location.pathname + location.search + roomHash());
+  if (R.host) { roomSend(rosterMsg()); lobbySend(roomAd()); }
+  renderRoom();
 }
 // is this browser the last human player of the running game still connected to its room?
 function lastInRoom() {

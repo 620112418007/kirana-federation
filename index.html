@@ -10412,7 +10412,7 @@ function hofTable(list, dev) {
     <div class="hr-score"><b>${r.score}</b><small>ชนะห่าง ${r.margin}</small></div>
     <div class="hr-cards"><span data-g="การ์ดวิจัย">${ICON('research')} ${(r.research.culture || 0) + (r.research.innovation || 0) + (r.research.building || 0)}<small>วัฒนธรรม ${r.research.culture || 0} · นวัตกรรม ${r.research.innovation || 0} · สิ่งปลูกสร้าง ${r.research.building || 0}</small></span>
       <span data-g="การ์ดทหาร">${ICON('military')} ${r.military}<small>การ์ดทหาร</small></span><span data-g="โครงการ">${ICON('building')} ${r.projects}<small>โครงการ</small></span></div>
-    <div class="hr-style"><b>${esc(r.style && r.style.label || '')}</b><small>${esc(r.style && r.style.desc || '')}</small></div></div>`).join('')}</div>`;
+    <div class="hr-style">${(nm => `<b${nm.renamed ? ` data-tip="${esc(`<div>ชื่อตอนจบเกม ${esc(nm.stored)}</div>`)}"` : ''}>${esc(nm.label)}</b>`)(hofStyleName(r))}<small>${esc(r.style && r.style.desc || '')}</small></div></div>`).join('')}</div>`;
 }
 // a rating is optional: no stars field, or a whole number of stars from 1 to 5
 const okStars = s => s == null || (Number.isInteger(s) && s >= 1 && s <= 5);
@@ -12310,6 +12310,16 @@ function playName(main, second, title) {
   const k = titleKind(title);
   return k && names[k] ? { label: names[k], byTitle: true } : { label: names[0], byTitle: false };
 }
+// the hall of fame names every record with the names in use now: a record keeps the key of its reading (main axis and
+// second) and its leader's title, so the name comes from the same table as the end screen; the name it had when its
+// game ended stays in the record and shows in a tip. A record with no key keeps the name it carries
+function hofStyleName(r) {
+  const st = (r && r.style) || {}, stored = typeof st.label === 'string' ? st.label : '';
+  const m = typeof st.key === 'string' ? /^(even|build|trade|war|lab|faith)(?:\+(build|trade|war|lab|faith))?$/.exec(st.key) : null;
+  if (!m || (m[1] === 'even' && m[2]) || m[1] === m[2]) return { label: stored, stored, renamed: false };
+  const label = playName(m[1] === 'even' ? null : m[1], m[2] || null, r.title).label;
+  return { label, stored, renamed: !!stored && label !== stored };
+}
 function playstyle(P) {
   const st = P.st, rs = P.research || [];
   const ax = { build: st.build + st.annex, trade: st.commerce, war: st.explore + st.attack + st.coup + st.reform * 0.35,
@@ -13471,7 +13481,7 @@ function stateHash() {
 }
 
 // =====================================================================
-window.UI = { menu: showMenu, state: () => G, session: () => S, answer, settings, startGame, profile: () => profile, hof: hofLocal, room: () => R, lobby: () => L, pending: () => pending, myId: () => pubId(), account: () => acct, playstyle };
+window.UI = { menu: showMenu, state: () => G, session: () => S, answer, settings, startGame, profile: () => profile, hof: hofLocal, room: () => R, lobby: () => L, pending: () => pending, myId: () => pubId(), account: () => acct, playstyle, hofStyleName, hofTable };
 if (/room=/.test(location.hash) && netAvailable()) needProfile(showLobby); else showMenu();
 presenceBoot();
 statsBoot();

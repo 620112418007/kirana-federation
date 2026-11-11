@@ -8271,14 +8271,14 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const reduceMotion = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ABORT = 'ABORT_GAME';
 
-// rule sets: the dataset each one plays and its rule switches. Players always play the default rules; the other
-// versions, the notes on how this page reads the rulebook and the designer room are the developer's backstage
+// rule sets: the dataset each one plays and its rule switches. Players pick one of the MODES below; the other versions,
+// the notes on how this page reads the rulebook and the designer room are the developer's backstage
 const RULESETS = {
   // 0.4.4 as ruled in on 11 Nov: the designer's military table, a weaker blue cloak, legitimacy for battles, and diplomacy
   // that asks whether the discard pile goes back into the army deck; the default rules
   '0.44d': { label: 'ฉบับ 0.4.4', data: () => window.KDATA044, rules: { dipChoice: true } },
-  // mode รัฐที่แตกแยก (trial of 11 Nov): 0.4.4 with a supporter card for every state, on the developer device until it is
-  // ruled in for everyone
+  // mode รัฐที่แตกแยก (trial of 11 Nov): 0.4.4 with a supporter card for every state; open to every player as a mode to
+  // try since 11 Nov
   '0.44s': { label: 'ฉบับ 0.4.4 โหมดรัฐที่แตกแยก (ทดลอง)', data: () => window.KDATA044, rules: { supporters: true, dipChoice: true } },
   // the 0.4.4 trial of 10 Nov (diplomacy always shuffled the discard pile back) stays readable for games saved and
   // reported with it, out of the menu
@@ -8300,6 +8300,16 @@ const RULESETS = {
   '0.2': { label: 'ฉบับ 0.2', data: () => window.KDATA02 || window.KDATA, rules: {} },
 };
 const DEFAULT_RULES = '0.44d';
+// the modes a player picks at the table setup or as the host of a room (ruled 11 Nov: the trial mode รัฐที่แตกแยก opens to
+// everyone). Each mode is a rule set of the list above, so saves, replays and online rooms carry it as before
+const MODES = [
+  { key: '0.44d', name: 'ปกติ', note: '' },
+  { key: '0.44s', name: 'รัฐที่แตกแยก (Asymmetric)', note: 'ทดลอง · ก่อนเริ่มเกม ทุกรัฐจั่วการ์ดผู้สนับสนุน 5 ใบ เลือกเก็บ 1 ใบ แล้วได้ความสามารถเฉพาะตัวไปทั้งเกม' },
+];
+const modeOf = r => MODES.find(m => m.key === r) || null;
+const modeOpts = cur => MODES.map(m => `<option value="${m.key}"${m.key === cur ? ' selected' : ''}>${esc(m.name)}</option>`).join('');
+// the name of a mode other than the usual one, for rooms, waiting lines and hall of fame rows ('' for the usual mode)
+const modeTag = r => (r !== DEFAULT_RULES && modeOf(r) ? modeOf(r).name : '');
 
 let G = null;              // the running game
 let S = null;              // the session around it (config, answer log, network)
@@ -10150,7 +10160,8 @@ function showSoloSetup() {
       <div class="kv">
         <label for="s-n">จำนวนรัฐ</label><span><select id="s-n"><option value="3"${T.n === 3 ? ' selected' : ''}>3 รัฐ</option><option value="4"${T.n === 4 ? ' selected' : ''}>4 รัฐ</option></select> <span class="tiny muted" id="s-n-note">${esc(N_NOTE(T.n))}</span></span>
         <label for="s-level">ความยาก AI</label><span><select id="s-level">${levelOpts(T.level)}</select> <span class="tiny muted" id="s-level-note">${esc(LEVEL_NOTE[T.level] || '')}</span></span>
-        ${devView() ? `<label for="s-rules">ชุดกฎ</label><span><select id="s-rules">${rulesetOpts(T.rules)}</select> <span class="tiny muted">หลังบ้าน · เห็นเฉพาะผู้พัฒนา</span></span>` : ''}
+        ${devView() ? `<label for="s-rules">ชุดกฎ</label><span><select id="s-rules">${rulesetOpts(T.rules)}</select> <span class="tiny muted">หลังบ้าน · เห็นเฉพาะผู้พัฒนา</span></span>`
+          : `<label for="s-mode">โหมด</label><span><select id="s-mode">${modeOpts(rulesFor(T.rules))}</select> <span class="tiny muted" id="s-mode-note">${esc((modeOf(rulesFor(T.rules)) || {}).note || '')}</span></span>`}
         <label for="s-seed">ซีด (เว้นว่าง = สุ่ม)</label><span><input id="s-seed" value="${esc(T.seed)}" placeholder="เช่น 2024" size="12"></span>
         <label for="s-speed">ความเร็ว AI</label><span><select id="s-speed">${[[0, 'ทันที'], [200, 'เร็ว'], [450, 'ปกติ'], [900, 'ช้า']].map(([v, l]) => `<option value="${v}"${settings.speed === v ? ' selected' : ''}>${l}</option>`).join('')}</select></span>
         <label for="s-bat">แสดงการรบ</label><span><select id="s-bat"><option value="mine">เฉพาะที่คุณเกี่ยวข้อง</option><option value="all">ทุกการรบ</option><option value="none">ไม่แสดง ดูในบันทึก</option></select></span>
@@ -10162,6 +10173,7 @@ function showSoloSetup() {
   q('#p-back').onclick = showMenu;
   q('#s-n').onchange = e => { T.n = +e.target.value; keep(); showSoloSetup(); };
   if (q('#s-rules')) q('#s-rules').onchange = e => { T.rules = e.target.value; keep(); };
+  if (q('#s-mode')) q('#s-mode').onchange = e => { T.rules = e.target.value; keep(); q('#s-mode-note').textContent = (modeOf(T.rules) || {}).note || ''; };
   q('#s-level').onchange = e => { T.level = e.target.value; keep(); q('#s-level-note').textContent = LEVEL_NOTE[T.level] || ''; };
   q('#s-seed').oninput = e => { T.seed = e.target.value.trim(); keep(); };
   q('#s-speed').onchange = e => { settings.speed = +e.target.value; saveSettings(); };
@@ -10197,11 +10209,11 @@ function launchSolo(watch) {
 function howToHtml() {
   const groups = {};
   for (const [t, d, g] of GLOSSARY) (groups[g] = groups[g] || []).push([t, d]);
-  const supOn = devView() || !!(G && G.rules && G.rules.supporters);
+  const supOn = true;   // the mode is open to every player since 11 Nov
   const SUPS = (window.KDATA044 && window.KDATA044.supporters) || [];
-  return `<div class="howto"><nav class="toc">${HOWTO.map(s => `<a href="#h-${s.id}">${esc(s.h)}</a>`).join('')}${supOn && SUPS.length ? '<a href="#h-sup">โหมดรัฐที่แตกแยก</a>' : ''}<a href="#h-terms">คำศัพท์</a>${devView() ? '<a href="#h-notes">ข้อที่หน้านี้ตีความเอง</a>' : ''}</nav>
+  return `<div class="howto"><nav class="toc">${HOWTO.map(s => `<a href="#h-${s.id}">${esc(s.h)}</a>`).join('')}${supOn && SUPS.length ? '<a href="#h-sup">โหมดรัฐที่แตกแยก (Asymmetric)</a>' : ''}<a href="#h-terms">คำศัพท์</a>${devView() ? '<a href="#h-notes">ข้อที่หน้านี้ตีความเอง</a>' : ''}</nav>
     ${HOWTO.map(s => `<section id="h-${s.id}"><h2>${esc(s.h)}</h2>${s.p.map(p => `<p>${gloss(p)}</p>`).join('')}</section>`).join('')}
-    ${supOn && SUPS.length ? `<section id="h-sup"><h2>โหมดรัฐที่แตกแยก <span class="tiny muted">ทดลอง</span></h2>${SUP_RULES.map(p => `<p>${gloss(p)}</p>`).join('')}
+    ${supOn && SUPS.length ? `<section id="h-sup"><h2>โหมดรัฐที่แตกแยก (Asymmetric) <span class="tiny muted">ทดลอง · เลือกได้ที่ช่องโหมดตอนตั้งโต๊ะ หรือให้ผู้สร้างห้องออนไลน์เลือก</span></h2>${SUP_RULES.map(p => `<p>${gloss(p)}</p>`).join('')}
       <table class="tbl suptbl"><tr><th>#</th><th>ผู้สนับสนุน</th><th>แท็ก</th><th>ผลติดตัว</th></tr>${SUPS.map(d => `<tr><td class="num">${d.no}</td><td><b>${esc(d.name)}</b>${d.alt ? ` <span class="tiny muted">(${esc(d.alt)})</span>` : ''}<div class="tiny muted">${esc(d.leader)}</div></td><td>${supTags(d)}</td><td>${gloss(d.text)}</td></tr>`).join('')}</table></section>` : ''}
     <section id="h-icons"><h2>สัญลักษณ์บนโต๊ะ</h2><div class="row small" style="gap:6px 16px">${rb('mat', '')} วัสดุ ${rb('fuel', '')} เชื้อเพลิง ${rb('food', '')} อาหาร ${rb('grav', '')} เกรฟ
       <span>${ICON('worker')} แรงงาน</span><span>${ICON('house')} ช่องสิ่งปลูกสร้าง</span><span>${ICON('shield')} ทหารบนโครงการ</span><span>${ICON('wagon')} ความจุการซื้อ</span><span>${ICON('star')} ผู้เล่นคนแรก</span></div></section>
@@ -10408,7 +10420,7 @@ function hofTable(list, dev) {
   if (!list.length) return '<p class="muted">ยังไม่มีผู้ชนะในหอเกียรติยศ ชนะเกมแรกแล้วชื่อของท่านจะขึ้นที่นี่</p>';
   return `<div class="hof${dev ? ' dev' : ''}">${list.map((r, i) => `<div class="hrow${i < 3 ? ' top' + (i + 1) : ''}" style="--pc:${esc(r.color || '#888')}">${dev ? `<button type="button" class="btn sm danger hr-del" data-del="${esc(r.id)}" aria-label="ลบ ${esc(r.state)} ออกจากหอเกียรติยศ">ลบ</button>` : ''}
     <div class="hr-rank">${i === 0 ? ICON('crown') : ''}${i + 1}</div>${flagHtml({ flag: r.flag, color: r.color }, 'lg')}
-    <div class="hr-name"><b data-tip="${esc(`<div class="tt">${esc(r.state)}${r.latin ? ' · ' + esc(r.latin) : ''}</div>${r.meaning ? `<div>${esc(r.meaning)}</div>` : ''}`)}">${esc(r.state)}</b><small>${esc(fullLeader(r))} · ${esc(r.at || '')} · ${r.mode === 'online' ? 'ออนไลน์' : 'เล่นกับ AI'} ${r.n} รัฐ${r.lvl && AI.LEVELS[r.lvl] ? ` · AI ${esc(AI.LEVELS[r.lvl].name)}` : ''}</small>${traitLine(r) ? `<small class="ptraits">${esc(traitLine(r))}</small>` : ''}</div>
+    <div class="hr-name"><b data-tip="${esc(`<div class="tt">${esc(r.state)}${r.latin ? ' · ' + esc(r.latin) : ''}</div>${r.meaning ? `<div>${esc(r.meaning)}</div>` : ''}`)}">${esc(r.state)}</b><small>${esc(fullLeader(r))} · ${esc(r.at || '')} · ${r.mode === 'online' ? 'ออนไลน์' : 'เล่นกับ AI'} ${r.n} รัฐ${r.lvl && AI.LEVELS[r.lvl] ? ` · AI ${esc(AI.LEVELS[r.lvl].name)}` : ''}${modeTag(r.rules) ? ` · โหมด${esc(modeTag(r.rules))}` : ''}</small>${traitLine(r) ? `<small class="ptraits">${esc(traitLine(r))}</small>` : ''}</div>
     <div class="hr-score"><b>${r.score}</b><small>ชนะห่าง ${r.margin}</small></div>
     <div class="hr-cards"><span data-g="การ์ดวิจัย">${ICON('research')} ${(r.research.culture || 0) + (r.research.innovation || 0) + (r.research.building || 0)}<small>วัฒนธรรม ${r.research.culture || 0} · นวัตกรรม ${r.research.innovation || 0} · สิ่งปลูกสร้าง ${r.research.building || 0}</small></span>
       <span data-g="การ์ดทหาร">${ICON('military')} ${r.military}<small>การ์ดทหาร</small></span><span data-g="โครงการ">${ICON('building')} ${r.projects}<small>โครงการ</small></span></div>
@@ -10521,7 +10533,7 @@ function batchReport(rows, errors, n, label) {
 const devView = () => !!(acct && acct.kind === 'dev');
 // rounds in a game of the given rule set (saved games keep the rules they were started with)
 const roundsOfRules = k => { const rs = RULESETS[k] || RULESETS[DEFAULT_RULES], d = rs.data(); return (rs.rules && rs.rules.rounds) || (d && d.rules && d.rules.rounds) || 16; };
-const rulesFor = r => devView() && RULESETS[r] && RULESETS[r].data() ? r : DEFAULT_RULES;
+const rulesFor = r => RULESETS[r] && RULESETS[r].data() && (devView() || modeOf(r)) ? r : DEFAULT_RULES;
 const rulesetOpts = cur => Object.entries(RULESETS).filter(([k, r]) => r.data() && (!r.hidden || k === cur)).map(([k, r]) => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(r.label)}</option>`).join('');
 const TAKEOVER = { takeover: true };
 
@@ -11015,7 +11027,7 @@ function showGameSettings() {
     <label for="gs-scene">ภาพฉากหลัง</label><span><input type="checkbox" id="gs-scene"${settings.scene ? ' checked' : ''}> <span class="tiny muted">แผนที่คีรันนาใต้โต๊ะ</span></span>
     ${hintsOn() ? `<label for="gs-auto">วางแรงงานอัตโนมัติ</label><span><input type="checkbox" id="gs-auto"${settings.autoWorkers ? ' checked' : ''}> <span class="tiny muted">ใช้การวางที่ AI แนะนำทุกรอบ (เฉพาะโหมดสอนเล่น)</span></span>` : ''}
     ${S && S.mode !== 'online' ? `<label>หยุดชั่วคราว</label><span><button class="btn sm" id="gs-pause">${paused ? 'เล่นต่อ' : 'หยุด AI ชั่วคราว'}</button></span>` : ''}
-    </div>${devView() ? `<div class="tiny muted" style="margin-top:8px">หลังบ้าน · ชุดกฎ ${esc(G && G.ui.rules || '')} · ซีด ${G ? G.seed : '-'}</div>` : ''}<div class="mfoot"><button class="btn primary" id="gs-ok">ปิด</button></div>`);
+    </div>${devView() ? `<div class="tiny muted" style="margin-top:8px">หลังบ้าน · ชุดกฎ ${esc(G && G.ui.rules || '')} · ซีด ${G ? G.seed : '-'}</div>` : S && S.cfg && modeTag(S.cfg.rules) ? `<div class="tiny muted" style="margin-top:8px">เกมนี้เล่นโหมด${esc(modeTag(S.cfg.rules))}</div>` : ''}<div class="mfoot"><button class="btn primary" id="gs-ok">ปิด</button></div>`);
   box.querySelector('#gs-bat').value = settings.battles;
   box.querySelector('#gs-speed').onchange = e => { settings.speed = +e.target.value; saveSettings(); };
   box.querySelector('#gs-bat').onchange = e => { settings.battles = e.target.value; saveSettings(); };
@@ -13038,7 +13050,7 @@ function renderLobbyParts() {
   }
   const ro = document.getElementById('l-rooms');
   if (ro) {
-    setHTML(ro, [...L.rooms.values()].map(r => `<div class="ri"><b>${esc(r.code)}</b><span>${esc(r.host)}</span><span class="tiny muted">${r.humans}/${r.n} ที่นั่ง${devView() ? ' · ' + esc((RULESETS[r.rules] || {}).label || r.rules) : ''}</span><span class="grow"></span><button class="btn sm primary" data-room="${esc(r.code)}">เข้าร่วม</button></div>`).join('') || '<p class="tiny muted">ยังไม่มีห้องเปิด สร้างห้องเองได้เลย</p>');
+    setHTML(ro, [...L.rooms.values()].map(r => `<div class="ri"><b>${esc(r.code)}</b><span>${esc(r.host)}</span><span class="tiny muted">${r.humans}/${r.n} ที่นั่ง${devView() ? ' · ' + esc((RULESETS[r.rules] || {}).label || r.rules) : modeTag(r.rules) ? ' · โหมด' + esc(modeTag(r.rules)) : ''}</span><span class="grow"></span><button class="btn sm primary" data-room="${esc(r.code)}">เข้าร่วม</button></div>`).join('') || '<p class="tiny muted">ยังไม่มีห้องเปิด สร้างห้องเองได้เลย</p>');
     ro.querySelectorAll('[data-room]').forEach(b => b.onclick = () => openGameRoom(b.dataset.room, false));
   }
   const ch = document.getElementById('l-chat');
@@ -13294,10 +13306,11 @@ function renderRoom() {
     ${roomStatusHtml()}
     <div class="lgrid two"><div class="box"><h2>ที่นั่ง</h2><div class="sseats">${seats.join('')}</div>${hereHtml}
       ${R.host ? `<div class="kv" style="margin-top:12px"><label for="r-n">จำนวนรัฐ</label><span><select id="r-n"><option value="3"${R.n === 3 ? ' selected' : ''}>3 รัฐ</option><option value="4"${R.n === 4 ? ' selected' : ''}>4 รัฐ</option></select></span>
-        ${devView() ? `<label for="r-rules">ชุดกฎ</label><span><select id="r-rules">${rulesetOpts(R.rules)}</select> <span class="tiny muted">หลังบ้าน · เห็นเฉพาะผู้พัฒนา</span></span>` : ''}
+        ${devView() ? `<label for="r-rules">ชุดกฎ</label><span><select id="r-rules">${rulesetOpts(R.rules)}</select> <span class="tiny muted">หลังบ้าน · เห็นเฉพาะผู้พัฒนา</span></span>`
+          : `<label for="r-mode">โหมด</label><span><select id="r-mode">${modeOpts(rulesFor(R.rules))}</select> <span class="tiny muted">${esc((modeOf(rulesFor(R.rules)) || {}).note || '')}</span></span>`}
         <label for="r-level">ความยาก AI</label><span><select id="r-level">${levelOpts(R.level)}</select> <span class="tiny muted">ใช้กับที่นั่งที่ AI เล่นแทน${R.level === 'easy' || R.n !== 4 ? ' ถ้ามี AI ร่วมโต๊ะ ชัยชนะจะไม่ขึ้นหอเกียรติยศ เพราะ' + (R.level === 'easy' ? 'เป็น AI ระดับง่าย' : 'เป็นโต๊ะ 3 รัฐ') : ''}</span></span></div>
         <div class="row" style="margin-top:14px"><button class="btn primary big" id="r-start">${ICON('dice')} ทอยลูกเต๋าและเริ่มเกม</button><span class="tiny muted">คนที่ยังยืนอยู่ได้ดูเกม ที่นั่งว่างเป็นของ AI</span></div>`
-      : `<p class="small muted">${R.gotRoster ? 'รอผู้สร้างห้องเริ่มเกม' : 'กำลังติดต่อผู้สร้างห้อง'}${devView() ? ' · ชุดกฎ ' + esc((RULESETS[R.rules] || {}).label || '') : ''} · AI ระดับ${esc((AI.LEVELS[R.level] || AI.LEVELS.normal).name)}</p>`}
+      : `<p class="small muted">${R.gotRoster ? 'รอผู้สร้างห้องเริ่มเกม' : 'กำลังติดต่อผู้สร้างห้อง'}${devView() ? ' · ชุดกฎ ' + esc((RULESETS[R.rules] || {}).label || '') : ' · โหมด' + esc((modeOf(R.rules) || { name: (RULESETS[R.rules] || {}).label || '' }).name)} · AI ระดับ${esc((AI.LEVELS[R.level] || AI.LEVELS.normal).name)}</p>`}
       <p class="tiny muted">ลิงก์ห้อง: <code>${esc(link)}</code></p></div>
       <div class="box"><h2>แชทในห้อง</h2><div id="r-chat" class="chatlog">${R.chat.map(chatLine).join('') || '<p class="tiny muted">ทักทายเพื่อนร่วมโต๊ะได้ที่นี่</p>'}</div><form id="r-chatf" class="chatform"><input id="r-chatin" maxlength="300" autocomplete="off" placeholder="พิมพ์ข้อความ"><button class="btn sm primary">ส่ง</button></form></div></div></div>`;
   const q = s => app.querySelector(s);
@@ -13317,7 +13330,8 @@ function renderRoom() {
       for (const p of gone) { const i = R.seats.indexOf(null); if (i >= 0) R.seats[i] = p; }
       roomSend(rosterMsg()); lobbySend(roomAd()); renderRoom();
     };
-    if (q('#r-rules')) q('#r-rules').onchange = e => { R.rules = e.target.value; roomSend(rosterMsg()); renderRoom(); };
+    if (q('#r-rules')) q('#r-rules').onchange = e => { R.rules = e.target.value; roomSend(rosterMsg()); lobbySend(roomAd()); renderRoom(); };
+    if (q('#r-mode')) q('#r-mode').onchange = e => { R.rules = rulesFor(e.target.value); roomSend(rosterMsg()); lobbySend(roomAd()); renderRoom(); };
     q('#r-level').onchange = e => { R.level = e.target.value; roomSend(rosterMsg()); renderRoom(); };
     app.querySelectorAll('[data-style]').forEach(s => s.onchange = e => { R.styles[+e.target.dataset.style] = e.target.value; roomSend(rosterMsg()); });
     q('#r-start').onclick = hostStart;
@@ -13481,7 +13495,7 @@ function stateHash() {
 }
 
 // =====================================================================
-window.UI = { menu: showMenu, state: () => G, session: () => S, answer, settings, startGame, profile: () => profile, hof: hofLocal, room: () => R, lobby: () => L, pending: () => pending, myId: () => pubId(), account: () => acct, playstyle, hofStyleName, hofTable };
+window.UI = { menu: showMenu, state: () => G, session: () => S, answer, settings, startGame, profile: () => profile, hof: hofLocal, room: () => R, lobby: () => L, pending: () => pending, myId: () => pubId(), account: () => acct, playstyle, hofStyleName, hofTable, gameSettings: showGameSettings };
 if (/room=/.test(location.hash) && netAvailable()) needProfile(showLobby); else showMenu();
 presenceBoot();
 statsBoot();

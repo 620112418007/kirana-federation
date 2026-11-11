@@ -5,6 +5,10 @@
  * ความคิดเห็นที่ผู้เล่นที่ลงชื่อเข้าใช้กดส่งลงชีต "cmt" ทันที เครื่องผู้พัฒนาลบรายชื่อหรือความคิดเห็นจากหน้าเกมได้
  * การลบจดไว้ในชีต "removed" ทุกหน้าเกมจึงซ่อนรายการนั้น แม้รายการจะยังค้างอยู่ในไฟล์ของคลังหรือในเครื่องผู้เล่น
  * ลบแถวในชีตเพื่อเอาบันทึกที่ไม่ต้องการออกได้ทันทีเหมือนเดิม
+ *
+ * หอเกียรติยศเริ่มใหม่ทุกวันที่ 1 ของเดือนตามเวลาไทย (รุ่น 5): คำขอแรกของเดือนใหม่ย้ายแถวของเดือนก่อน ๆ จากชีต "hof"
+ * ไปต่อท้ายชีต "hof-archive" พร้อมเดือนของแถวนั้นในคอลัมน์แรก ชีต "hof" จึงเหลือเฉพาะเดือนที่กำลังเดิน ไม่มีแถวใดถูกลบทิ้ง
+ * วันที่ของบันทึกมาจากนาฬิกาของสคริปต์ และบันทึกที่เคยขึ้นหอในเดือนก่อนส่งซ้ำเข้าเดือนใหม่ไม่ได้
  * ถ้าเคยเผยแพร่รุ่นก่อนแล้ว วางโค้ดนี้ทับ แล้ว Deploy > Manage deployments > แก้ไข > Version: New version ที่อยู่เดิมใช้ต่อได้
  *
  * สถิติการเล่น: ชีต "daily" นับจำนวนคนเข้าต่อวัน (เบราว์เซอร์ละครั้งต่อวัน แยกสมาชิกกับผู้มาเยือน ไม่มีรายการการเข้าชม)
@@ -42,13 +46,19 @@ const CSHEET = 'cmt';
 const CHEAD = ['id', 'ts', 'by', 'json'];
 const RSHEET = 'removed';
 const RHEAD = ['kind', 'id', 'ts', 'by'];
+const ASHEET = 'hof-archive';
+const AHEAD = ['month'].concat(HEAD);
+// dates in Thai time (CONFIG.UTC_OFFSET): '2026-11-30' and the month '2026-11'
+const dayStr = t => new Date(t + CONFIG.UTC_OFFSET * 3600e3).toISOString().slice(0, 10);
+const monthStr = t => dayStr(t).slice(0, 7);
+const listKey = () => 'list.' + monthStr(Date.now());
 
 function doGet(e) {
   const p = (e && e.parameter) || {};
   if (p.list === 'hof') return out(listCached());
   if (p.list === 'cmt') return out(listComments());
   if (p.list === 'removed') return out(listRemoved());
-  return out({ ok: true, app: 'kirana-federation-hof', v: 4, count: Math.max(0, sheet().getLastRow() - 1) });
+  return out({ ok: true, app: 'kirana-federation-hof', v: 5, month: monthStr(Date.now()), count: Math.max(0, sheet().getLastRow() - 1) });
 }
 
 function doPost(e) {
@@ -104,20 +114,25 @@ function addRecord(b) {
   let rec;
   try { rec = cleanRecord(b.rec); } catch (err) { return { ok: false, err: 'record', msg: String(err && err.message || err) }; }
   rec.by = acct; rec.via = 'auto';
+  // the record is dated by the script's clock, in Thai time: the month it counts in is the month it arrived
+  rec.at = dayStr(Date.now());
   const lock = LockService.getScriptLock();
   lock.waitLock(15000);
   try {
+    rollHof(true);
     // a record the developer removed stays out, even when the winner's page sends it again
     if (isRemoved('hof', rec.id)) return { ok: true, removed: true };
     const sh = sheet();
     const rows = sh.getLastRow() > 1 ? sh.getRange(2, 1, sh.getLastRow() - 1, HEAD.length).getValues() : [];
     const key = 'r:' + rec.id;
     if (rows.some(r => r[0] === key)) return { ok: true, dup: true, rank: rankIn(rows, rec.id), total: rows.length };
+    // a win that already stood in the hall of a month before does not come back for the new month
+    if (archivedKeys().has(key)) return { ok: true, dup: true, old: true };
     const dayAgo = Date.now() - 864e5;
     if (rows.filter(r => r[2] === 'u:' + acct && +r[1] > dayAgo).length >= CONFIG.MAX_PER_DAY) return { ok: false, err: 'limit' };
     const row = [key, Date.now(), 'u:' + acct, rec.score, rec.margin, JSON.stringify(rec)];
     sh.appendRow(row);
-    CacheService.getScriptCache().remove('list');
+    CacheService.getScriptCache().remove(listKey());
     rows.push(row);
     return { ok: true, rank: rankIn(rows, rec.id), total: rows.length };
   } finally { lock.releaseLock(); }
@@ -233,7 +248,7 @@ function removeEntry(b) {
     }
     if (!isRemoved(kind, b.id)) removedSheet().appendRow([kind, b.id, Date.now(), acct]);
     const cache = CacheService.getScriptCache();
-    ['list', 'clist', 'rlist'].forEach(k => cache.remove(k));
+    [listKey(), 'clist', 'rlist'].forEach(k => cache.remove(k));
     return { ok: true, deleted: deleted };
   } finally { lock.releaseLock(); }
 }
@@ -252,21 +267,63 @@ function listRemoved() {
   return list;
 }
 
-// ---------- the list the game reads ----------
+// ---------- the list the game reads: the month that runs, Thai time ----------
 function listCached() {
-  const cache = CacheService.getScriptCache();
-  const hit = cache.get('list');
+  rollHof(false);
+  const cache = CacheService.getScriptCache(), key = listKey(), month = monthStr(Date.now());
+  const hit = cache.get(key);
   if (hit) return JSON.parse(hit);
   const sh = sheet();
   const rows = sh.getLastRow() > 1 ? sh.getRange(2, 1, sh.getLastRow() - 1, HEAD.length).getValues() : [];
   const list = [];
-  // rows saved before the rules of 11 Nov stay in the sheet; the list leaves out the ones the rules no longer count
-  for (const r of rows) { const rec = rowRec(r); if (rec && rec.id && hofOk(rec)) list.push(rec); }
+  // rows saved before the rules of 11 Nov stay in the sheet; the list leaves out the ones the rules no longer count, and
+  // a row of another month waits there only if the move into the archive could not run yet
+  for (const r of rows) { const rec = rowRec(r); if (rec && rec.id && hofOk(rec) && rowMonth(r) === month) list.push(rec); }
   list.sort(hofOrder);
   const top = list.slice(0, CONFIG.LIST_SIZE);
   const text = JSON.stringify(top);
-  if (text.length < 95000) cache.put('list', text, 60);
+  if (text.length < 95000) cache.put(key, text, 60);
   return top;
+}
+// ---------- the hall starts again on the 1st of every month, Thai time (ruled 11 Nov 2026) ----------
+// The first call of a new month moves the rows of the months before from "hof" to the end of "hof-archive", each with its
+// month in front, in one write, and "hof" keeps the month that runs. Nothing is deleted: the owner reads every past month
+// in the archive. A row's month comes from the time the script saved it (a row typed by hand without one: its date);
+// a row with neither stays where it is
+function rowMonth(r) {
+  const t = +r[1];
+  if (isFinite(t) && t > 0) return monthStr(t);
+  const rec = rowRec(r);
+  return rec && typeof rec.at === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(rec.at) ? rec.at.slice(0, 7) : '';
+}
+function rollHof(locked) {
+  const props = PropertiesService.getScriptProperties(), month = monthStr(Date.now());
+  if (props.getProperty('HOF_MONTH') === month) return;
+  const lock = locked ? null : LockService.getScriptLock();
+  if (lock) { try { lock.waitLock(15000); } catch (err) { return; } }   // busy: the list still shows this month only
+  try {
+    if (props.getProperty('HOF_MONTH') === month) return;
+    const sh = sheet(), last = sh.getLastRow();
+    if (last > 1) {
+      const rows = sh.getRange(2, 1, last - 1, HEAD.length).getValues(), keep = [], old = [];
+      for (const r of rows) { const m = rowMonth(r); (m && m < month ? old : keep).push(r); }
+      if (old.length) {
+        const ar = archiveSheet(), at = ar.getLastRow() + 1, need = at + old.length - 1 - ar.getMaxRows();
+        if (need > 0) ar.insertRowsAfter(ar.getMaxRows(), need);
+        ar.getRange(at, 1, old.length, AHEAD.length).setValues(old.map(r => [rowMonth(r)].concat(r)));
+        sh.getRange(2, 1, last - 1, HEAD.length).clearContent();
+        if (keep.length) sh.getRange(2, 1, keep.length, HEAD.length).setValues(keep);
+      }
+    }
+    props.setProperty('HOF_MONTH', month);
+    CacheService.getScriptCache().remove(listKey());
+  } finally { if (lock) lock.releaseLock(); }
+}
+function archiveSheet() { return sheetNamed(ASHEET, AHEAD); }
+function archivedKeys() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet(), ar = ss.getSheetByName(ASHEET);
+  if (!ar || ar.getLastRow() < 2) return new Set();
+  return new Set(ar.getRange(2, 2, ar.getLastRow() - 1, 1).getValues().map(r => r[0]));
 }
 // ---------- play statistics: visitors per day, games and their move logs, for the developer's eyes only ----------
 // Visitors are counts per day and nothing else: a page sends one signal a day, the script adds one to that day's

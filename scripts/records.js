@@ -12,13 +12,15 @@ const int = (x, lo, hi) => Number.isInteger(x) && x >= lo && x <= hi ? x : 0;
 const okImg = (x, n) => typeof x === 'string' && x.length < n && /^data:image\/(png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(x);
 const read = f => { try { const j = JSON.parse(fs.readFileSync(f, 'utf8')); return Array.isArray(j) ? j : []; } catch (e) { return []; } };
 const write = (f, list) => fs.writeFileSync(f, JSON.stringify(list, null, 1) + '\n');
+// dates in Thai time (UTC+7): the hall of fame starts again on the 1st of every month (ruled 11 Nov 2026)
+const thDay = t => new Date(t + 7 * 3600e3).toISOString().slice(0, 10);
 
 if (title.startsWith('[HOF]')) {
   if (typeof d.id !== 'string' || !/^[a-z0-9]{1,16}$/.test(d.id)) done('รหัสบันทึกไม่ถูกต้อง');
   if (!Number.isInteger(d.score) || Math.abs(d.score) > 300) done('คะแนนไม่ถูกต้อง');
   const r = d.research || {}, st = d.style || {};
   const rec = {
-    v: 1, id: d.id, at: str(d.at, 10), mode: d.mode === 'online' ? 'online' : 'solo', rules: str(d.rules, 8), n: int(d.n, 3, 4) || 4, seed: int(d.seed, 0, 4294967295),
+    v: 1, id: d.id, at: thDay(Date.now()), mode: d.mode === 'online' ? 'online' : 'solo', rules: str(d.rules, 8), n: int(d.n, 3, 4) || 4, seed: int(d.seed, 0, 4294967295),
     leader: str(d.leader, 24) || 'ผู้เล่น', title: str(d.title, 32), traits: (Array.isArray(d.traits) ? d.traits : []).slice(0, 3).map(x => str(x, 24)).filter(Boolean),
     state: str(d.state, 24) || 'รัฐไร้นาม', latin: str(d.latin, 24), meaning: str(d.meaning, 60),
     color: /^#[0-9a-f]{6}$/i.test(d.color) ? d.color : '#888888',
@@ -39,7 +41,9 @@ if (title.startsWith('[HOF]')) {
   const tier = r => r.lvl === 'hard' ? 0 : 1;
   if (!ok(rec)) done('เกมกับ AI ขึ้นหอเกียรติยศได้เฉพาะโต๊ะ 4 รัฐที่ AI ระดับปกติหรือยาก จึงไม่ได้บันทึก');
   const file = 'data/hall-of-fame.json';
-  const list = read(file).filter(ok);
+  // the record is dated when the Action runs, and the file keeps the month that runs: older months leave it here
+  const month = rec.at.slice(0, 7);
+  const list = read(file).filter(ok).filter(x => typeof x.at === 'string' && x.at.slice(0, 7) === month);
   if (list.some(x => x.id === rec.id)) done(`บันทึกนี้อยู่ในหอเกียรติยศแล้ว (${rec.state} ${rec.score} คะแนน)`);
   list.push(rec);
   list.sort((a, b) => tier(a) - tier(b) || b.score - a.score || b.margin - a.margin);

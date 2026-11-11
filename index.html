@@ -1239,6 +1239,15 @@ body[data-view="table"] .online-pill { bottom: auto; top: 60px; left: auto; righ
 .lcard.off .mcard { opacity: .45; filter: grayscale(.8); transform: rotate(-4deg) translateY(6px); }
 .lcard.off .os { color: var(--bad); }
 .lbtn { display: flex; gap: 6px; }
+/* the payment order on the player's own board (ruled 11 Nov) */
+.payord { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); padding: 2px 6px; border-radius: 8px; border: 1px solid rgba(255,255,255,.08); }
+.payord select { font: inherit; font-size: 12px; padding: 2px 4px; border-radius: 6px; background: rgba(0,0,0,.35); color: var(--text); border: 1px solid rgba(255,255,255,.15); }
+.payord.wait { border-color: var(--warn); }
+.payord.wait span::after { content: " (รอใช้)"; color: var(--warn); }
+/* selling to the central market, place by place */
+.sellsrc { display: grid; gap: 3px; margin: 2px 0 8px 26px; }
+.sellsrc .frow { font-size: 12px; }
+.sellsrc .src { color: var(--muted); }
 
 /* =====================================================================
    GOTHIC INDUSTRIAL: Luxonia after dark.
@@ -5658,8 +5667,17 @@ async function supporterDraft(G) {
 }
 
 // ---------- payments ----------
+// Where the goods of a payment come from is the payer's choice (rules 5.1: any of the state's projects or the warehouse).
+// P.payFirst holds the order the player picked on the page (ruled 11 Nov): 'wh' takes from the warehouse first, 'proj'
+// from the projects first, the project holding the most first. Unset (the AI, and every game before the choice
+// existed), each payment keeps the order it always had: selling to the central market and fuel from the warehouse first,
+// everything else from the projects first. The page changes it with a control that rides on the player's next answer,
+// so every peer and every replay applies it at the same point of the game
+const PAY_ORDERS = ['wh', 'proj'];
+K.PAY_ORDERS = PAY_ORDERS;
 function takeGoods(P, t, k, preferWh) {
   // remove k goods of type t: projects first (largest stock), warehouse last (or the reverse)
+  if (P.payFirst === 'wh') preferWh = true; else if (P.payFirst === 'proj') preferWh = false;
   if (preferWh) { const w = Math.min(k, P.wh[t]); P.wh[t] -= w; k -= w; }
   if (k > 0) {
     const ps = P.projects.filter(p => p.d.out === t && p.goods > 0).sort((a, b) => b.goods - a.goods);
@@ -5697,7 +5715,7 @@ function execPay(G, P, cost, plan) {
   P.grav -= plan.gravNeed;
   if (P.grav < 0) throw new Error('negative grav');
 }
-K.payPlan = payPlan;
+K.payPlan = payPlan; K.execPay = execPay; K.takeGoods = takeGoods;
 
 function projectCost(G, P, d, annex) {
   if (annex && G.rules && G.rules.annexFree) return { mat: 0, fuel: 0, food: 0, grav: expansionCost(G, P) };
@@ -6392,7 +6410,18 @@ async function doCommerce(G, P, plan) {
   for (const t of GOODS) {
     const n = Math.min((plan.sells && plan.sells[t]) || 0, goodsOf(P, t));
     if (n <= 0) continue;
-    takeGoods(P, t, n, true);
+    // the player may say where every unit comes from: plan.from[t] = {wh: n, <project uid>: n}; what it leaves out (or
+    // asks beyond what a place holds) comes by the state's payment order
+    let left = n;
+    const from = plan.from && typeof plan.from[t] === 'object' ? plan.from[t] : null;
+    if (from) for (const key of Object.keys(from)) {
+      const want = Math.min(left, Math.max(0, Math.floor(+from[key] || 0)));
+      if (!want) continue;
+      if (key === 'wh') { const x = Math.min(want, P.wh[t]); P.wh[t] -= x; left -= x; continue; }
+      const pr = P.projects.find(p => String(p.uid) === key && p.d.out === t);
+      if (pr) { const x = Math.min(want, pr.goods); pr.goods -= x; left -= x; }
+    }
+    if (left > 0) takeGoods(P, t, left, true);
     let earned = n * sellP; const extra = Math.min(law, n); earned += extra; law -= extra;
     P.grav += earned; sold.push(`${RES_NAME[t]} ${n} ได้ ${earned}`); fx.sells.push({ t, n, g: earned });
     G.stats.centralSold.units += n; G.stats.centralSold.grav += earned;
@@ -6497,6 +6526,7 @@ function paySupply(G, P) {
   if (goodsOf(P, 'food') < 1) return false;
   takeGoods(P, 'food', 1); return true;
 }
+K.paySupply = paySupply;
 
 async function doCommand(G, P, cmd) {
   const warlord = isRegime(G, 'ระบอบขุนศึก');
@@ -8964,6 +8994,7 @@ const GLOSSARY = [
   ['อาหาร', 'สินค้าที่ใช้จ้างแรงงานตอนสภา และจ่ายเป็นเสบียงเมื่อบัญชาการทัพ', 'ทรัพยากร'],
   ['สินค้า', 'วัสดุ เชื้อเพลิง และอาหาร นับรวมทั้งที่ค้างบนโครงการและที่อยู่ในคลังสินค้า', 'ทรัพยากร'],
   ['คลังสินค้า', 'ที่เก็บสินค้าที่ปลอดภัยของรัฐ จุ 6 หน่วย รัฐอื่นซื้อหรือปล้นไม่ได้ ของที่ซื้อ ปล้น หรือได้จากการ์ดเข้าคลัง ถ้าเกินความจุ ระบบขายส่วนเกินให้ตลาดกลางตอนจบเทิร์น', 'ทรัพยากร', ['คลัง']],
+  ['ลำดับการจ่าย', 'ช่องจ่ายจากบนแผงรัฐของคุณ เลือกว่าเวลาจ่ายสินค้าจะหยิบจากคลังหรือจากโครงการก่อน ใช้กับต้นทุน เสบียง ค่าแรงงาน วัตถุดิบนำเข้า เชื้อเพลิง และผลของการ์ด แบบอัตโนมัติขายตลาดกลางกับเชื้อเพลิงจากคลังก่อน อย่างอื่นจากโครงการก่อน', 'ทรัพยากร'],
   ['ค้างบนโครงการ', 'ผลผลิตที่วางอยู่บนการ์ดโครงการ ได้ไม่เกิน 6 หน่วยต่อใบ (ยุ้งฉางที่ทำงานอยู่เพิ่มเป็น 9) รัฐอื่นซื้อได้ตามราคาขายบนการ์ด และปล้นได้เมื่อชนะการโจมตี', 'ทรัพยากร', ['ค้าง']],
   ['ตลาดกลาง', 'ตลาดของสหพันธรัฐ รับซื้อสินค้าได้ไม่จำกัด และขายสินค้าให้ทุกรัฐ ราคาตามยุค ยุค I ขายให้ 5 รับซื้อ 2 ยุค II 4 และ 1 ยุค III และ IV 3 และ 1', 'ทรัพยากร'],
   ['ราคาขาย', 'ราคาต่อหน่วยที่รัฐอื่นจ่ายให้เจ้าของเมื่อซื้อสินค้าที่ค้างบนโครงการ โครงการเริ่มต้นถึงยุค II ขาย 3 ยุค III และ IV ขาย 2', 'ทรัพยากร'],
@@ -9047,6 +9078,7 @@ const HOWTO = [
     'การทูต: คืนการ์ดที่เล่นแล้วขึ้นมือ เลือกได้ว่าจะสับกองพักกลับเข้ากองทหารหรือไม่ และขยับกระแส 1 ช่อง ใครเล่นการทูตช้า ได้เทิร์นในรอบนั้นมากกว่า แต่ใครเล่นเร็วได้เลือกจังหวะกระแสก่อน'] },
   { id: 'trade', h: 'เศรษฐกิจและการค้า', p: [
     'โครงการผลิตแล้ววางสินค้าค้างบนการ์ดได้ไม่เกิน 6 หน่วย รัฐอื่นซื้อของที่ค้างได้ตามราคาขายบนการ์ด และเงินเข้ากระเป๋าคุณ คลังสินค้าจุ 6 หน่วยและปลอดภัย แต่ของจะเข้าคลังได้ทางการซื้อ การปล้น หรือผลของการ์ดเท่านั้น',
+    'จ่ายสินค้าจากไหนก็ได้ทั้งคลังและโครงการ เลือกลำดับได้ที่ช่องจ่ายจากบนแผงรัฐ คลังก่อนเก็บของที่ค้างบนโครงการไว้ขายให้รัฐอื่น โครงการก่อนลดของที่โดนปล้นได้และเหลือที่ว่างในคลัง ตอนขายให้ตลาดกลาง หน้าค้าขายให้เลือกได้ทีละที่ว่าจะขายจากคลังหรือโครงการไหน',
     'ตลาดกลางรับซื้อไม่จำกัดแต่ให้ราคาต่ำ และขายให้แพงกว่าซื้อจากรัฐอื่นในยุคแรก การซื้อจากรัฐเพื่อนบ้านจึงคุ้มกว่าและสร้างรายได้ให้เขาด้วย ถ้าจ่ายให้รัฐเดียวถึงเกณฑ์การค้ามูลค่าสูง ทั้งสองฝ่ายจั่วโบนัส',
     'สิ่งปลูกสร้างเสียบใต้โครงการ และทำงานเองทุกรอบตราบที่โครงการนั้นมีแรงงานเต็ม ไม่ต้องกดและไม่มีค่าใช้ บางใบทำงานตอนขั้นผลิต เช่นกังหันน้ำที่ผลิตเพิ่ม บางใบเสริมแอคชันของคุณ เช่นโบสถ์ที่ดันกระแสเพิ่มตอนเล่นการทูต หรือโรงตีเหล็กที่ทำให้การปฏิรูปจั่วการ์ดมากขึ้น ป้ายใต้การ์ดบอกว่าใบไหนทำงานหรือหยุดอยู่'] },
   { id: 'war', h: 'การทหารและการรบ', p: [
@@ -10513,12 +10545,13 @@ const INTERP = ['การ์ดแอคชันที่เล่นแล้
   'โครงการที่มีวัตถุดิบนำเข้าจ่ายวัตถุดิบจากของที่มีอยู่ก่อนผลิตของรอบนี้', 'โบนัสผลิตจากนวัตกรรมใช้กับโครงการที่ผลิตในรอบนั้น', 'โคมไฟกริดมานาให้โครงการที่ใช้แรงงาน 1 คนผลิตได้โดยไม่มีแรงงาน',
   'ผลที่ค้างไว้ถึงการรบครั้งถัดไปหมดอายุตอนประชุมสภา', 'แรงงานฟรีจากการ์ดโบนัสไม่นับเป็นการรับแรงงานของรอบ', 'กระแสแต่ละสายอยู่ในช่วง 0 ถึง 9 และราคาซื้อจากตลาดกลางต่ำสุด 1',
   'รัฐประหารสำเร็จต้องเลือกระบอบที่ต่างจากระบอบเดิม', 'อำนาจยิงเหนือกว่าทำลายใบล่าสุดของอีกฝ่ายที่ยังไม่โดนทำลาย ใบนั้นลงกองพักทันที', 'สกัดลดพลังใบที่พลังปัจจุบันสูงสุดของอีกฝ่าย',
-  'คำสำคัญเชื้อเพลิงจ่ายอัตโนมัติ เริ่มจากคลังสินค้า การ์ดที่ไม่มีเชื้อเพลิงจ่ายมีพลัง 0 แต่คำสำคัญอื่นยังทำงาน', 'สนับสนุนบวกพลังให้ใบถัดไปทันทีที่มันเปิด จึงนับตอนเทียบอำนาจยิงด้วย',
+  'คำสำคัญเชื้อเพลิงจ่ายอัตโนมัติ หยิบตามลำดับการจ่ายที่ผู้เล่นเลือกบนแผงรัฐ (แบบอัตโนมัติเริ่มจากคลังสินค้า) การ์ดที่ไม่มีเชื้อเพลิงจ่ายมีพลัง 0 แต่คำสำคัญอื่นยังทำงาน', 'สนับสนุนบวกพลังให้ใบถัดไปทันทีที่มันเปิด จึงนับตอนเทียบอำนาจยิงด้วย',
   'การซื้อจากผลของการ์ดไม่นับเงื่อนไขซื้อครบในแอคชันเดียวของนวัตกรรม', 'คลังสินค้าเกินความจุ ระบบขายส่วนเกินให้อัตโนมัติ เริ่มจากชนิดที่มีมากที่สุด และตรวจซ้ำตอนเริ่มประชุมสภา', 'สอดแนมเลือกกองก่อนแล้วจึงเห็นการ์ดของกองนั้น',
   'ลำดับที่นั่งและผู้เล่นคนแรกของรอบแรกมาจากการทอยลูกเต๋า D6 แต้มเท่ากันทอยใหม่เฉพาะกลุ่มที่เท่ากัน',
   'ฉบับ 0.4: การวางแรงงานและการจ้างแรงงานที่ถามทุกรัฐพร้อมกัน ทำผลตามลำดับที่นั่ง รัฐที่จ้างได้สองคนถูกถามรอบที่สองหลังทุกรัฐตอบรอบแรกแล้ว',
   'ฉบับ 0.4: ผลขั้นผลิตของสิ่งปลูกสร้างทำหลังรัฐนั้นผลิตเสร็จ ไล่ตามลำดับโครงการแล้วตามลำดับที่ติด สิ่งปลูกสร้างที่ขายหรือแปรรูปใช้สินค้าที่ค้างบนโครงการ ถ้ามีไม่ถึงก็ไม่ทำงาน',
-  'ฉบับ 0.4: ห้องทดลองเคมีกับโรงจักรไอน้ำมานาจ่ายเชื้อเพลิงอัตโนมัติ เริ่มจากคลังสินค้า ถ้าไม่มีเชื้อเพลิงก็ไม่ผลิตเพิ่ม',
+  'ฉบับ 0.4: ห้องทดลองเคมีกับโรงจักรไอน้ำมานาจ่ายเชื้อเพลิงอัตโนมัติ หยิบตามลำดับการจ่ายที่ผู้เล่นเลือก (แบบอัตโนมัติเริ่มจากคลังสินค้า) ถ้าไม่มีเชื้อเพลิงก็ไม่ผลิตเพิ่ม',
+  'ลำดับการจ่ายสินค้า (11 พ.ย.): ผู้เล่นเลือกบนแผงรัฐว่าจะหยิบจากคลังหรือโครงการก่อน ใช้กับทุกการจ่ายสินค้า ค่าที่เลือกมีผลตั้งแต่การตัดสินใจครั้งถัดไปของผู้เล่น เพื่อให้ทุกเครื่องในเกมออนไลน์ใช้ค่าเดียวกันที่จังหวะเดียวกัน แบบโครงการก่อนหยิบจากโครงการที่ค้างมากที่สุดก่อน การขายให้ตลาดกลางเลือกได้ทีละที่ การ์ดที่ระบุโครงการนี้ เช่นท่าเทียบเรือและโรงทอ ยังใช้สินค้าบนโครงการนั้น',
   'ฉบับ 0.4: การขยับกระแสจากสิ่งปลูกสร้างถามต่อจากการขยับของการทูต เรียงโบสถ์ ศาลาประชาคม อนุสาวรีย์ แท่นพิมพ์ แล้วหอกระจายเสียง ทุกครั้งเลือกไม่ขยับได้',
   'ฉบับ 0.4: ศูนย์บัญชาการทหารสับกองพักกลับก่อนการรบทุกครั้งของเจ้าของ ทั้งตอนบุกและตอนรับ และยุ้งฉางกันการปล้นสินค้า แต่ไม่กันการปล้นเกรฟ',
   'ฉบับ 0.4.1: ปฏิรูปทำตามลำดับ จั่ว เลือกเก็บ เปิดดูกองทหารกับกองพักแล้วทิ้ง แล้วจึงสับกองพักกับใบที่เก็บรวมเข้ากอง ใบที่เพิ่งได้จึงไม่อยู่ในตัวเลือกทิ้ง',
@@ -10891,7 +10924,7 @@ async function ioAsk(tok, P, req) {
   const seq = ++S.seq;
   if (window.__fedTrace) window.__fedTrace.push([seq, P.id, req.kind, stateHash(), G.__aiN ? G.__aiN() : -1]);
   if (S.replay) {
-    if (S.replay.has(seq)) { const e = S.replay.get(seq); S.log.set(seq, e); applyCtl(seq, e); if (++S.yieldN % 40 === 0) await sleep(0); const v = decodeAns(req, e); if (isMine(P)) rememberWorkers(P, req, v); return v; }
+    if (S.replay.has(seq)) { const e = S.replay.get(seq); S.log.set(seq, e); applyCtl(seq, e, P); if (++S.yieldN % 40 === 0) await sleep(0); const v = decodeAns(req, e); if (isMine(P)) rememberWorkers(P, req, v); return v; }
     if (seq > S.replayMax) endReplay();
   }
   const tk = S.takeover[P.id];
@@ -10908,9 +10941,11 @@ async function ioAsk(tok, P, req) {
     alive(tok);
     rememberWorkers(P, req, v);
     const e = encodeAns(req, v);
+    // a payment order the player picked since their last answer rides on this one
+    if (S.payCtl && S.payCtl[P.id] != null) { e.c = (e.c || []).concat([{ pay: P.id, m: S.payCtl[P.id] }]); delete S.payCtl[P.id]; }
     S.log.set(seq, e);
     if (S.net) S.net.sendAnswer(seq, P.id, e);
-    applyCtl(seq, e);
+    applyCtl(seq, e, P);
     saveSoon();
     return v;
   }
@@ -10918,14 +10953,26 @@ async function ioAsk(tok, P, req) {
   alive(tok);
   if (e === TAKEOVER) return aiAnswer(tok, P, req);
   S.log.set(seq, e);
-  applyCtl(seq, e);
+  applyCtl(seq, e, P);
   saveSoon();
   return decodeAns(req, e);
 }
-// controls ride on answers, so every peer applies them at the same point of the game
-function applyCtl(seq, e) {
+// controls ride on answers, so every peer applies them at the same point of the game. P: the state that answered; a
+// payment order only counts on that state's own answer
+function applyCtl(seq, e, P) {
   if (!e || !e.c) return;
-  for (const c of e.c) if (c.reclaim != null && S.takeover[c.reclaim] && S.takeover[c.reclaim].to == null) S.takeover[c.reclaim].to = seq;
+  for (const c of e.c) {
+    if (c.reclaim != null && S.takeover[c.reclaim] && S.takeover[c.reclaim].to == null) S.takeover[c.reclaim].to = seq;
+    if (c.pay != null && P && c.pay === P.id && (c.m === 'auto' || K.PAY_ORDERS.includes(c.m))) { if (c.m === 'auto') delete P.payFirst; else P.payFirst = c.m; }
+  }
+}
+// the payment order the player sees: one picked and waiting for their next answer, else the state's own
+const payOrderOf = P => (S && S.payCtl && S.payCtl[P.id] != null ? S.payCtl[P.id] : P.payFirst || 'auto');
+function setPayOrder(P, m) {
+  if (!S || !isMine(P) || !(m === 'auto' || K.PAY_ORDERS.includes(m))) return;
+  S.payCtl = S.payCtl || {};
+  if (m === (P.payFirst || 'auto')) delete S.payCtl[P.id]; else S.payCtl[P.id] = m;
+  queueRender();
 }
 async function aiAnswer(tok, P, req) {
   if (req.kind === 'turn' && !S.replaying) {
@@ -11471,6 +11518,17 @@ function handPips(P) {
     return `<i class="${inH ? '' : 'out'}${dip ? ' dip' : ''}">${ICON(CARD_ICON[c])}</i>`;
   }).join('')}</span>`;
 }
+// where the goods of a payment come from (ruled 11 Nov): the player picks the order on their own board; it rides on their
+// next answer (30_session.js), so the board shows the pick at once and says when it starts to count
+const PAY_LABEL = { auto: 'อัตโนมัติ', wh: 'คลังก่อน', proj: 'โครงการก่อน' };
+function payOrderHtml(P) {
+  const m = payOrderOf(P), wait = !!(S && S.payCtl && S.payCtl[P.id] != null);
+  const tip = `<div class="tt">จ่ายสินค้าจากไหนก่อน</div><div>ใช้กับทุกการจ่ายสินค้า ทั้งต้นทุน เสบียง ค่าแรงงาน วัตถุดิบนำเข้า เชื้อเพลิง และผลของการ์ด ส่วนการขายให้ตลาดกลางเลือกได้ทีละที่ในหน้าค้าขาย</div>
+    <div><b>อัตโนมัติ</b> ขายตลาดกลางกับเชื้อเพลิงหยิบจากคลังก่อน อย่างอื่นหยิบจากโครงการก่อน</div><div><b>คลังก่อน</b> หยิบจากคลังสินค้าก่อน ไม่พอจึงหยิบจากโครงการ</div>
+    <div><b>โครงการก่อน</b> หยิบจากโครงการที่ค้างมากที่สุดก่อน ไม่พอจึงหยิบจากคลัง</div><div class="muted">ของที่ค้างบนโครงการรัฐอื่นซื้อหรือปล้นได้ ของในคลังปลอดภัยแต่คลังจุจำกัด</div>
+    ${wait ? '<div class="warnc">มีผลตั้งแต่การตัดสินใจครั้งถัดไปของคุณ</div>' : ''}`;
+  return `<label class="payord${wait ? ' wait' : ''}" data-tipw="1" data-tip="${esc(tip)}"><span>จ่ายจาก</span><select id="m-pay" aria-label="จ่ายสินค้าจากไหนก่อน">${Object.entries(PAY_LABEL).map(([v, l]) => `<option value="${v}"${v === m ? ' selected' : ''}>${l}</option>`).join('')}</select></label>`;
+}
 function whHtml(P) {
   let wh = ''; for (const t of GOODS) for (let i = 0; i < P.wh[t]; i++) wh += `<i class="cube c-${t}"></i>`;
   for (let i = K.whTotal(P); i < K.whCap(P); i++) wh += '<i class="cube off"></i>';
@@ -11537,12 +11595,13 @@ function renderMine() {
   const ready = !P.pb && pending && pending.req.kind === 'turn' && pending.P === P ? new Set(pending.req.opts.acts.map(a => a.uid)) : null;
   const xc = G.rules.expansionFree != null ? K.expansionCost(G, P) : 0;
   setHTML(box, `<div class="mat me${isActive(P) ? ' active' : ''}" style="--pc:${P.color}" data-anchor="seat-${P.id}">
-    <div class="mtop">${seatHead(P, true)}${resLine(P)}<span class="stat" data-g="ความจุการซื้อ">${ICON('wagon')}<b>${K.capacity(G, P, true)}</b></span></div>
+    <div class="mtop">${seatHead(P, true)}${resLine(P)}<span class="stat" data-g="ความจุการซื้อ">${ICON('wagon')}<b>${K.capacity(G, P, true)}</b></span>${payOrderHtml(P)}</div>
     <div class="mbody"><div class="projrow">${P.projects.map(pr => projCardHtml(pr, { P, isNew: isNew(pr.uid), ready })).join('')}
       ${G.rules.expansionFree != null ? `<div class="xnote${xc > 0 ? ' on' : ''}" data-g="ค่าขยายดินแดน">${xc > 0 ? `${ICON('grav')}<b>+${xc}</b><span>ค่าขยายดินแดน โครงการใบถัดไป</span>` : `<span>ค่าขยายดินแดนเริ่มที่โครงการใบที่ ${G.rules.expansionFree + 1} (มี ${P.projects.length})</span>`}</div>` : ''}</div>
       <div class="mside"><div class="b-label"><span data-g="การ์ดวิจัย">การ์ดวิจัย</span></div><div class="rrow2" data-anchor="research-${P.id}">${researchRow(P)}</div>
         <div class="b-label"><span data-g="กองทัพ">กองทัพ</span><button class="btn xs" id="m-army">ดูทั้งกอง</button></div>${armyPiles(P, true)}</div></div></div>`);
   const ab = box.querySelector('#m-army'); if (ab) ab.onclick = () => showArmy(P);
+  const ps = box.querySelector('#m-pay'); if (ps) ps.onchange = e => { sfx('tick'); setPayOrder(P, e.target.value); };
 }
 function showArmy(P) {
   const army = K.armyCards(P).slice().sort((a, b) => b.d.power - a.d.power);
@@ -11999,9 +12058,23 @@ function drawWorkers() {
 let cState = null;
 function openCommerce() {
   if (!pending || pending.req.kind !== 'commerce') return;
-  if (!cState || cState.id !== pending.id) cState = { id: pending.id, sells: { mat: 0, fuel: 0, food: 0 }, buys: {}, central: { mat: 0, fuel: 0, food: 0 } };
+  if (!cState || cState.id !== pending.id) cState = { id: pending.id, sells: { mat: 0, fuel: 0, food: 0 }, from: { mat: {}, fuel: {}, food: {} }, buys: {}, central: { mat: 0, fuel: 0, food: 0 } };
   drawCommerce();
 }
+// selling to the central market place by place (ruled 11 Nov): the warehouse and every project holding the good. Places
+// are listed in the order the state pays from (payment order on the board; the automatic order sells from the
+// warehouse first), and a total set at once (the AI's advice) is spread over them in that order
+function sellSources(P, t) {
+  const wh = P.wh[t] > 0 ? [{ key: 'wh', name: 'คลังสินค้า', max: P.wh[t] }] : [];
+  const prs = P.projects.filter(p => p.d.out === t && p.goods > 0).slice().sort((a, b) => b.goods - a.goods).map(p => ({ key: String(p.uid), name: p.d.name, max: p.goods }));
+  return payOrderOf(P) === 'proj' ? prs.concat(wh) : wh.concat(prs);
+}
+function spreadSell(P, t, n) {
+  const out = {};
+  for (const s of sellSources(P, t)) { if (n <= 0) break; const x = Math.min(n, s.max); if (x > 0) { out[s.key] = x; n -= x; } }
+  return out;
+}
+const sumFrom = f => Object.values(f || {}).reduce((a, b) => a + b, 0);
 function commerceCalc(P) {
   const sp = K.marketSellPrice(G, P), mp = K.marketBuyPrice(G, P), cap = K.capacity(G, P, true);
   let law = K.has(P, 'กฎหมายตราชั่ง') ? 3 : 0, earned = 0;
@@ -12019,7 +12092,12 @@ function drawCommerce() {
   const P = pending.P; const c = commerceCalc(P);
   const th = K.hvThreshold(G, P);
   const step = (key, n, max) => `<span class="stepper"><button data-k="${key}" data-d="-1" ${n <= 0 ? 'disabled' : ''}>−</button><span>${n}</span><button data-k="${key}" data-d="1" ${n >= max ? 'disabled' : ''}>+</button></span>`;
-  const sellRows = GOODS.map(t => `<div class="frow">${rb(t, K.goodsOf(P, t))}<span class="tiny muted">คลัง ${P.wh[t]} · บนโครงการ ${K.goodsOf(P, t) - P.wh[t]}</span><span class="grow"></span>${step('s:' + t, cState.sells[t], K.goodsOf(P, t))}</div>`).join('');
+  const sellRows = GOODS.map(t => {
+    const src = sellSources(P, t), f = cState.from[t];
+    const head = `<div class="frow">${rb(t, K.goodsOf(P, t))}<span class="tiny muted">คลัง ${P.wh[t]} · บนโครงการ ${K.goodsOf(P, t) - P.wh[t]}</span><span class="grow"></span><span class="tiny">ขาย <b>${cState.sells[t]}</b></span></div>`;
+    if (!src.length) return head;
+    return head + `<div class="sellsrc">${src.map(s => `<div class="frow" data-src="${t}:${esc(s.key)}"><span class="src">${s.key === 'wh' ? ICON('house') + ' ' : ''}${esc(s.name)} <span class="tiny">(${s.max})</span></span><span class="grow"></span>${step('f:' + t + ':' + s.key, f[s.key] || 0, s.max)}</div>`).join('')}</div>`;
+  }).join('');
   let buyRows = '';
   for (const S2 of G.players) {
     if (S2 === P) continue;
@@ -12035,6 +12113,9 @@ function drawCommerce() {
   const errs = [];
   if (c.used > c.cap) errs.push('ซื้อเกินความจุ');
   if (c.final < 0) errs.push('เกรฟไม่พอ');
+  // a click inside the window draws it again: keep it still and where the player scrolled, so a row of steppers can be
+  // clicked through without the window jumping
+  const again = !modal.classList.contains('hidden') && !!modal.querySelector('#c-clear'), top = again ? modal.scrollTop : 0;
   const box = openModal(`<div class="choice"><div class="ch-head"><h2>${ICON('trade')} ค้าขาย</h2><button class="btn sm ghost" id="c-peek">${ICON('eye')} ดูโต๊ะ</button></div>
     <p class="small muted">ลำดับในแอคชันเดียว: ขายให้ตลาดกลาง แล้วซื้อจากรัฐอื่นตามราคาบนการ์ด แล้วซื้อจากตลาดกลาง การขายไม่กินความจุ ของที่ซื้อเข้าคลังสินค้า (จุ ${K.whCap(P)} ส่วนเกินขายทิ้งตอนจบเทิร์น)</p>
     <div class="ccols"><div class="form-sec"><h4>ขายให้ตลาดกลาง <span class="tiny muted">หน่วยละ ${c.sp}${K.has(P, 'กฎหมายตราชั่ง') ? ' (+1 สูงสุด 3 จากกฎหมายตราชั่ง)' : ''}</span></h4>${sellRows}</div>
@@ -12042,9 +12123,10 @@ function drawCommerce() {
       <div class="form-sec"><h4 data-g="ตลาดกลาง">ซื้อจากตลาดกลาง</h4>${cenRows}</div></div>
     <div class="summary"><span data-g="ความจุการซื้อ">ความจุ <b>${c.used}</b>/${c.cap}</span><span>${ICON('grav')} ${P.grav} + ขาย ${c.earned} − ซื้อ ${c.spent} = <b>${c.final}</b></span>${errs.length ? `<span class="err">${errs.join(' · ')}</span>` : ''}</div>
     <div class="mfoot">${hintBtn('c-ai', '', ICON('star') + ' ใช้ตามที่ AI แนะนำ')}<button class="btn" id="c-clear">ล้าง</button><button class="btn" id="c-back">กลับไปเลือกแอคชันอื่น</button><span class="grow"></span><button class="btn primary" id="c-ok" ${errs.length ? 'disabled' : ''}>ยืนยันการค้า</button></div></div>`, 'wide choicebox');
+  if (again) { box.style.animation = 'none'; modal.scrollTop = top; }
   box.querySelectorAll('[data-k]').forEach(b => b.onclick = () => {
     const [kind, a, bb] = b.dataset.k.split(':'); const d = +b.dataset.d;
-    if (kind === 's') cState.sells[a] = Math.max(0, cState.sells[a] + d);
+    if (kind === 'f') { const f = cState.from[a]; f[bb] = Math.max(0, (f[bb] || 0) + d); if (!f[bb]) delete f[bb]; cState.sells[a] = sumFrom(f); }
     else if (kind === 'c') cState.central[a] = Math.max(0, cState.central[a] + d);
     else { const key = a + ':' + bb; cState.buys[key] = Math.max(0, (cState.buys[key] || 0) + d); }
     sfx('tick'); drawCommerce();
@@ -12052,14 +12134,18 @@ function drawCommerce() {
   wireHint(box, '#c-ai', () => {
     const plan = aiHint(P, pending.req) || { sells: {}, buys: [], central: {} };
     cState.sells = Object.assign({ mat: 0, fuel: 0, food: 0 }, plan.sells); cState.central = Object.assign({ mat: 0, fuel: 0, food: 0 }, plan.central); cState.buys = {};
+    cState.from = { mat: {}, fuel: {}, food: {} }; for (const t of GOODS) { cState.from[t] = spreadSell(P, t, cState.sells[t] || 0); cState.sells[t] = sumFrom(cState.from[t]); }
     for (const b of plan.buys || []) cState.buys[b.pid + ':' + b.puid] = (cState.buys[b.pid + ':' + b.puid] || 0) + b.n;
     drawCommerce();
   });
-  box.querySelector('#c-clear').onclick = () => { cState.sells = { mat: 0, fuel: 0, food: 0 }; cState.central = { mat: 0, fuel: 0, food: 0 }; cState.buys = {}; drawCommerce(); };
+  box.querySelector('#c-clear').onclick = () => { cState.sells = { mat: 0, fuel: 0, food: 0 }; cState.from = { mat: {}, fuel: {}, food: {} }; cState.central = { mat: 0, fuel: 0, food: 0 }; cState.buys = {}; drawCommerce(); };
   box.querySelector('#c-back').onclick = () => { cState = null; answer(null); };
   box.querySelector('#c-peek').onclick = peekTable;
   box.querySelector('#c-ok').onclick = () => {
     const plan = { sells: Object.assign({}, cState.sells), central: Object.assign({}, cState.central), buys: [] };
+    // where every unit sold comes from, as the player set it place by place
+    const from = {}; for (const t of GOODS) if (cState.sells[t] > 0) from[t] = Object.assign({}, cState.from[t]);
+    if (Object.keys(from).length) plan.from = from;
     for (const [k, n] of Object.entries(cState.buys)) if (n > 0) { const [pid, puid] = k.split(':').map(Number); plan.buys.push({ pid, puid, n }); }
     cState = null; answer(plan);
   };
@@ -13498,7 +13584,8 @@ function cleanAns(e) {
   const out = {};
   if (e.n) out.n = 1; else if (int(e.o) != null && e.o >= 0 && e.o < 400) out.o = e.o; else if ('v' in e) out.v = JSON.parse(JSON.stringify(e.v, (k, v) => (k === '__proto__' || k === 'constructor' || k === 'prototype') ? undefined : v));
   else return null;
-  if (Array.isArray(e.c)) out.c = e.c.filter(c => c && int(c.reclaim) != null).map(c => ({ reclaim: c.reclaim })).slice(0, 4);
+  if (Array.isArray(e.c)) out.c = e.c.filter(c => c && (int(c.reclaim) != null || (int(c.pay) != null && (c.m === 'auto' || K.PAY_ORDERS.includes(c.m)))))
+    .map(c => int(c.reclaim) != null ? { reclaim: c.reclaim } : { pay: c.pay, m: c.m }).slice(0, 4);
   return out;
 }
 const cleanChat = c => c && typeof c === 'object' && typeof c.text === 'string' ? { id: str(c.id, 16) || uid(6), by: str(c.by, 16), leader: str(c.leader, 60) || 'ผู้เล่น', color: /^#[0-9a-f]{6}$/i.test(c.color) ? c.color : '#888888', text: c.text.slice(0, 300), at: int(c.at) || Date.now() } : null;
@@ -14074,7 +14161,7 @@ function gameNet() {
       beat(); R.aliveTimer = setInterval(beat, 10000);
     },
     sendAnswer(seq, pid, e) {
-      if (R.ctl.length) { e.c = R.ctl.splice(0); }
+      if (R.ctl.length) { e.c = (e.c || []).concat(R.ctl.splice(0)); }
       R.seenAns.add(seq);
       roomSend({ t: 'ans', s: seq, p: pid, e });
     },

@@ -947,6 +947,9 @@ body { line-height: 1.55; }
 .gl dt { font-weight: 700; color: var(--brass-hi); } .gl dd { margin: 0; color: var(--text); }
 /* hall of fame */
 .hof { display: grid; gap: 8px; }
+.hofmonth { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; font-size: 15px; color: var(--brass-hi); }
+.hofmonth .ic { width: 18px; height: 18px; }
+.hofmonth .tiny { flex-basis: 100%; }
 .hrow { display: grid; grid-template-columns: 48px auto minmax(160px, 1.2fr) 80px minmax(220px, 1.4fr) minmax(200px, 1.4fr); gap: 12px; align-items: center; padding: 10px 12px; border-radius: 14px; background: rgba(0,0,0,.22); border-left: 4px solid var(--pc); }
 .hrow.top1 { background: linear-gradient(90deg, rgba(214,169,75,.22), rgba(0,0,0,.2)); }
 .hr-rank { font-family: var(--f-display); font-size: 22px; color: var(--brass-hi); text-align: center; display: grid; justify-items: center; }
@@ -8955,6 +8958,12 @@ function download(name, text, type) {
 }
 function hashStr(s) { let h = 2166136261; for (const ch of String(s)) { h ^= ch.codePointAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
 function uid(n) { const a = new Uint8Array(n || 8); (window.crypto || {}).getRandomValues ? crypto.getRandomValues(a) : a.forEach((_, i) => { a[i] = Math.random() * 256; }); return Array.from(a, b => 'abcdefghjkmnpqrstuvwxyz23456789'[b % 31]).join(''); }
+// the calendar of the hosted game runs on Thai time (UTC+7, no daylight saving), the same for every player wherever they
+// are (ruled 11 Nov): the lobby chat starts again at midnight and the hall of fame on the 1st of every month
+const TH_OFFSET = 7 * 3600e3;
+const thDay = t => new Date((t == null ? Date.now() : t) + TH_OFFSET).toISOString().slice(0, 10);   // 'YYYY-MM-DD'
+const thMonth = t => thDay(t).slice(0, 7);                                                           // 'YYYY-MM'
+const thMonthName = t => new Date(t == null ? Date.now() : t).toLocaleDateString('th-TH-u-ca-gregory', { month: 'long', year: 'numeric', timeZone: 'Asia/Bangkok' });
 
 // =====================================================================
 // TEXT: glossary (hover definitions), how-to page, tutorial script
@@ -9090,7 +9099,7 @@ const HOWTO = [
     'รัฐประหารเปลี่ยนระบอบทันทีโดยไม่ต้องรอกระแส แต่ต้องชนะการรบกับรัฐที่ถือฐานอำนาจมากที่สุด และรับตราบาปเสมอ',
     'ชี้ที่คะแนนสุทธิบนโต๊ะ ทั้งป้ายบนที่นั่ง รางคะแนน และหน้าจบเกม ป้ายจะแยกที่มาของคะแนนทีละแหล่ง เช่น การนับคะแนนของแต่ละระบอบ ผลของการ์ด และตราบาป พร้อมรอบที่ได้หรือเสียคะแนนนั้น'] },
   { id: 'end', h: 'จบเกม', p: [
-    'เกมจบหลังสภารอบที่ 12 คะแนนสุทธิสูงสุดชนะ เสมอดูเกรฟ แล้วดูสินค้ารวม ถ้าผู้ชนะเป็นผู้เล่น ผลจะบันทึกเข้าหอเกียรติยศพร้อมการวิเคราะห์ว่ารัฐนั้นเล่นสายใด'] },
+    'เกมจบหลังสภารอบที่ 12 คะแนนสุทธิสูงสุดชนะ เสมอดูเกรฟ แล้วดูสินค้ารวม ถ้าผู้ชนะเป็นผู้เล่น ผลจะบันทึกเข้าหอเกียรติยศพร้อมการวิเคราะห์ว่ารัฐนั้นเล่นสายใด หอเกียรติยศเริ่มใหม่ทุกวันที่ 1 ของเดือนตามเวลาไทย'] },
 ];
 
 // ---------- tutorial: Nemessiah, the Red Prophet, sits beside the player for the first game ----------
@@ -10650,7 +10659,8 @@ async function showHallOfFame() {
     const list = hofMerge(hofLocal(), remote.concat(online, lobbyRecords()));
     store.set('hof', list);
     if (!body.isConnected) return;
-    body.innerHTML = hofTable(list.slice(0, 10), dev) + `<p class="tiny muted">รวมผลจากเครื่องนี้${hofOnline() ? ' หอเกียรติยศออนไลน์ (ผู้ชนะที่ลงชื่อเข้าใช้ถูกบันทึกเองตอนจบเกม)' : ''}${repoInfo() ? ' ไฟล์หอเกียรติยศในคลัง GitHub' : ''} และผู้เล่นที่ออนไลน์อยู่ บันทึกเฉพาะเกมที่ผู้ชนะเป็นผู้เล่น (ไม่นับ AI และโหมดสอนเล่น) เกมกับ AI นับเฉพาะโต๊ะ 4 รัฐที่ AI ระดับปกติหรือยาก ผู้ชนะที่เล่นกับ AI ระดับยากเรียงก่อน จากนั้นเรียงตามคะแนนสุทธิ</p>`;
+    body.innerHTML = `<div class="hofmonth">${ICON('crown')}<b>ผู้ชนะประจำเดือน${esc(thMonthName())}</b><span class="tiny muted">หอเกียรติยศเริ่มใหม่ทุกวันที่ 1 เวลา 00:00 น. ตามเวลาไทย</span></div>`
+      + hofTable(list.slice(0, 10), dev) + `<p class="tiny muted">รวมผลจากเครื่องนี้${hofOnline() ? ' หอเกียรติยศออนไลน์ (ผู้ชนะที่ลงชื่อเข้าใช้ถูกบันทึกเองตอนจบเกม)' : ''}${repoInfo() ? ' ไฟล์หอเกียรติยศในคลัง GitHub' : ''} และผู้เล่นที่ออนไลน์อยู่ บันทึกเฉพาะเกมที่ผู้ชนะเป็นผู้เล่น (ไม่นับ AI และโหมดสอนเล่น) เกมกับ AI นับเฉพาะโต๊ะ 4 รัฐที่ AI ระดับปกติหรือยาก ผู้ชนะที่เล่นกับ AI ระดับยากเรียงก่อน จากนั้นเรียงตามคะแนนสุทธิ</p>`;
     if (dev) wireRemove(body, 'hof');
   } else {
     const [remote, online] = await Promise.all([fetchRepoJSON('comments.json'), hofGet('cmt', 200), fetchRemoved()]);
@@ -10742,7 +10752,7 @@ function wireRemove(root, kind) {
   });
 }
 function hofTable(list, dev) {
-  if (!list.length) return '<p class="muted">ยังไม่มีผู้ชนะในหอเกียรติยศ ชนะเกมแรกแล้วชื่อของท่านจะขึ้นที่นี่</p>';
+  if (!list.length) return '<p class="muted">ยังไม่มีผู้ชนะในเดือนนี้ ชนะเกมแรกของเดือนแล้วชื่อของท่านจะขึ้นที่นี่</p>';
   return `<div class="hof${dev ? ' dev' : ''}">${list.map((r, i) => `<div class="hrow${i < 3 ? ' top' + (i + 1) : ''}" style="--pc:${esc(r.color || '#888')}">${dev ? `<button type="button" class="btn sm danger hr-del" data-del="${esc(r.id)}" aria-label="ลบ ${esc(r.state)} ออกจากหอเกียรติยศ">ลบ</button>` : ''}
     <div class="hr-rank">${i === 0 ? ICON('crown') : ''}${i + 1}</div>${flagHtml({ flag: r.flag, color: r.color }, 'lg')}
     <div class="hr-name"><b data-tip="${esc(`<div class="tt">${esc(r.state)}${r.latin ? ' · ' + esc(r.latin) : ''}</div>${r.meaning ? `<div>${esc(r.meaning)}</div>` : ''}`)}">${esc(r.state)}</b><small>${esc(fullLeader(r))} · ${esc(r.at || '')} · ${r.mode === 'online' ? 'ออนไลน์' : 'เล่นกับ AI'} ${r.n} รัฐ${r.lvl && AI.LEVELS[r.lvl] ? ` · AI ${esc(AI.LEVELS[r.lvl].name)}` : ''}${modeTag(r.rules) ? ` · โหมด${esc(modeTag(r.rules))}` : ''}</small>${traitLine(r) ? `<small class="ptraits">${esc(traitLine(r))}</small>` : ''}</div>
@@ -13048,7 +13058,7 @@ function hofRecord(G2, P) {
   const army = K.armyCards(P).length;
   const ps = playstyle(P);
   const rec = {
-    v: 1, at: new Date().toISOString().slice(0, 10), mode: S.mode, rules: S.cfg.rules, n: G2.n, seed: G2.seed,
+    v: 1, at: thDay(), mode: S.mode, rules: S.cfg.rules, n: G2.n, seed: G2.seed,
     leader: String(s.leader || 'ผู้เล่น').slice(0, 24), title: String(s.title || '').slice(0, 32), traits: Array.isArray(s.traits) ? s.traits.slice(0, 3).map(x => String(x).slice(0, 24)) : [], state: String(P.name).slice(0, 24), latin: String(s.latin || '').slice(0, 24), meaning: String(s.meaning || '').slice(0, 60),
     color: s.color || P.color, flag: s.flag && (s.flag.thumb || (s.flag.img && s.flag.img.length < 9000)) ? { img: s.flag.thumb || s.flag.img } : { seed: (s.flag && s.flag.seed) || 1 },
     score: P.legit - P.stigma, legit: P.legit, stigma: P.stigma, grav: P.grav,
@@ -13072,10 +13082,16 @@ const hofVsAI = r => r.mode !== 'online' || r.lvl != null;
 const hofOk = r => !hofVsAI(r) || (r.n === 4 && r.lvl !== 'easy');
 const hofTier = r => r.lvl === 'hard' ? 0 : 1;
 const hofOrder = (a, b) => hofTier(a) - hofTier(b) || b.score - a.score || b.margin - a.margin;
-function hofLocal() { return store.get('hof', []); }
+// the hall starts again on the 1st of every month, Thai time (ruled 11 Nov): a record counts in the month of its date (the
+// page dates a win in Thai time, the script dates what it keeps by its own clock), and every list this page shows, keeps
+// or passes to other players holds this month only, whatever source it came from
+const hofMonthOf = r => r && typeof r.at === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.at) ? r.at.slice(0, 7) : '';
+const hofThisMonth = r => hofMonthOf(r) === thMonth();
+function hofLocal() { const a = store.get('hof', []); return Array.isArray(a) ? a.filter(hofThisMonth) : []; }
 function hofMerge(list, add) {
-  const by = new Map(list.filter(r => validRecord(r) && !isRemoved('hof', r.id)).map(r => [r.id, r]));
-  for (const r of add || []) if (validRecord(r) && !by.has(r.id) && !isRemoved('hof', r.id)) by.set(r.id, r);
+  const m = thMonth(), keep = r => validRecord(r) && !isRemoved('hof', r.id) && hofMonthOf(r) === m;
+  const by = new Map(list.filter(keep).map(r => [r.id, r]));
+  for (const r of add || []) if (keep(r) && !by.has(r.id)) by.set(r.id, r);
   return [...by.values()].sort(hofOrder).slice(0, 60);
 }
 function validRecord(r) {
@@ -13593,7 +13609,11 @@ const cleanChat = c => c && typeof c === 'object' && typeof c.text === 'string' 
 // =====================================================================
 // LOBBY: who is online, open rooms, lobby chat; hall of fame and comments gossip between peers
 // =====================================================================
-const L = { net: null, peers: new Map(), rooms: new Map(), chat: [], hof: [], cmts: [], timer: null, status: 'ในล็อบบี้' };
+const L = { net: null, peers: new Map(), rooms: new Map(), chat: [], chatDay: thDay(), hof: [], cmts: [], timer: null, status: 'ในล็อบบี้' };
+// the lobby chat starts again every day at midnight, Thai time (ruled 11 Nov). It is never stored anywhere: messages go
+// from page to page while the pages are open, and a page left open past midnight drops the day before (the lobby timer
+// looks every 15 seconds, and every message in or out looks first)
+function lobbyChatToday() { const d = thDay(); if (L.chatDay !== d) { L.chatDay = d; L.chat = []; } }
 const lobbyRecords = () => L.hof;
 const lobbyComments = () => L.cmts;
 function lobbySend(m, to) { if (L.net) L.net.send(m, to); }
@@ -13671,7 +13691,15 @@ function renderOnlinePill() {
   const n = onlinePlayers().length + 1;
   setHTML(pill, `<i class="dot"></i>ออนไลน์ <b>${n}</b> คน`);
   pill.title = 'ดูผู้เล่นทุกคนที่เปิดเกมอยู่ตอนนี้';
-  const list = document.getElementById('op-list'); if (list) list.innerHTML = onlineListHtml();
+  // the open panel follows every presence message of every player (asked 11 Nov: it kept jumping back to the top). The
+  // list scrolls inside the panel and drawing it again made a new list at the top, so it is drawn only when something in
+  // it changed, and the new list opens where the player had scrolled
+  const list = document.getElementById('op-list');
+  if (list) {
+    const was = list.querySelector('.plist'), top = was ? was.scrollTop : 0;
+    setHTML(list, onlineListHtml());
+    const now = list.querySelector('.plist'); if (now && now !== was) now.scrollTop = top;
+  }
 }
 function onlineListHtml() {
   const rows = onlinePlayers();
@@ -13702,7 +13730,7 @@ function lobbyMsg(d, pid) {
     if (sv && sv.room === code && R.code !== code && who && sv.cfg && sv.cfg.seats.some(st => st.human && st.owner === who.p.id)) { forgetRoom(code); renderResume(); }
     renderLobbyParts();
   }
-  else if (d.t === 'lchat') { const c = cleanChat(d.c); if (c && !L.chat.some(x => x.id === c.id)) { L.chat.push(c); L.chat = L.chat.slice(-60); renderLobbyParts(); sfx('chat'); } }
+  else if (d.t === 'lchat') { lobbyChatToday(); const c = cleanChat(d.c); if (c && !L.chat.some(x => x.id === c.id)) { L.chat.push(c); L.chat = L.chat.slice(-60); renderLobbyParts(); sfx('chat'); } }
   else if (d.t === 'hofs' && Array.isArray(d.list)) { L.hof = hofMerge(L.hof, d.list.slice(0, 20)); store.set('hof', hofMerge(hofLocal(), L.hof)); }
   else if (d.t === 'cmts' && Array.isArray(d.list)) { L.cmts = cmtMerge(L.cmts, d.list.slice(0, 40)); store.set('comments', cmtMerge(store.get('comments', []), L.cmts)); }
 }
@@ -13717,7 +13745,7 @@ function showLobby() {
         <div class="row" style="margin-top:12px"><button class="btn primary" id="l-create">${ICON('crown')} สร้างห้องใหม่</button><input id="l-newpw" maxlength="24" autocomplete="off" placeholder="รหัสผ่านห้อง (ไม่บังคับ)" style="flex:1;min-width:140px" title="ตั้งรหัสผ่าน แล้วคนที่จะเข้าห้องต้องกรอกรหัสนี้"></div>
         <div class="row" style="margin-top:8px"><input id="l-code" maxlength="8" placeholder="รหัสห้อง" style="flex:1;min-width:110px;text-transform:uppercase"><button class="btn" id="l-join">เข้าห้อง</button></div>
         <p class="tiny muted">ส่งรหัสห้องหรือลิงก์ให้เพื่อน เข้าห้องแล้วกดนั่งเก้าอี้ว่างหนึ่งตัว ที่นั่งที่ไม่มีคนนั่งตอนเริ่มเกม AI จะเล่นแทน ถ้ามีคนหลุดกลางเกม AI จะรับช่วงจนเขากลับมา สองแท็บในเครื่องเดียวกันเป็นผู้เล่นคนละคนเมื่อไม่ได้ใช้บัญชีเดียวกัน ห้องที่มีรูปกุญแจตั้งรหัสผ่านไว้ ขอรหัสผ่านจากผู้สร้างห้องก่อนเข้า</p></div>
-      <div class="box"><h2>แชทล็อบบี้</h2><div id="l-chat" class="chatlog"></div><form id="l-chatf" class="chatform"><input id="l-chatin" maxlength="300" autocomplete="off" placeholder="ทักทายผู้เล่นคนอื่น"><button class="btn sm primary">ส่ง</button></form></div>
+      <div class="box"><h2>แชทล็อบบี้ <span class="tiny muted">ล้างทุกวันตอนเที่ยงคืนตามเวลาไทย</span></h2><div id="l-chat" class="chatlog"></div><form id="l-chatf" class="chatform"><input id="l-chatin" maxlength="300" autocomplete="off" placeholder="ทักทายผู้เล่นคนอื่น"><button class="btn sm primary">ส่ง</button></form></div>
     </div></div>`;
   const q = s => app.querySelector(s);
   renderAcctChips();
@@ -13731,12 +13759,13 @@ function showLobby() {
   q('#l-chatf').onsubmit = e => {
     e.preventDefault(); const inp = q('#l-chatin'); const t = inp.value.trim(); if (!t) return;
     const c = { id: uid(8), by: pubId(), leader: fullLeader(profile).slice(0, 60), color: profile.color, text: t.slice(0, 300), at: Date.now() };
-    L.chat.push(c); lobbySend({ t: 'lchat', c }); inp.value = ''; renderLobbyParts();
+    lobbyChatToday(); L.chat.push(c); lobbySend({ t: 'lchat', c }); inp.value = ''; renderLobbyParts();
   };
   renderLobbyParts();
   if (hashRoom) { if (/[#&]lock=1\b/.test(location.hash)) askRoomPassword(hashRoom.toUpperCase()); else joinRoom(hashRoom.toUpperCase()); }
 }
 function renderLobbyParts() {
+  lobbyChatToday();
   const pe = document.getElementById('l-peers');
   if (pe) {
     const rows = onlinePlayers();
@@ -13749,7 +13778,7 @@ function renderLobbyParts() {
     ro.querySelectorAll('[data-room]').forEach(b => b.onclick = () => joinRoom(b.dataset.room));
   }
   const ch = document.getElementById('l-chat');
-  if (ch) { const atB = ch.scrollTop + ch.clientHeight >= ch.scrollHeight - 20; setHTML(ch, L.chat.map(chatLine).join('') || '<p class="tiny muted">ยังไม่มีข้อความ</p>'); if (atB) ch.scrollTop = ch.scrollHeight; }
+  if (ch) { const atB = ch.scrollTop + ch.clientHeight >= ch.scrollHeight - 20; setHTML(ch, L.chat.map(chatLine).join('') || '<p class="tiny muted">ยังไม่มีข้อความวันนี้</p>'); if (atB) ch.scrollTop = ch.scrollHeight; }
 }
 const chatLine = c => `<div class="cl"><b style="color:${esc(c.color)}">${esc(c.leader)}</b> ${esc(c.text)}<span class="tiny muted"> ${new Date(c.at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</span></div>`;
 function newRoomCode() { const a = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s = ''; const b = new Uint8Array(6); crypto.getRandomValues(b); for (const x of b) s += a[x % a.length]; return s; }

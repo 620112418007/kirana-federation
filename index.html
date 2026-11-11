@@ -733,6 +733,51 @@ body { line-height: 1.55; }
 .battlebox .vs { align-self: center; font-family: var(--f-display); font-size: 30px; color: var(--brass-hi); text-shadow: 0 3px 0 rgba(0,0,0,.4); }
 .lane.lose { opacity: .65; filter: saturate(.6); }
 .bcard .bk { font-size: 10px; color: #7a2b20; font-weight: 600; margin-top: 2px; }
+/* the skills of the cards drawn on the battle (ruled 11 Nov): a layer over the battle carries the shells, bursts and shields */
+.battlebox .battle { position: relative; }
+.bfx-layer { position: absolute; inset: 0; pointer-events: none; z-index: 9; overflow: visible; }
+.bfx { position: absolute; pointer-events: none; will-change: transform, opacity; }
+.bfx.flash { width: 54px; height: 54px; margin: -27px 0 0 -27px; border-radius: 50%; background: radial-gradient(circle, #fffbe0 0, #ffd36b 30%, rgba(255,140,40,.7) 52%, rgba(255,100,30,0) 72%); mix-blend-mode: screen; }
+.bfx.puff { width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: radial-gradient(circle, rgba(225,215,200,.85), rgba(160,150,140,0) 70%); }
+.bfx.puff.grey { width: 30px; height: 30px; margin: -15px 0 0 -15px; background: radial-gradient(circle, rgba(120,112,104,.85), rgba(70,64,58,0) 70%); }
+.bfx.shell { width: 15px; height: 15px; margin: -7.5px 0 0 -7.5px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #9a9a9a, #262626 62%, #0d0d0d); box-shadow: 0 0 0 1px rgba(0,0,0,.5), 0 0 12px 3px rgba(255,160,60,.85); }
+.bfx.boom { width: 130px; height: 130px; margin: -65px 0 0 -65px; border-radius: 50%; background: radial-gradient(circle, #fffbe6 0, #ffe07a 14%, #ff9a33 34%, rgba(214,58,24,.75) 52%, rgba(90,24,10,.35) 64%, rgba(40,12,6,0) 74%); mix-blend-mode: screen; }
+.bfx.ringw, .bfx.ringb, .bfx.ringg { width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; border: 3px solid rgba(255,230,180,.9); }
+.bfx.ringb { border-color: rgba(143,211,255,.95); box-shadow: 0 0 14px rgba(108,196,255,.6); }
+.bfx.ringg { border-color: rgba(247,211,107,.95); box-shadow: 0 0 14px rgba(247,211,107,.55); }
+.bfx.spark { width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: #ffd27a; box-shadow: 0 0 7px 2px rgba(255,150,50,.9); }
+.bfx.spark.w { background: #fff6dc; box-shadow: 0 0 6px 2px rgba(255,236,180,.9); }
+.bfx.star { width: 70px; height: 70px; margin: -35px 0 0 -35px; background: radial-gradient(circle, #fff 0, #fff3c4 30%, #ffc24d 60%, rgba(255,160,40,0) 75%); clip-path: polygon(50% 0, 61% 34%, 98% 22%, 70% 50%, 98% 78%, 61% 66%, 50% 100%, 39% 66%, 2% 78%, 30% 50%, 2% 22%, 39% 34%); }
+.bfx.shieldfx { width: 96px; height: 96px; margin: -48px 0 0 -48px; display: grid; place-items: center; color: #8fd3ff; filter: drop-shadow(0 0 6px rgba(160,220,255,1)) drop-shadow(0 0 20px rgba(108,196,255,.75)); }
+.bfx.shieldfx svg { width: 84px; height: 84px; fill: rgba(150,214,255,.78); stroke: #f4fbff; stroke-width: 1.1px; }
+.bfx.glint { width: 12px; height: 12px; margin: -6px 0 0 -6px; background: #e6f6ff; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); filter: drop-shadow(0 0 4px #8fd3ff); }
+.bfx.orb { width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; background: radial-gradient(circle, #fffbe0 0, #f7d36b 45%, rgba(227,179,65,0) 72%); box-shadow: 0 0 14px 4px rgba(247,211,107,.6); }
+.bfx.streak { width: 52px; height: 3px; margin: -1.5px 0 0 -26px; border-radius: 2px; background: linear-gradient(90deg, rgba(255,214,160,0), rgba(255,236,200,.95), rgba(255,214,160,0)); }
+.bfx.pennant { width: 34px; height: 34px; margin: -17px 0 0 -17px; display: grid; place-items: center; color: #f7d36b; filter: drop-shadow(0 0 8px rgba(247,211,107,.9)); }
+.bfx.pennant svg, .bfx.drop svg { width: 28px; height: 28px; }
+.bfx.eye { width: 38px; height: 38px; margin: -19px 0 0 -19px; display: grid; place-items: center; color: #cfe8ff; filter: drop-shadow(0 0 8px rgba(160,210,255,.95)); }
+.bfx.eye svg { width: 32px; height: 32px; }
+.bfx.drop { width: 30px; height: 30px; margin: -15px 0 0 -15px; display: grid; place-items: center; color: #ffb04a; filter: drop-shadow(0 0 6px rgba(255,170,70,.8)); }
+.bfx.tag { white-space: nowrap; padding: 2px 8px; border-radius: 999px; font: 700 12px/1.5 var(--f-body); background: rgba(18,12,8,.9); border: 1px solid currentColor; box-shadow: 0 4px 10px rgba(0,0,0,.45); z-index: 2; }
+.bfx.tag.gold { color: #f7d36b; } .bfx.tag.red { color: #ff8f7e; } .bfx.tag.blue { color: #9fdcff; }
+.bcard.deploy { animation: deployin .45s cubic-bezier(.2,.8,.3,1) both; }
+@keyframes deployin { 0% { transform: translateX(-54px) scale(.86); opacity: 0; box-shadow: 0 0 0 2px #2d6aa3, 0 0 22px rgba(80,150,230,.9); } 100% { transform: none; opacity: 1; } }
+.bcard.goldglow { box-shadow: 0 0 0 2px #f7d36b, 0 0 20px rgba(247,211,107,.75); }
+.bcard.shieldglow { box-shadow: 0 0 0 2px #8fd3ff, 0 0 22px rgba(108,196,255,.8); }
+.bcard.hitglow { box-shadow: 0 0 0 2px #ff8f7e, 0 0 20px rgba(255,110,80,.8); }
+.bcard.scorched { filter: sepia(.7) brightness(.72) contrast(1.15); }
+.bcard.dry { filter: grayscale(.85) brightness(.85); }
+.bcard.gone { opacity: .3; filter: grayscale(1); }
+.bcard.gone::before { content: "ลงกองพัก"; position: absolute; left: 0; right: 0; bottom: 6px; text-align: center; font-size: 10.5px; font-weight: 700; color: #a2372a; z-index: 1; }
+.bcard .bp.drop { animation: bpdrop .5s ease-out; }
+@keyframes bpdrop { 0% { transform: scale(1); } 30% { transform: scale(1.45); background: radial-gradient(circle at 35% 30%, #ff6a4f, #a8261a); } 100% { transform: scale(1); } }
+.bpile { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; padding: 2px 7px 2px 4px; border-radius: 8px; background: rgba(0,0,0,.35); font-size: 11px; font-weight: 400; color: var(--muted); }
+.bpile .pi { position: relative; width: 16px; height: 18px; }
+.bpile .pi i { position: absolute; width: 12px; height: 16px; border-radius: 2px; background: linear-gradient(150deg, #5a2d29, #3a1b19); border: 1px solid rgba(255,220,180,.35); }
+.bpile .pi i:first-child { left: 0; top: 2px; transform: rotate(-8deg); } .bpile .pi i:last-child { left: 4px; top: 0; }
+.bpile b { color: var(--brass-hi); font-size: 13px; }
+.bpile.bump { animation: pilebump .45s ease-out; }
+@keyframes pilebump { 0% { transform: scale(1); } 35% { transform: scale(1.3); box-shadow: 0 0 14px rgba(255,140,80,.7); } 100% { transform: scale(1); } }
 
 /* ---------- drawer: log and chat ---------- */
 .drawer { position: fixed; top: 0; right: 0; bottom: 0; z-index: 45; width: min(420px, 94vw); display: flex; flex-direction: column; background: linear-gradient(#10302a, #0a221e); border-left: 1px solid #44695f; box-shadow: -20px 0 50px rgba(0,0,0,.5); transform: translateX(105%); transition: transform .3s ease; }
@@ -5926,13 +5971,14 @@ function* battleGen(G, A, Dd, size, type, opt) {
     const c = { inst: instc, name: instc.d.name, kw, base, cur: base, destroyed: false, extra: !!extra, notes: [] };
     s.revealed.push(c);
     if (!extra) s.counted++;
-    if (s.pendingSup) { c.cur += s.pendingSup; c.fuelFree = true; c.notes.push(`สนับสนุน +${s.pendingSup}`); s.pendingSup = 0; }
+    if (s.pendingSup) { c.cur += s.pendingSup; c.fuelFree = true; c.notes.push(`สนับสนุน +${s.pendingSup}`); if (!opt.sim) { c.supFrom = s.supFrom; c.supIn = s.pendingSup; } s.pendingSup = 0; }
     let dry = false;
     if (kw.fuel) {
       if (c.fuelFree) c.notes.push('ไม่ต้องจ่ายเชื้อเพลิง');
       else if (s.ramjet && !s.ramjetUsed) { s.ramjetUsed = true; c.notes.push('แรมเจ็ท ไม่ต้องจ่ายเชื้อเพลิง'); }
       else if (payFuel(s)) c.notes.push('จ่ายเชื้อเพลิง 1');
       else { c.cur = 0; dry = true; c.notes.push('ไม่มีเชื้อเพลิง พลังเป็น 0'); }
+      if (!opt.sim) c.dry = dry;
     }
     if (s.flame && !dry && instc.d.era >= 2) { c.cur += 1; c.notes.push('ภาคีเปลวสุริยา +1'); }
     if (s.sunLead && s.revealed.length === 1) c.notes.push('หน่วยสุริยะพิฆาต นำทัพ +1');
@@ -5940,14 +5986,18 @@ function* battleGen(G, A, Dd, size, type, opt) {
     if (kw.int) {
       let tgt = null;
       for (const x of o.revealed) if (!x.destroyed && (!tgt || x.cur > tgt.cur)) tgt = x;
-      if (tgt && tgt.cur > 0) { const before = tgt.cur; tgt.cur = Math.max(0, tgt.cur - kw.int); c.notes.push(`สกัด ${tgt.name} ${before}→${tgt.cur}`); }
+      if (tgt && tgt.cur > 0) {
+        const before = tgt.cur; tgt.cur = Math.max(0, tgt.cur - kw.int); c.notes.push(`สกัด ${tgt.name} ${before}→${tgt.cur}`);
+        // for the battle view: the card struck and by how much, and the cuts a card took in all
+        if (!opt.sim) { c.hit = { k: o.revealed.indexOf(tgt), d: before - tgt.cur }; tgt.cut = (tgt.cut || 0) + (before - tgt.cur); }
+      }
     }
     if (kw.scout) {
       const ans = yield { kind: 'scout', si, X: kw.scout, mine: s.deck.slice(0, kw.scout), theirs: o.deck.slice(0, kw.scout), s, o };
       if (ans && ans.which) {
         const deck = ans.which === 'mine' ? s.deck : o.deck;
         const k = Math.min(kw.scout, deck.length);
-        if (ans.idx >= 0 && ans.idx < k) { const [m] = deck.splice(ans.idx, 1); deck.push(m); c.notes.push(`สอดแนม ส่ง ${m.d.name} ของ${ans.which === 'mine' ? 'ฝ่ายตน' : 'อีกฝ่าย'}ไปใต้กอง`); }
+        if (ans.idx >= 0 && ans.idx < k) { const [m] = deck.splice(ans.idx, 1); deck.push(m); if (!opt.sim) c.scouted = ans.which; c.notes.push(`สอดแนม ส่ง ${m.d.name} ของ${ans.which === 'mine' ? 'ฝ่ายตน' : 'อีกฝ่าย'}ไปใต้กอง`); }
         else c.notes.push('สอดแนม ไม่ย้ายการ์ด');
       }
     }
@@ -5955,11 +6005,12 @@ function* battleGen(G, A, Dd, size, type, opt) {
       const latest = [...o.revealed].reverse().find(x => !x.destroyed);
       if (latest && sumNow(s) > sumNow(o)) {
         latest.destroyed = true; c.notes.push(`อำนาจยิงเหนือกว่า ทำลาย ${latest.name}`);
+        if (!opt.sim) c.shot = o.revealed.indexOf(latest);
         if (!o.neutral) { const i = o.revealed.indexOf(latest); latest.toDisc = true; o.disc.push(latest.inst); void i; }
       }
     }
-    if (kw.sup) s.pendingSup = kw.sup;
-    if (s.intSup && kw.int) { s.pendingSup = (kw.sup || 0) + 1; c.notes.push('ฟอซาร์เคน ฟรอนท์ สนับสนุน 1'); }
+    if (kw.sup) { s.pendingSup = kw.sup; s.supFrom = s.revealed.indexOf(c); }
+    if (s.intSup && kw.int) { s.pendingSup = (kw.sup || 0) + 1; s.supFrom = s.revealed.indexOf(c); c.notes.push('ฟอซาร์เคน ฟรอนท์ สนับสนุน 1'); }
     if (!opt.sim) ev.push({ side: si, t: 'card', c });
     if (kw.reinf) { c.notes.push('เสริมทัพ'); yield* reveal(si, true); }
   }
@@ -5984,6 +6035,13 @@ function* battleGen(G, A, Dd, size, type, opt) {
         if (s.role === 'att' && c.kw.chg && !S[1].wire) v += c.kw.chg;
         c.final = v; t += v;
       } else c.final = 0;
+      // for the battle view: what each skill added to this card, and what a destroyed card would have counted
+      if (!opt.sim) {
+        const lead = leads.reduce((a, x) => a + x, 0), surge = c.kw.surge ? c.kw.surge * before : 0;
+        const def = s.role === 'def' && c.kw.def ? c.kw.def : 0, chg = s.role === 'att' && c.kw.chg && !S[1].wire ? c.kw.chg : 0;
+        c.adds = { lead, surge, def, chg };
+        if (c.destroyed) c.lost = c.cur + lead + surge + def + chg + (s.role === 'def' && s.spear && c.name === 'พลหอก' ? 1 : 0) + (s.camp && (c.name === 'พลหอก' || c.name === 'พลธนู') ? s.camp : 0);
+      }
       if (c.kw.lead) leads.push(c.kw.lead);
       if (i === 0 && s.sunLead) leads.push(1);
       before++;
@@ -8430,6 +8488,13 @@ function sfx(name) {
     case 'dice': for (let i = 0; i < 5; i++) noise(i * 0.07, 0.05, 0.05, 1800 + i * 300); break;
     case 'shuffle': for (let i = 0; i < 6; i++) noise(i * 0.045, 0.04, 0.04, 3000); break;
     case 'chat': tone(990, 0, 0.08, 'sine', 0.04); tone(1320, 0.06, 0.1, 'sine', 0.035); break;
+    // the battle's skills
+    case 'cannon': noise(0, 0.18, 0.09, 420); tone(72, 0, 0.26, 'sine', 0.14); break;
+    case 'boom': noise(0, 0.42, 0.11, 320); noise(0.03, 0.22, 0.05, 1400); tone(54, 0, 0.4, 'sine', 0.13); break;
+    case 'clash': noise(0, 0.07, 0.07, 3600); tone(196, 0, 0.12, 'square', 0.03); tone(1480, 0.01, 0.14, 'triangle', 0.02); break;
+    case 'shield': tone(880, 0, 0.32, 'sine', 0.035); tone(1320, 0.05, 0.3, 'sine', 0.025); tone(1760, 0.1, 0.26, 'sine', 0.015); break;
+    case 'horn': tone(392, 0, 0.16, 'triangle', 0.045); tone(523, 0.12, 0.26, 'triangle', 0.05); break;
+    case 'whoosh': for (let i = 0; i < 4; i++) noise(i * 0.03, 0.06, 0.03, 900 + i * 700); break;
   }
 }
 
@@ -11917,7 +11982,7 @@ async function handleFx(d) {
 }
 
 // =====================================================================
-// BATTLE VIEW: cards turn over one by one, attacker first, then the totals settle
+// BATTLE VIEW: cards turn over one by one in the order the engine drew them, then the totals settle
 // =====================================================================
 const BTYPE = { explore: 'บุกเบิกดินแดน', attack: 'โจมตีรัฐอื่น', coup: 'รัฐประหาร' };
 function battleTitle(res) {
@@ -11926,38 +11991,250 @@ function battleTitle(res) {
   if (res.type === 'attack') return `${esc(A.name)} โจมตี ${esc(res.info.S.name)} ที่${esc(res.info.pr.d.name)}`;
   return `${esc(A.name)} ก่อรัฐประหารต่อ${esc(G.regime)}`;
 }
-function laneHtml(res, i) {
+// With the table effects on, the skills of the cards play out on the cards (ruled 11 Nov): อำนาจยิงเหนือกว่า fires a shell
+// from its card that bursts on the card it destroys and sends that card to its discard pile, สกัด rams the card it strikes
+// before that card's power drops, ตั้งรับ raises a shield; นำทัพ, สนับสนุน, ทะลวง, โถมกำลัง, เสริมทัพ, สอดแนม and เชื้อเพลิง have
+// marks of their own. Every number comes from the engine's result: a card shows what it counted when it turned, a strike
+// takes off what the engine took off, and the totals end on the engine's totals. The effects only draw; เปิดทั้งหมด skips them
+const shownOf = c => (c.destroyed ? (c.lost != null ? c.lost : c.base) : c.final) + (c.cut || 0);
+function laneHtml(res, i, fx) {
   const s = res.sides[i], P = s.P;
+  const pile = fx && s.revealed.some(c => c.destroyed && c.toDisc);
   const cards = s.revealed.map((c, k) => {
     const kw = c.inst && c.inst.d && c.inst.d.kw ? K.kwText(c.inst.d.kw) : '';
-    return `<div class="bcard back${c.destroyed ? ' destroyed' : ''}${c.extra ? ' extra' : ''}" data-k="${i}-${k}"><span class="bp">${c.final}</span><div class="bn">${esc(c.name)}</div><div class="bb">พลังพิมพ์ ${c.base}</div>${kw ? `<div class="bk">${gloss(kw)}</div>` : ''}${c.extra ? '<div class="bx">เปิดเพิ่มจากเสริมทัพ</div>' : ''}${c.notes.length ? `<div class="bx">${esc(c.notes.join(' · '))}</div>` : ''}</div>`;
+    return `<div class="bcard back${c.destroyed && !fx ? ' destroyed' : ''}${c.extra ? ' extra' : ''}" data-k="${i}-${k}"><span class="bp">${fx ? shownOf(c) : c.final}</span><div class="bn">${esc(c.name)}</div><div class="bb">พลังพิมพ์ ${c.base}</div>${kw ? `<div class="bk">${gloss(kw)}</div>` : ''}${c.extra ? '<div class="bx">เปิดเพิ่มจากเสริมทัพ</div>' : ''}${c.notes.length ? `<div class="bx">${esc(c.notes.join(' · '))}</div>` : ''}</div>`;
   }).join('');
   return `<div class="lane" data-lane="${i}" style="--pc:${pColor(P)}"><div class="who">${pFlag(P, 'lg')}<div><div class="nm">${esc(pName(P))}</div><small>${i === 0 ? 'ผู้บุก' : 'ฝ่ายรับ'}${s.bonus ? ` · โบนัสรวมพลัง ${s.bonus > 0 ? '+' : ''}${s.bonus}` : ''}</small></div></div>
-    <div class="cards">${cards || '<span class="tiny muted">ไม่มีการ์ดให้เปิด</span>'}</div><div class="tot"><span data-tot="${i}">0</span><small>รวมพลัง</small></div></div>`;
+    <div class="cards">${cards || '<span class="tiny muted">ไม่มีการ์ดให้เปิด</span>'}</div><div class="tot"><span data-tot="${i}">0</span><small>รวมพลัง</small>${pile ? `<div class="bpile" data-pile="${i}" title="กองพักของ${esc(pName(P))}"><span class="pi"><i></i><i></i></span><span>กองพัก</span><b>0</b></div>` : ''}</div></div>`;
 }
+// the order the cards turned in the engine (a reinforcement turns right after the card that called it); results without
+// the record alternate the two sides as before
+function revealOrder(res) {
+  const seq = [];
+  if (Array.isArray(res.ev)) for (const e of res.ev) {
+    if (e.t !== 'card' || !res.sides[e.side]) continue;
+    const k = res.sides[e.side].revealed.indexOf(e.c); if (k >= 0) seq.push([e.side, k]);
+  }
+  const total = res.sides[0].revealed.length + res.sides[1].revealed.length;
+  if (seq.length === total) return seq;
+  seq.length = 0;
+  const A = res.sides[0].revealed.length, B = res.sides[1].revealed.length;
+  for (let k = 0; k < Math.max(A, B); k++) { if (k < A) seq.push([0, k]); if (k < B) seq.push([1, k]); }
+  return seq;
+}
+// ---------- the effects: small pieces drawn on a layer over the battle, moved with the Web Animations API ----------
+const BFX = {
+  k: 1,
+  pause: ms => new Promise(r => setTimeout(r, ms * BFX.k)),
+  at(layer, el) { const r = el.getBoundingClientRect(), b = layer.getBoundingClientRect(); return { x: r.left - b.left + r.width / 2, y: r.top - b.top + r.height / 2, w: r.width, h: r.height }; },
+  bit(layer, cls, x, y, html) { const e = document.createElement('div'); e.className = 'bfx ' + cls; if (html) e.innerHTML = html; e.style.left = x + 'px'; e.style.top = y + 'px'; layer.appendChild(e); return e; },
+  play(el, frames, ms, o) { try { return el.animate(frames, Object.assign({ duration: ms * BFX.k, easing: 'ease-out' }, o || {})).finished.catch(() => {}); } catch (e) { return Promise.resolve(); } },
+  once(el, frames, ms, o) { return BFX.play(el, frames, ms, o).then(() => el.remove()); },
+  // a label that rises from a card: what a skill added or took off
+  tag(layer, el, text, kind, row) {
+    const p = BFX.at(layer, el), t = BFX.bit(layer, 'tag ' + (kind || 'gold'), p.x, p.y - p.h / 2 - 4 - (row || 0) * 20, '');
+    t.textContent = text;
+    BFX.once(t, [{ transform: 'translate(-50%,-30%) scale(.7)', opacity: 0 }, { transform: 'translate(-50%,-100%) scale(1)', opacity: 1, offset: .25 }, { transform: 'translate(-50%,-150%)', opacity: 1, offset: .8 }, { transform: 'translate(-50%,-185%)', opacity: 0 }], 1500, { easing: 'linear' });
+  },
+  shake(el, px) { return BFX.play(el, [{ transform: 'none' }, { transform: `translateX(${px}px)` }, { transform: `translateX(${-px}px)` }, { transform: `translateX(${px / 2}px)` }, { transform: 'none' }], 300); },
+  // the glow a card keeps while a skill works on it
+  glow(el, cls, ms) { el.classList.add(cls); setTimeout(() => el.classList.remove(cls), ms * BFX.k); },
+  // อำนาจยิงเหนือกว่า: recoil and muzzle flash, a shell on an arc, the burst on the target, the target into the discard pile
+  async cannon(layer, src, tgt, pile, onBurst, onPile) {
+    const a = BFX.at(layer, src), b = BFX.at(layer, tgt), dir = Math.sign(b.x - a.x) || 1;
+    sfx('cannon');
+    BFX.play(src, [{ transform: 'none' }, { transform: `translateX(${-10 * dir}px) rotate(${-4 * dir}deg)`, offset: .25 }, { transform: 'none' }], 360);
+    const mx = a.x + dir * a.w * 0.42, my = a.y - a.h * 0.22;
+    BFX.once(BFX.bit(layer, 'flash', mx, my), [{ transform: 'scale(.3)', opacity: 1 }, { transform: 'scale(1.5)', opacity: 0 }], 300);
+    for (let i = 0; i < 3; i++) BFX.once(BFX.bit(layer, 'puff', mx, my), [{ transform: 'translate(0,0) scale(.4)', opacity: .7 }, { transform: `translate(${-dir * (10 + i * 9)}px, ${-12 - i * 6}px) scale(${1 + i * 0.3})`, opacity: 0 }], 700 + i * 120);
+    const sh = BFX.bit(layer, 'shell', mx, my), lift = Math.min(170, 70 + Math.hypot(b.x - mx, b.y - my) * 0.32), fr = [];
+    for (let i = 0; i <= 14; i++) { const t = i / 14, x = (b.x - mx) * t, y = (b.y - my) * t - lift * 4 * t * (1 - t); fr.push({ transform: `translate(${x}px, ${y}px) rotate(${t * 540}deg)` }); }
+    await BFX.play(sh, fr, 480, { easing: 'cubic-bezier(.3,.1,.6,1)' }); sh.remove();
+    sfx('boom');
+    BFX.once(BFX.bit(layer, 'boom', b.x, b.y), [{ transform: 'scale(.2)', opacity: 1 }, { transform: 'scale(1.35)', opacity: .95, offset: .4 }, { transform: 'scale(1.8)', opacity: 0 }], 620);
+    BFX.once(BFX.bit(layer, 'ringw', b.x, b.y), [{ transform: 'scale(.3)', opacity: .9 }, { transform: 'scale(2.6)', opacity: 0 }], 520);
+    for (let i = 0; i < 10; i++) { const g = i / 10 * Math.PI * 2 + Math.random() * 0.5, d = 34 + Math.random() * 34; BFX.once(BFX.bit(layer, 'spark', b.x, b.y), [{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${Math.cos(g) * d}px, ${Math.sin(g) * d}px) scale(.3)`, opacity: 0 }], 460 + Math.random() * 220, { easing: 'cubic-bezier(.15,.7,.3,1)' }); }
+    if (onBurst) onBurst();
+    tgt.classList.add('scorched');
+    BFX.shake(tgt, 7);
+    await BFX.pause(300);
+    if (pile) {
+      const p = BFX.at(layer, pile);
+      tgt.style.zIndex = 8;
+      await BFX.play(tgt, [{ transform: 'none', opacity: 1 }, { transform: `translate(${(p.x - b.x) * .5}px, ${(p.y - b.y) * .5 - 30}px) scale(.62) rotate(-10deg)`, opacity: .85, offset: .5 }, { transform: `translate(${p.x - b.x}px, ${p.y - b.y}px) scale(.22) rotate(14deg)`, opacity: .2 }], 480, { easing: 'cubic-bezier(.45,0,.6,1)', fill: 'forwards' });
+      tgt.getAnimations().forEach(x => x.cancel()); tgt.style.zIndex = '';
+      pile.classList.remove('bump'); void pile.offsetWidth; pile.classList.add('bump');
+    }
+    tgt.classList.remove('scorched');
+    if (onPile) onPile();
+  },
+  // สกัด: the card charges the card it strikes, the blow lands, then it falls back to its place
+  async ram(layer, src, tgt, onHit) {
+    const a = BFX.at(layer, src), b = BFX.at(layer, tgt), dx = (b.x - a.x) * 0.7, dy = (b.y - a.y) * 0.7, tilt = dx >= 0 ? 7 : -7;
+    src.style.zIndex = 8;
+    sfx('whoosh');
+    const go = src.animate([{ transform: 'none' }, { transform: `translate(${dx * .15}px, ${dy * .15}px) scale(1.04)`, offset: .3 }, { transform: `translate(${dx}px, ${dy}px) rotate(${tilt}deg) scale(1.08)` }], { duration: 230 * BFX.k, easing: 'cubic-bezier(.55,0,.9,.35)', fill: 'forwards' });
+    await go.finished.catch(() => {});
+    sfx('clash');
+    const ix = a.x + dx + (b.x - a.x - dx) * 0.45, iy = a.y + dy + (b.y - a.y - dy) * 0.45;
+    BFX.once(BFX.bit(layer, 'star', ix, iy), [{ transform: 'scale(.2) rotate(0deg)', opacity: 1 }, { transform: 'scale(1.25) rotate(25deg)', opacity: 1, offset: .35 }, { transform: 'scale(1.6) rotate(40deg)', opacity: 0 }], 420);
+    for (let i = 0; i < 6; i++) { const g = Math.atan2(b.y - a.y, b.x - a.x) + (Math.random() - .5) * 1.8, d = 22 + Math.random() * 22; BFX.once(BFX.bit(layer, 'spark w', ix, iy), [{ transform: 'translate(0,0)', opacity: 1 }, { transform: `translate(${Math.cos(g) * d}px, ${Math.sin(g) * d}px) scale(.4)`, opacity: 0 }], 360); }
+    BFX.glow(tgt, 'hitglow', 520);
+    BFX.shake(tgt, 6);
+    if (onHit) onHit();
+    const back = src.animate([{ transform: `translate(${dx}px, ${dy}px) rotate(${tilt}deg) scale(1.08)` }, { transform: `translate(${dx * .55}px, ${dy * .55}px) rotate(${-tilt / 2}deg)`, offset: .35 }, { transform: 'none' }], { duration: 300 * BFX.k, easing: 'ease-out' });
+    go.cancel();
+    await back.finished.catch(() => {});
+    src.style.zIndex = '';
+  },
+  // ตั้งรับ: a shield rises over the card with a ring of light
+  async shield(layer, el) {
+    const p = BFX.at(layer, el);
+    sfx('shield');
+    BFX.glow(el, 'shieldglow', 900);
+    BFX.once(BFX.bit(layer, 'ringb', p.x, p.y), [{ transform: 'scale(.4)', opacity: .9 }, { transform: 'scale(2.1)', opacity: 0 }], 650);
+    // the shield rises out of the card and sparkles as it settles
+    for (let i = 0; i < 10; i++) { const g = i / 10 * Math.PI * 2, r = 46; BFX.once(BFX.bit(layer, 'glint', p.x + Math.cos(g) * r * .62, p.y + Math.sin(g) * r * .72), [{ transform: 'scale(0)', opacity: 0 }, { transform: 'translateY(-6px) scale(1.3)', opacity: 1, offset: .45 }, { transform: `translate(${Math.cos(g) * 12}px, ${Math.sin(g) * 10 - 22}px) scale(0)`, opacity: 0 }], 700 + i * 45, { delay: 120 * BFX.k }); }
+    BFX.once(BFX.bit(layer, 'shieldfx', p.x, p.y, ICON('shield')), [{ transform: 'translateY(22px) scale(.45)', opacity: 0 }, { transform: 'translateY(-4px) scale(1.14)', opacity: 1, offset: .3 }, { transform: 'translateY(-8px) scale(1)', opacity: 1, offset: .72 }, { transform: 'translateY(-16px) scale(1.05)', opacity: 0 }], 1050);
+    await BFX.pause(620);
+  },
+  // นำทัพ: the card raises its banner; the cards after it carry its glow
+  async banner(layer, el) {
+    const p = BFX.at(layer, el);
+    sfx('horn');
+    BFX.glow(el, 'goldglow', 900);
+    BFX.once(BFX.bit(layer, 'pennant', p.x, p.y - p.h / 2, ICON('crown')), [{ transform: 'translate(0,8px) scale(.5)', opacity: 0 }, { transform: 'translate(0,-14px) scale(1.15)', opacity: 1, offset: .4 }, { transform: 'translate(0,-22px) scale(1)', opacity: 0 }], 760);
+    await BFX.pause(460);
+  },
+  // สนับสนุน: a spark travels from the card that supports to the card it supports
+  async support(layer, from, to) {
+    const a = BFX.at(layer, from), b = BFX.at(layer, to), o = BFX.bit(layer, 'orb', a.x, a.y), fr = [];
+    for (let i = 0; i <= 10; i++) { const t = i / 10; fr.push({ transform: `translate(${(b.x - a.x) * t}px, ${(b.y - a.y) * t - 40 * 4 * t * (1 - t)}px) scale(${1 + Math.sin(Math.PI * t) * .4})` }); }
+    BFX.glow(from, 'goldglow', 500);
+    await BFX.once(o, fr, 460, { easing: 'ease-in-out' });
+    BFX.glow(to, 'goldglow', 700);
+    BFX.once(BFX.bit(layer, 'ringg', b.x, b.y), [{ transform: 'scale(.4)', opacity: .9 }, { transform: 'scale(1.8)', opacity: 0 }], 480);
+  },
+  // ทะลวง: the card lunges at the other side with speed streaks behind it
+  async charge(layer, el, toward) {
+    const p = BFX.at(layer, el), dir = toward >= 0 ? 1 : -1;
+    sfx('whoosh');
+    for (let i = 0; i < 3; i++) BFX.once(BFX.bit(layer, 'streak', p.x - dir * (p.w / 2 + 8), p.y - 18 + i * 18), [{ transform: `translateX(${dir * 20}px) scaleX(.2)`, opacity: 0 }, { transform: `translateX(${-dir * 10}px) scaleX(1)`, opacity: .9, offset: .4 }, { transform: `translateX(${-dir * 30}px) scaleX(.4)`, opacity: 0 }], 420 + i * 40);
+    await BFX.play(el, [{ transform: 'none' }, { transform: `translateX(${dir * 16}px) skewX(${-dir * 6}deg)`, offset: .35 }, { transform: 'none' }], 420);
+  },
+  // โถมกำลัง: pulses gather on the card, one for each card before it
+  async surge(layer, el) {
+    const p = BFX.at(layer, el);
+    BFX.glow(el, 'goldglow', 700);
+    for (let i = 0; i < 2; i++) BFX.once(BFX.bit(layer, 'ringg', p.x, p.y), [{ transform: 'scale(2)', opacity: 0 }, { transform: 'scale(1.1)', opacity: .9, offset: .6 }, { transform: 'scale(.6)', opacity: 0 }], 520, { delay: i * 160 * BFX.k });
+    await BFX.pause(460);
+  },
+  // สอดแนม: an eye sweeps across the deck that was looked at
+  async scout(layer, lane) {
+    if (!lane) return;
+    const p = BFX.at(layer, lane), e = BFX.bit(layer, 'eye', p.x - p.w / 2 + 20, p.y, ICON('eye'));
+    await BFX.once(e, [{ transform: 'translateX(0) scale(.6)', opacity: 0 }, { transform: `translateX(${p.w * .2}px) scale(1)`, opacity: 1, offset: .2 }, { transform: `translateX(${p.w - 40}px) scale(1)`, opacity: 1, offset: .8 }, { transform: `translateX(${p.w - 30}px) scale(.6)`, opacity: 0 }], 600, { easing: 'ease-in-out' });
+  },
+  // เชื้อเพลิง: a drop of fuel falls into the card; without fuel the card sputters out in smoke
+  async fuel(layer, el, dry) {
+    const p = BFX.at(layer, el);
+    if (dry) {
+      el.classList.add('dry');
+      for (let i = 0; i < 4; i++) BFX.once(BFX.bit(layer, 'puff grey', p.x + (i - 1.5) * 14, p.y), [{ transform: 'translate(0,0) scale(.5)', opacity: .8 }, { transform: `translate(${(i - 1.5) * 6}px, -38px) scale(1.6)`, opacity: 0 }], 760 + i * 80);
+      await BFX.pause(440); return;
+    }
+    await BFX.once(BFX.bit(layer, 'drop', p.x, p.y - p.h / 2 - 26, ICON('fuel')), [{ transform: 'translateY(-10px) scale(.7)', opacity: 0 }, { transform: 'translateY(0) scale(1)', opacity: 1, offset: .3 }, { transform: `translateY(${p.h / 2 + 8}px) scale(.5)`, opacity: 0 }], 440, { easing: 'ease-in' });
+  },
+};
 function showBattle(res) {
   return new Promise(resolve => {
     const w = res.sides[res.winner], h = meP();
     const auto = settings.autoplay || (S && S.mode === 'online');
+    const fx = fxOn() && !settings.autoplay && typeof Element.prototype.animate === 'function';
+    BFX.k = (settings.speed >= 900 ? 1.25 : settings.speed > 0 && settings.speed <= 200 ? 0.75 : 1) * (h && res.sides.some(s => s.P === h) ? 1 : 0.8);
     const box = openModal(`<div class="battle"><div class="bt-head"><span class="bt-k">${ICON(res.type === 'coup' ? 'crown' : 'shield')} ${BTYPE[res.type]}</span><h2>${battleTitle(res)}</h2>
       <div class="small muted">ขนาดการรบ ${res.size} ใบต่อฝ่าย · เปิดสลับกัน ผู้บุกเปิดก่อน · เสมอฝ่ายรับชนะ</div></div>
-      <div class="bf">${laneHtml(res, 0)}<div class="vs">VS</div>${laneHtml(res, 1)}</div>
+      <div class="bf">${laneHtml(res, 0, fx)}<div class="vs">VS</div>${laneHtml(res, 1, fx)}</div>
       <div class="bwin hide" style="color:${pColor(w.P)}">${pFlag(w.P, 'sm')} ${esc(pName(w.P))} ชนะ ${res.totals[0]} ต่อ ${res.totals[1]}</div>
       <div class="mfoot"><span class="tiny muted grow" id="b-auto"></span><button class="btn" id="b-skip">เปิดทั้งหมด</button><button class="btn primary" id="b-ok">ต่อไป</button></div></div>`, 'wide battlebox');
-    const seq = [], A = res.sides[0].revealed.length, B = res.sides[1].revealed.length;
-    for (let k = 0; k < Math.max(A, B); k++) { if (k < A) seq.push([0, k]); if (k < B) seq.push([1, k]); }
+    const root = box.querySelector('.battle');
+    const layer = document.createElement('div'); layer.className = 'bfx-layer'; root.appendChild(layer);
+    const seq = revealOrder(res);
     const run = [0, 0];
     let done = false, timer = null, idx = 0, closeT = null;
+    const cardEl = (si, k) => box.querySelector(`[data-k="${si}-${k}"]`);
+    const setTot = si => { const el = box.querySelector(`[data-tot="${si}"]`); if (el) el.textContent = run[si]; };
     const reveal = (x, anim) => {
-      const el = box.querySelector(`[data-k="${x[0]}-${x[1]}"]`); if (!el || !el.classList.contains('back')) return;
-      el.classList.remove('back'); if (anim) el.classList.add('flip');
-      run[x[0]] += res.sides[x[0]].revealed[x[1]].final;
-      box.querySelector(`[data-tot="${x[0]}"]`).textContent = run[x[0]];
+      const el = cardEl(x[0], x[1]); if (!el || !el.classList.contains('back')) return;
+      const c = res.sides[x[0]].revealed[x[1]];
+      el.classList.remove('back'); if (anim) el.classList.add(fx && c.extra ? 'deploy' : 'flip');
+      run[x[0]] += fx ? shownOf(c) : c.final;
+      setTot(x[0]);
+    };
+    // the skills of the card that just turned, in the order the engine applied them
+    const playSkills = async ([si, k]) => {
+      const s = res.sides[si], oi = 1 - si, o = res.sides[oi], c = s.revealed[k], el = cardEl(si, k);
+      if (!el || !c || !c.kw || s.neutral) return;
+      const kw = c.kw, a = c.adds || {};
+      const lanes = [box.querySelector('[data-lane="0"]'), box.querySelector('[data-lane="1"]')];
+      const toward = lanes[oi] && lanes[si] ? BFX.at(layer, lanes[oi]).x - BFX.at(layer, lanes[si]).x : (si === 0 ? 1 : -1);
+      if (kw.fuel) await BFX.fuel(layer, el, !!c.dry);
+      if (done) return;
+      if (c.supFrom != null && cardEl(si, c.supFrom)) { await BFX.support(layer, cardEl(si, c.supFrom), el); BFX.tag(layer, el, `สนับสนุน +${c.supIn || ''}`.trim(), 'gold', 0); }
+      if (done) return;
+      // what the card gains as it lands: the banners before it, its momentum, its charge, its shield
+      const tags = [], marks = [];
+      if (a.lead) { tags.push([`นำทัพ +${a.lead}`, 'gold']); BFX.glow(el, 'goldglow', 700); }
+      if (a.surge) { tags.push([`โถมกำลัง +${a.surge}`, 'gold']); marks.push(BFX.surge(layer, el)); }
+      if (a.chg) { tags.push([`ทะลวง +${a.chg}`, 'red']); marks.push(BFX.charge(layer, el, toward)); }
+      if (a.def) { tags.push([`ตั้งรับ +${a.def}`, 'blue']); marks.push(BFX.shield(layer, el)); }
+      tags.forEach((t, j) => BFX.tag(layer, el, t[0], t[1], j + (c.supFrom != null ? 1 : 0)));
+      if (marks.length) await Promise.all(marks); else if (tags.length) await BFX.pause(260);
+      if (done) return;
+      if (c.hit && cardEl(oi, c.hit.k)) {
+        const tgt = cardEl(oi, c.hit.k);
+        await BFX.ram(layer, el, tgt, () => {
+          if (done) return;
+          const bp = tgt.querySelector('.bp'); bp.textContent = (+bp.textContent || 0) - c.hit.d;
+          bp.classList.remove('drop'); void bp.offsetWidth; bp.classList.add('drop');
+          run[oi] -= c.hit.d; setTot(oi);
+          BFX.tag(layer, tgt, `สกัด −${c.hit.d}`, 'red', 0);
+        });
+        if (done) return;
+      }
+      if (c.shot != null && cardEl(oi, c.shot)) {
+        const tgt = cardEl(oi, c.shot), t = o.revealed[c.shot], pile = t.toDisc ? box.querySelector(`[data-pile="${oi}"]`) : null;
+        await BFX.cannon(layer, el, tgt, pile, () => {
+          if (done) return;
+          const bp = tgt.querySelector('.bp'); run[oi] -= (+bp.textContent || 0); bp.textContent = 0; setTot(oi);
+          tgt.classList.add('destroyed');
+          BFX.tag(layer, tgt, 'ถูกทำลาย', 'red', 0);
+        }, () => {
+          if (done || !t.toDisc) return;
+          tgt.classList.add('gone');
+          const n = box.querySelector(`[data-pile="${oi}"] b`); if (n) n.textContent = (+n.textContent || 0) + 1;
+        });
+        if (done) return;
+      }
+      if (c.scouted) await BFX.scout(layer, box.querySelector(`[data-lane="${c.scouted === 'mine' ? si : oi}"] .cards`));
+      if (done) return;
+      if (kw.lead) { BFX.tag(layer, el, `นำทัพ ใบหลังจากนี้ +${kw.lead}`, 'gold', tags.length); await BFX.banner(layer, el); }
+      if (kw.reinf) BFX.tag(layer, el, 'เสริมทัพ เปิดเพิ่ม 1 ใบ', 'blue', tags.length + (kw.lead ? 1 : 0));
     };
     const close = () => { done = true; clearTimeout(timer); clearTimeout(closeT); closeModal(); resolve(); };
     const finish = () => {
       if (done) return; done = true; clearTimeout(timer);
+      // effects in flight stop where they are; every card shows what it counts in the end
+      layer.innerHTML = '';
+      box.querySelectorAll('.bcard').forEach(el => { el.getAnimations().forEach(a => { if (!(a instanceof CSSAnimation)) a.cancel(); }); el.style.zIndex = ''; el.classList.remove('scorched', 'hitglow', 'goldglow', 'shieldglow'); });
       seq.forEach(x => reveal(x, false));
+      res.sides.forEach((s, si) => s.revealed.forEach((c, k) => {
+        const el = cardEl(si, k); if (!el) return;
+        el.querySelector('.bp').textContent = c.final;
+        if (c.destroyed) el.classList.add('destroyed');
+        if (c.destroyed && c.toDisc && fx) el.classList.add('gone');
+      }));
+      if (fx) [0, 1].forEach(si => { const n = box.querySelector(`[data-pile="${si}"] b`); if (n) n.textContent = res.sides[si].revealed.filter(c => c.destroyed && c.toDisc).length; });
       [0, 1].forEach(i => { box.querySelector(`[data-tot="${i}"]`).textContent = res.totals[i]; });
       box.querySelector(`[data-lane="${res.winner}"]`).classList.add('win');
       box.querySelector(`[data-lane="${1 - res.winner}"]`).classList.add('lose');
@@ -11971,7 +12248,18 @@ function showBattle(res) {
         tick();
       }
     };
-    const step = () => { if (done) return; if (idx >= seq.length) { timer = setTimeout(finish, 250); return; } reveal(seq[idx++], true); sfx('flip'); timer = setTimeout(step, 430); };
+    const step = async () => {
+      if (done) return;
+      if (idx >= seq.length) { timer = setTimeout(finish, 250); return; }
+      const x = seq[idx++];
+      reveal(x, true); sfx('flip');
+      if (!fx) { timer = setTimeout(step, 430); return; }
+      await BFX.pause(320);   // the card turns over first
+      if (done) return;
+      try { await playSkills(x); } catch (e) { console.error(e); }
+      if (done) return;
+      timer = setTimeout(step, 180 * BFX.k);
+    };
     if (reduceMotion() || settings.autoplay) finish(); else timer = setTimeout(step, 300);
     box.querySelector('#b-skip').onclick = finish;
     const ok = box.querySelector('#b-ok');
@@ -13607,7 +13895,7 @@ function stateHash() {
 }
 
 // =====================================================================
-window.UI = { menu: showMenu, state: () => G, session: () => S, answer, settings, startGame, profile: () => profile, hof: hofLocal, room: () => R, lobby: () => L, pending: () => pending, myId: () => pubId(), account: () => acct, playstyle, hofStyleName, hofTable, gameSettings: showGameSettings };
+window.UI = { menu: showMenu, state: () => G, session: () => S, answer, settings, startGame, profile: () => profile, hof: hofLocal, room: () => R, lobby: () => L, pending: () => pending, myId: () => pubId(), account: () => acct, playstyle, hofStyleName, hofTable, gameSettings: showGameSettings, showBattle };
 if (/room=/.test(location.hash) && netAvailable()) needProfile(showLobby); else showMenu();
 presenceBoot();
 statsBoot();

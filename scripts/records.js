@@ -32,11 +32,17 @@ if (title.startsWith('[HOF]')) {
     by: str(d.by, 16), gh: str(author, 40),
   };
   if (['easy', 'normal', 'hard'].includes(d.lvl)) rec.lvl = d.lvl;
+  // the rules of the hall (ruled 11 Nov 2026): a win against AI counts only at a table of 4 states and not against the
+  // easy level; winners who beat the hard AI rank first, then everyone by net score
+  const vsAI = r => r.mode !== 'online' || r.lvl != null;
+  const ok = r => !vsAI(r) || (r.n === 4 && r.lvl !== 'easy');
+  const tier = r => r.lvl === 'hard' ? 0 : 1;
+  if (!ok(rec)) done('เกมกับ AI ขึ้นหอเกียรติยศได้เฉพาะโต๊ะ 4 รัฐที่ AI ระดับปกติหรือยาก จึงไม่ได้บันทึก');
   const file = 'data/hall-of-fame.json';
-  const list = read(file);
+  const list = read(file).filter(ok);
   if (list.some(x => x.id === rec.id)) done(`บันทึกนี้อยู่ในหอเกียรติยศแล้ว (${rec.state} ${rec.score} คะแนน)`);
   list.push(rec);
-  list.sort((a, b) => b.score - a.score || b.margin - a.margin);
+  list.sort((a, b) => tier(a) - tier(b) || b.score - a.score || b.margin - a.margin);
   write(file, list.slice(0, 100));
   const rank = list.findIndex(x => x.id === rec.id) + 1;
   done(`บันทึก ${rec.state} ของ ${(rec.title ? rec.title + ' ' : '') + rec.leader} (${rec.score} คะแนน) เข้าหอเกียรติยศแล้ว อันดับ ${rank} หน้าเกมจะเห็นภายในไม่กี่นาที`);

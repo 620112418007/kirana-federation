@@ -122,9 +122,17 @@ function addRecord(b) {
     return { ok: true, rank: rankIn(rows, rec.id), total: rows.length };
   } finally { lock.releaseLock(); }
 }
+// the rules of the hall (ruled 11 Nov 2026): a win against AI counts only at a table of 4 states and not against the easy
+// level; winners who beat the hard AI rank first, then everyone by net score. A solo game, or an online game whose record
+// carries the level of its AI seats, is a game against AI; an online game of people only keeps its place by score
+const hofVsAI = r => r.mode !== 'online' || r.lvl != null;
+const hofOk = r => !hofVsAI(r) || (r.n === 4 && r.lvl !== 'easy');
+const hofTier = r => r.lvl === 'hard' ? 0 : 1;
+const hofOrder = (a, b) => hofTier(a) - hofTier(b) || b.score - a.score || b.margin - a.margin;
+function rowRec(r) { try { return JSON.parse(r[5]); } catch (err) { return null; } }
 function rankIn(rows, id) {
-  const sorted = rows.slice().sort((a, b) => (+b[3]) - (+a[3]) || (+b[4]) - (+a[4]));
-  return sorted.findIndex(r => r[0] === 'r:' + id) + 1;
+  const recs = rows.map(rowRec).filter(x => x && x.id && hofOk(x)).sort(hofOrder);
+  return recs.findIndex(x => x.id === id) + 1;
 }
 const str = (x, n) => (typeof x === 'string' ? x : '').replace(/[\u0000-\u001f]/g, ' ').slice(0, n);
 const int = (x, lo, hi) => Number.isInteger(x) && x >= lo && x <= hi ? x : 0;
@@ -148,6 +156,7 @@ function cleanRecord(d) {
     opp: (Array.isArray(d.opp) ? d.opp : []).slice(0, 3).map(o => ({ state: str(o && o.state, 24), score: int(o && o.score, -300, 300), ai: !!(o && o.ai) })),
   };
   if (['easy', 'normal', 'hard'].indexOf(d.lvl) >= 0) rec.lvl = d.lvl;
+  if (!hofOk(rec)) throw new Error('เกมกับ AI ขึ้นหอได้เฉพาะโต๊ะ 4 รัฐที่ AI ระดับปกติหรือยาก');
   if (rec.legit - rec.stigma !== rec.score) throw new Error('คะแนนสุทธิไม่ตรงกับความชอบธรรมลบตราบาป');
   if (rec.opp.length !== rec.n - 1) throw new Error('จำนวนคู่แข่งไม่ตรงกับจำนวนรัฐ');
   if (rec.opp.some(o => o.score > rec.score)) throw new Error('ผู้ชนะต้องมีคะแนนไม่น้อยกว่าคู่แข่ง');
@@ -251,8 +260,9 @@ function listCached() {
   const sh = sheet();
   const rows = sh.getLastRow() > 1 ? sh.getRange(2, 1, sh.getLastRow() - 1, HEAD.length).getValues() : [];
   const list = [];
-  for (const r of rows) { try { const rec = JSON.parse(r[5]); if (rec && rec.id) list.push(rec); } catch (err) { /* a row edited by hand */ } }
-  list.sort((a, b) => b.score - a.score || b.margin - a.margin);
+  // rows saved before the rules of 11 Nov stay in the sheet; the list leaves out the ones the rules no longer count
+  for (const r of rows) { const rec = rowRec(r); if (rec && rec.id && hofOk(rec)) list.push(rec); }
+  list.sort(hofOrder);
   const top = list.slice(0, CONFIG.LIST_SIZE);
   const text = JSON.stringify(top);
   if (text.length < 95000) cache.put('list', text, 60);

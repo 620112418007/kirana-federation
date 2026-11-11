@@ -12304,7 +12304,7 @@ function titleKind(title) {
   return best ? TITLE_KIND[best[0]] || 0 : 0;
 }
 function playName(main, second, title) {
-  if (!main) return { label: 'รัฐสายสมดุล', byTitle: false };
+  if (!main) return { label: 'รัฐพหุนิยม', byTitle: false };
   if (!second) return { label: 'รัฐ' + STYLE_AXES[main].label, byTitle: false };
   const names = STYLE_NAMES[main + '+' + second] || STYLE_NAMES[second + '+' + main];
   const k = titleKind(title);
@@ -12330,7 +12330,7 @@ function playstyle(P) {
   if (P.stigma === 0) notes.push('มือสะอาด ไม่มีตราบาปเลยทั้งเกม');
   if (st.plunderedFrom >= 4) notes.push(`ถูกปล้นไป ${st.plunderedFrom} หน่วย`);
   if (nm.byTitle) notes.push(`คำนำหน้า ${seat.title} ทำให้เรียกว่า${nm.label}`);
-  const desc = (main ? `${STYLE_AXES[main].line}มากกว่าโต๊ะทั่วไป ${Math.round((ratio[main] - 1) * 100)}%${second ? ' เสริมด้วย' + STYLE_AXES[second].label : ''}` : 'กระจายแอคชันใกล้เคียงโต๊ะทั่วไป ไม่ทุ่มทางใดทางหนึ่ง')
+  const desc = (main ? `${STYLE_AXES[main].line}มากกว่าโต๊ะทั่วไป ${Math.round((ratio[main] - 1) * 100)}%${second ? ' เสริมด้วย' + STYLE_AXES[second].label : ''}` : 'กระจายแอคชันและการ์ดใกล้เคียงโต๊ะทั่วไป ไม่ทุ่มทางใดทางหนึ่ง')
     + (base && base[1] > 0 ? ` · ฐานอุดมการณ์หนักไปทาง${LN[base[0]]} (${base[1]} สัญลักษณ์)` : '');
   return { key: (main || 'even') + (second ? '+' + second : ''), label: nm.label, desc, notes, ratio, base: base && base[1] > 0 ? base[0] : null };
 }

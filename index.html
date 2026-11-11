@@ -12266,30 +12266,73 @@ const STYLE_AXES = {
   build: { label: 'นักขยายดินแดน', line: 'สร้างและผนวกโครงการเป็นแกน' },
   trade: { label: 'พาณิชย์', line: 'ค้าขายเป็นแกน' },
   war: { label: 'ทหาร', line: 'ใช้กองทัพเป็นแกน' },
-  lab: { label: 'วิทยาการ', line: 'วิจัยเป็นแกน' },
+  lab: { label: 'วิทยาการ', line: 'สะสมการ์ดนวัตกรรมเป็นแกน' },
+  faith: { label: 'ศาสนา', line: 'สะสมการ์ดวัฒนธรรมเป็นแกน' },
 };
-// read a state's play from the counts the engine kept during the game
-// shares are read against a typical table (AI averages over many v0.3 games), because reform and research
-// fill most turns for everyone; what marks a style is the action a state chose more often than usual
-const STYLE_BASE = { build: 4.4, trade: 5.3, war: 6.9, lab: 10.3 };
+// read a state's play from what it chose during the game (ruled 11 Nov): the actions it took for the first three axes,
+// the innovation and culture cards it kept for วิทยาการ and ศาสนา. Each axis is a share of the five, read against a typical
+// table of rules 0.4.4 (AI, 80 games of 4 states) in units of how much that share swings between states, so that the
+// card axes, which count only a few cards, do not take the lead more often than the others
+const STYLE_MEAN = { build: 0.193, trade: 0.184, war: 0.350, lab: 0.135, faith: 0.139 };
+const STYLE_SD = { build: 0.072, trade: 0.096, war: 0.125, lab: 0.094, faith: 0.102 };
+// the names of a main axis with a second one (ruled 11 Nov): [the name, with a title of the business and administration
+// group, with a title of royalty and nobility]; a pair with ศาสนา second takes the name of the reversed pair
+const STYLE_NAMES = {
+  'build+trade': ['รัฐพาณิชยจักรวรรดินิยม', 'รัฐบรรษัทอาณานิคมนิยม'],
+  'build+war': ['รัฐจักรวรรดินิยมเผด็จการทหาร'],
+  'build+lab': ['รัฐจักรวรรดินิยมเทคโนแครต'],
+  'trade+build': ['รัฐธนาธิปไตยจักรวรรดินิยม', 'รัฐบรรษัทข้ามชาติ'],
+  'trade+war': ['รัฐคณาธิปไตยทหารรับจ้าง'],
+  'trade+lab': ['รัฐทุนนิยมเทคโนแครต', 'เมกาคอร์ป'],
+  'war+build': ['รัฐเสนาธิปไตยจักรวรรดินิยม'],
+  'war+trade': ['รัฐพาณิชย์นาวี'],
+  'war+lab': ['รัฐเสนาธิปไตยเทคโนแครต'],
+  'lab+build': ['รัฐอภิชนาธิปไตย'],
+  'lab+trade': ['รัฐคณาธิปไตยเทคโนแครต'],
+  'lab+war': ['รัฐเผด็จการปัญญาประดิษฐ์'],
+  'faith+build': ['รัฐเทวธิปไตยจักรวรรดินิยม', null, 'จักรวรรดิศักดิ์สิทธิ์'],
+  'faith+trade': ['รัฐเทวธิปไตยพาณิชนิยม'],
+  'faith+war': ['รัฐเสนาธิปไตยอันศักดิ์สิทธิ์'],
+  'faith+lab': ['รัฐวิทยาการศักดิ์สิทธิ์'],
+};
+const TITLE_KIND = { 'ธุรกิจและการบริหาร': 1, 'ราชวงศ์และขุนนาง': 2 };
+// the title group of a leader: a title from the list, or the longest title of the list inside one the player typed
+function titleKind(title) {
+  const t = String(title || '').trim();
+  let best = null;
+  if (t) for (const [g, ts] of LEADER_TITLES) for (const x of ts) if (t.includes(x) && (!best || x.length > best[1].length)) best = [g, x];
+  return best ? TITLE_KIND[best[0]] || 0 : 0;
+}
+function playName(main, second, title) {
+  if (!main) return { label: 'รัฐสายสมดุล', byTitle: false };
+  if (!second) return { label: 'รัฐ' + STYLE_AXES[main].label, byTitle: false };
+  const names = STYLE_NAMES[main + '+' + second] || STYLE_NAMES[second + '+' + main];
+  const k = titleKind(title);
+  return k && names[k] ? { label: names[k], byTitle: true } : { label: names[0], byTitle: false };
+}
 function playstyle(P) {
-  const st = P.st;
-  const ax = { build: st.build + st.annex, trade: st.commerce, war: st.explore + st.attack + st.coup + st.reform * 0.35, lab: st.research };
-  const tot = Object.values(ax).reduce((a, b) => a + b, 0) || 1, btot = Object.values(STYLE_BASE).reduce((a, b) => a + b, 0);
-  const ratio = {}; for (const k in ax) ratio[k] = (ax[k] / tot) / (STYLE_BASE[k] / btot);
-  const ranked = Object.keys(ratio).sort((a, b) => ratio[b] - ratio[a]);
-  const main = ratio[ranked[0]] >= 1.12 ? ranked[0] : null;
-  const second = main && ratio[ranked[1]] >= 1.08 && ratio[ranked[1]] >= ratio[main] - 0.25 ? ranked[1] : null;
-  const label = main ? 'รัฐ' + STYLE_AXES[main].label + (second ? 'สาย' + STYLE_AXES[second].label : '') : 'รัฐสายสมดุล';
+  const st = P.st, rs = P.research || [];
+  const ax = { build: st.build + st.annex, trade: st.commerce, war: st.explore + st.attack + st.coup + st.reform * 0.35,
+    lab: rs.filter(r => r.d.kind === 'innovation').length, faith: rs.filter(r => r.d.kind === 'culture').length };
+  const tot = Object.values(ax).reduce((a, b) => a + b, 0) || 1;
+  const ratio = {}, z = {};
+  for (const k in ax) { const sh = ax[k] / tot; ratio[k] = sh / STYLE_MEAN[k]; z[k] = (sh - STYLE_MEAN[k]) / STYLE_SD[k]; }
+  const ranked = Object.keys(z).sort((a, b) => z[b] - z[a]);
+  const main = z[ranked[0]] >= 0.6 ? ranked[0] : null;
+  const second = main && z[ranked[1]] >= 0.45 && z[main] - z[ranked[1]] <= 0.6 ? ranked[1] : null;
+  const seat = seatOf(P) || {};
+  const nm = playName(main, second, seat.title);
   const base = LINES.map(l => [l, K.symCount(P, l)]).sort((a, b) => b[1] - a[1])[0];
   const notes = [];
   notes.push(`สร้าง ${st.build} · ผนวก ${st.annex} · ค้าขาย ${st.commerce} · วิจัย ${st.research} · ปฏิรูป ${st.reform} · บุกเบิก ${st.explore} · โจมตี ${st.attack} · รัฐประหาร ${st.coup}`);
+  notes.push(`การ์ดนวัตกรรม ${ax.lab} · การ์ดวัฒนธรรม ${ax.faith}`);
   if (st.bwin + st.blose) notes.push(`รบชนะ ${st.bwin} แพ้ ${st.blose}`);
   if (P.stigma === 0) notes.push('มือสะอาด ไม่มีตราบาปเลยทั้งเกม');
   if (st.plunderedFrom >= 4) notes.push(`ถูกปล้นไป ${st.plunderedFrom} หน่วย`);
+  if (nm.byTitle) notes.push(`คำนำหน้า ${seat.title} ทำให้เรียกว่า${nm.label}`);
   const desc = (main ? `${STYLE_AXES[main].line}มากกว่าโต๊ะทั่วไป ${Math.round((ratio[main] - 1) * 100)}%${second ? ' เสริมด้วย' + STYLE_AXES[second].label : ''}` : 'กระจายแอคชันใกล้เคียงโต๊ะทั่วไป ไม่ทุ่มทางใดทางหนึ่ง')
     + (base && base[1] > 0 ? ` · ฐานอุดมการณ์หนักไปทาง${LN[base[0]]} (${base[1]} สัญลักษณ์)` : '');
-  return { key: (main || 'even') + (second ? '+' + second : ''), label, desc, notes, ratio, base: base && base[1] > 0 ? base[0] : null };
+  return { key: (main || 'even') + (second ? '+' + second : ''), label: nm.label, desc, notes, ratio, base: base && base[1] > 0 ? base[0] : null };
 }
 function hofRecord(G2, P) {
   const s = seatOf(P) || {};
@@ -13428,7 +13471,7 @@ function stateHash() {
 }
 
 // =====================================================================
-window.UI = { menu: showMenu, state: () => G, session: () => S, answer, settings, startGame, profile: () => profile, hof: hofLocal, room: () => R, lobby: () => L, pending: () => pending, myId: () => pubId(), account: () => acct };
+window.UI = { menu: showMenu, state: () => G, session: () => S, answer, settings, startGame, profile: () => profile, hof: hofLocal, room: () => R, lobby: () => L, pending: () => pending, myId: () => pubId(), account: () => acct, playstyle };
 if (/room=/.test(location.hash) && netAvailable()) needProfile(showLobby); else showMenu();
 presenceBoot();
 statsBoot();

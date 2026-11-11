@@ -48,7 +48,7 @@ function doGet(e) {
   if (p.list === 'hof') return out(listCached());
   if (p.list === 'cmt') return out(listComments());
   if (p.list === 'removed') return out(listRemoved());
-  return out({ ok: true, app: 'kirana-federation-hof', v: 3, count: Math.max(0, sheet().getLastRow() - 1) });
+  return out({ ok: true, app: 'kirana-federation-hof', v: 4, count: Math.max(0, sheet().getLastRow() - 1) });
 }
 
 function doPost(e) {

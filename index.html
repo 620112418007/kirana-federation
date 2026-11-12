@@ -13106,27 +13106,35 @@ const STYLE_AXES = {
 // card axes, which count only a few cards, do not take the lead more often than the others
 const STYLE_MEAN = { build: 0.193, trade: 0.184, war: 0.350, lab: 0.135, faith: 0.139 };
 const STYLE_SD = { build: 0.072, trade: 0.096, war: 0.125, lab: 0.094, faith: 0.102 };
-// the names of a main axis with a second one (ruled 11 Nov): [the name, with a title of the business and administration
-// group, with a title of royalty and nobility]; a pair with ศาสนา second takes the name of the reversed pair
+// the names of every reading, from the designer's sheet federation-playstyles (pairs ruled 11 Nov, one axis and the title
+// groups 12 Nov): the key is even (no main axis), the main axis alone, or main+second; each row is [the name, with a title of
+// business and administration, of royalty and nobility, of religion and spirituality, of revolution and the people]; an
+// empty slot keeps the name, and a pair with ศาสนา second takes the names of the reversed pair
 const STYLE_NAMES = {
-  'build+trade': ['รัฐพาณิชยจักรวรรดินิยม', 'รัฐบรรษัทอาณานิคมนิยม'],
-  'build+war': ['รัฐจักรวรรดินิยมเผด็จการทหาร'],
-  'build+lab': ['รัฐจักรวรรดินิยมเทคโนแครต'],
-  'trade+build': ['รัฐธนาธิปไตยจักรวรรดินิยม', 'รัฐบรรษัทข้ามชาติ'],
-  'trade+war': ['รัฐคณาธิปไตยทหารรับจ้าง'],
-  'trade+lab': ['รัฐทุนนิยมเทคโนแครต', 'เมกาคอร์ป'],
-  'war+build': ['รัฐเสนาธิปไตยจักรวรรดินิยม'],
-  'war+trade': ['รัฐพาณิชย์นาวี'],
-  'war+lab': ['รัฐเสนาธิปไตยเทคโนแครต'],
-  'lab+build': ['รัฐอภิชนาธิปไตย'],
-  'lab+trade': ['รัฐคณาธิปไตยเทคโนแครต'],
-  'lab+war': ['รัฐเผด็จการปัญญาประดิษฐ์'],
-  'faith+build': ['รัฐเทวธิปไตยจักรวรรดินิยม', null, 'จักรวรรดิศักดิ์สิทธิ์'],
+  even: ['รัฐพหุนิยม', 'รัฐคอนซอร์เตียม', 'ราชอาณาจักรสามฐานันดร', 'รัฐสมัชชาศรัทธา', 'รัฐแนวร่วมประชาชน'],
+  build: ['รัฐอาณานิคม', 'รัฐบริษัทสัมปทาน', 'จักรวรรดิล่าอาณานิคม', 'รัฐมิชชันนารี', 'สหภาพสาธารณรัฐประชาชน'],
+  trade: ['รัฐพาณิชย์', 'รัฐบรรษัท', 'รัฐพระคลังสินค้า', 'รัฐทศางค์', 'สาธารณรัฐสหกรณ์'],
+  war: ['รัฐทหาร', 'รัฐทหารรับจ้าง', 'รัฐขุนศึก', 'รัฐภาคีอัศวิน', 'เขตอนาธิปไตย'],
+  lab: ['รัฐวิทยาการ', 'รัฐสิทธิบัตร', 'รัฐราชาปราชญ์', 'รัฐเทพพยากรณ์', 'รัฐสังคมนิยมวิทยาศาสตร์'],
+  faith: ['รัฐศาสนา', 'รัฐศาสนพาณิชย์', 'รัฐเทวราชา', 'รัฐศาสนจักร', 'รัฐลัทธิสังคมนิยม'],
+  'build+trade': ['รัฐพาณิชยจักรวรรดินิยม', 'รัฐบรรษัทอาณานิคมนิยม', 'จักรวรรดิเมืองท่า', 'รัฐนิคมพันธสัญญา', 'สันนิบาตนครเสรี'],
+  'build+war': ['รัฐจักรวรรดินิยมเผด็จการทหาร', 'รัฐบริษัทกองทัพเอกชน', 'จักรวรรดิผู้พิชิต', 'รัฐครูเสด', 'รัฐเผด็จการสังคมนิยม'],
+  'build+lab': ['รัฐจักรวรรดินิยมเทคโนแครต', 'รัฐนิคมอุตสาหกรรม', 'จักรวรรดิภูมิธรรม', 'รัฐมหาวิหารจักรกล', 'รัฐสังคมนิยมเทคโนแครต'],
+  'trade+build': ['รัฐธนาธิปไตยจักรวรรดินิยม', 'รัฐบรรษัทข้ามชาติ', 'รัฐขุนนางพ่อค้า', 'รัฐศาสนพาณิชย์', 'รัฐทุนแดง'],
+  'trade+war': ['รัฐคณาธิปไตยทหารรับจ้าง', 'รัฐคาร์เทลติดอาวุธ', null, 'สันนิบาตศักดิ์สิทธิ์', 'รัฐคอมมูนพาณิชย์'],
+  'trade+lab': ['รัฐทุนนิยมเทคโนแครต', 'เมกาคอร์ป', 'ราชสำนักจักรกล', 'รัฐเล่นแร่แปรธาตุ', 'รัฐสหกรณ์ช่างกล'],
+  'war+build': ['รัฐเสนาธิปไตยจักรวรรดินิยม', 'รัฐพาณิชย์ชาตินิยม', 'ราชอาณาจักร', 'รัฐนักรบแสวงบุญ', 'สาธารณรัฐทหาร'],
+  'war+trade': ['รัฐพาณิชย์นาวี', 'รัฐบรรษัทเรือปืน', 'รัฐราชนาวี', 'รัฐโจรสลัดศักดิ์สิทธิ์', 'รัฐกองเรือโจรสลัด'],
+  'war+lab': ['รัฐเสนาธิปไตยเทคโนแครต', 'บรรษัทอุตสาหกรรมสงคราม', null, 'รัฐลัทธิบูชาเครื่องจักร'],
+  'lab+build': ['รัฐอภิชนาธิปไตย', 'รัฐเทคโนโพลิส', 'รัฐขุนนางบัณฑิต', 'ภราดรภาพมหาอาราม', 'รัฐสังคมนิยมยูโทเปีย'],
+  'lab+trade': ['รัฐคณาธิปไตยเทคโนแครต', 'รัฐบริษัทเทคโนโลยี', 'รัฐราชสมาคม', null, 'สาธารณรัฐวิศวกร'],
+  'lab+war': ['รัฐเผด็จการปัญญาประดิษฐ์', 'รัฐบรรษัทสมองกล', 'รัฐผู้สำเร็จราชการแทน', 'รัฐเทวปัญญา', 'รัฐหุ่นกลกรรมาชีพ'],
+  'faith+build': ['รัฐเทวธิปไตยจักรวรรดินิยม', 'รัฐแฟรนไชส์ธุรกิจ', 'จักรวรรดิศักดิ์สิทธิ์', 'รัฐสังฆมณฑลไร้พรมแดน', 'รัฐยูโทเปีย'],
   'faith+trade': ['รัฐเทวธิปไตยพาณิชยนิยม'],
-  'faith+war': ['รัฐเสนาธิปไตยอันศักดิ์สิทธิ์'],
-  'faith+lab': ['รัฐวิทยาการศักดิ์สิทธิ์'],
+  'faith+war': ['รัฐเสนาธิปไตยอันศักดิ์สิทธิ์', null, null, 'รัฐกองทัพสวรรค์'],
+  'faith+lab': ['รัฐวิทยาการศักดิ์สิทธิ์', null, 'รัฐโหรหลวง', 'รัฐอารามวิทยาการ', 'รัฐลัทธิบูชาเหตุผล'],
 };
-const TITLE_KIND = { 'ธุรกิจและการบริหาร': 1, 'ราชวงศ์และขุนนาง': 2 };
+const TITLE_KIND = { 'ธุรกิจและการบริหาร': 1, 'ราชวงศ์และขุนนาง': 2, 'ศาสนาและจิตวิญญาณ': 3, 'การปฏิวัติและประชาชน': 4 };
 // the title group of a leader: a title from the list, or the longest title of the list inside one the player typed
 function titleKind(title) {
   const t = String(title || '').trim();
@@ -13135,9 +13143,8 @@ function titleKind(title) {
   return best ? TITLE_KIND[best[0]] || 0 : 0;
 }
 function playName(main, second, title) {
-  if (!main) return { label: 'รัฐพหุนิยม', byTitle: false };
-  if (!second) return { label: 'รัฐ' + STYLE_AXES[main].label, byTitle: false };
-  const names = STYLE_NAMES[main + '+' + second] || STYLE_NAMES[second + '+' + main];
+  const key = main ? main + (second ? '+' + second : '') : 'even';
+  const names = STYLE_NAMES[key] || (second && STYLE_NAMES[second + '+' + main]) || [key];
   const k = titleKind(title);
   return k && names[k] ? { label: names[k], byTitle: true } : { label: names[0], byTitle: false };
 }
